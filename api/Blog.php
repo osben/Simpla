@@ -54,7 +54,6 @@ class Blog extends Simpla
         $post_id_filter = '';
         $visible_filter = '';
         $keyword_filter = '';
-        $posts = array();
 
         if (isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
