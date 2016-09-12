@@ -14,8 +14,8 @@ require_once('api/Simpla.php');
 class StatsAdmin extends Simpla
 {
 
-	public function fetch()
-	{
-		return $this->design->fetch('stats.tpl');
-	}
+    public function fetch()
+    {
+        return $this->design->fetch('stats.tpl');
+    }
 }
