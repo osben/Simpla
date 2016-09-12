@@ -33,12 +33,10 @@ class Settings extends Simpla
 
     public function __get($name)
     {
-        if ($res = parent::__get($name)) {
-            return $res;
-        }
-
         if (isset($this->vars[$name])) {
             return $this->vars[$name];
+        } elseif ($res = parent::__get($name)) {
+            return $res;
         } else {
             return null;
         }
