@@ -110,13 +110,6 @@ class Coupons extends Simpla
 		if(isset($filter['valid']))
 			$valid_filter = $this->db->placehold('AND ((DATE(NOW()) <= DATE(c.expire) OR c.expire IS NULL) AND (c.usages=0 OR NOT c.single))');
 
-		if(isset($filter['keyword']))
-		{
-			$keywords = explode(' ', $filter['keyword']);
-			foreach($keywords as $keyword)
-				$keyword_filter .= $this->db->placehold('AND (b.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR b.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
-		}
-
 		$query = $this->db->placehold("SELECT COUNT(distinct c.id) as count
 										FROM __coupons c
 										WHERE 1
