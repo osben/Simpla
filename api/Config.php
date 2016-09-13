@@ -91,7 +91,12 @@ class Config
         }
     }
 
-    // Магическим методов возвращаем нужную переменную
+    /**
+     * Магическим методов возвращаем нужную переменную
+     *
+     * @param $name
+     * @return mixed|null
+     */
     public function __get($name)
     {
         if (isset($this->vars[$name])) {
@@ -101,7 +106,12 @@ class Config
         }
     }
 
-    // Магическим методов задаём нужную переменную
+    /**
+     * Магическим методов задаём нужную переменную
+     *
+     * @param $name
+     * @param $value
+     */
     public function __set($name, $value)
     {
         # Запишем конфиги
@@ -115,11 +125,20 @@ class Config
         }
     }
 
+    /**
+     * @param  string $text
+     * @return string
+     */
     public function token($text)
     {
         return md5($text.$this->salt);
     }
 
+    /**
+     * @param $text
+     * @param $token
+     * @return bool
+     */
     public function check_token($text, $token)
     {
         if (!empty($token) && $token === $this->token($text)) {

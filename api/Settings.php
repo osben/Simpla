@@ -53,6 +53,7 @@ class Settings extends Simpla
         }
 
         $this->db->query('SELECT count(*) as count FROM __settings WHERE name=?', $name);
+
         if ($this->db->result('count')>0) {
             $this->db->query('UPDATE __settings SET value=? WHERE name=?', $value, $name);
         } else {

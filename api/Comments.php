@@ -14,7 +14,12 @@ require_once('Simpla.php');
 class Comments extends Simpla
 {
 
-    // Возвращает комментарий по id
+    /**
+     * Возвращает комментарий по id
+     *
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_comment($id)
     {
         $query = $this->db->placehold("SELECT c.id, c.object_id, c.name, c.ip, c.type, c.text, c.date, c.approved FROM __comments c WHERE id=? LIMIT 1", intval($id));
@@ -26,7 +31,12 @@ class Comments extends Simpla
         }
     }
 
-    // Возвращает комментарии, удовлетворяющие фильтру
+    /**
+     * Возвращает комментарии, удовлетворяющие фильтру
+     *
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_comments($filter = array())
     {
         // По умолчанию
@@ -90,7 +100,12 @@ class Comments extends Simpla
         return $this->db->results();
     }
 
-    // Количество комментариев, удовлетворяющих фильтру
+    /**
+     * Количество комментариев, удовлетворяющих фильтру
+     *
+     * @param array $filter
+     * @return bool|object|string
+     */
     public function count_comments($filter = array())
     {
         $object_id_filter = '';
@@ -129,7 +144,12 @@ class Comments extends Simpla
         return $this->db->result('count');
     }
 
-    // Добавление комментария
+    /**
+     * Добавление комментария
+     *
+     * @param $comment
+     * @return bool|mixed
+     */
     public function add_comment($comment)
     {
         $query = $this->db->placehold('INSERT INTO __comments
@@ -145,7 +165,13 @@ class Comments extends Simpla
         return $id;
     }
 
-    // Изменение комментария
+    /**
+     * Изменение комментария
+     *
+     * @param $id
+     * @param $comment
+     * @return mixed
+     */
     public function update_comment($id, $comment)
     {
         $date_query = '';
@@ -159,7 +185,11 @@ class Comments extends Simpla
         return $id;
     }
 
-    // Удаление комментария
+    /**
+     * Удаление комментария
+     *
+     * @param $id
+     */
     public function delete_comment($id)
     {
         if (!empty($id)) {

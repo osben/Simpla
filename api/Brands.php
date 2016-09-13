@@ -13,12 +13,12 @@ require_once('Simpla.php');
 
 class Brands extends Simpla
 {
-    /*
-    *
-    * Функция возвращает массив брендов, удовлетворяющих фильтру
-    * @param $filter
-    *
-    */
+    /**
+     * Функция возвращает массив брендов, удовлетворяющих фильтру
+     *
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_brands($filter = array())
     {
         $category_id_filter = '';
@@ -47,13 +47,13 @@ class Brands extends Simpla
         return $this->db->results();
     }
 
-    /*
-    *
-    * Функция возвращает бренд по его id или url
-    * (в зависимости от типа аргумента, int - id, string - url)
-    * @param $id id или url поста
-    *
-    */
+    /**
+     * Функция возвращает бренд по его id или url
+     * (в зависимости от типа аргумента, int - id, string - url)
+     *
+     * @param  int|string $id
+     * @return bool|object
+     */
     public function get_brand($id)
     {
         if (is_int($id)) {
@@ -70,12 +70,12 @@ class Brands extends Simpla
         return $this->db->result();
     }
 
-    /*
-    *
-    * Добавление бренда
-    * @param $brand
-    *
-    */
+    /**
+     * Добавление бренда
+     *
+     * @param  array|object $brand
+     * @return mixed
+     */
     public function add_brand($brand)
     {
         $brand = (array)$brand;
@@ -88,12 +88,13 @@ class Brands extends Simpla
         return $this->db->insert_id();
     }
 
-    /*
-    *
-    * Обновление бренда(ов)
-    * @param $brand
-    *
-    */
+    /**
+     * Обновление бренда(ов)
+     *
+     * @param  int $id
+     * @param  array|object $brand
+     * @return mixed
+     */
     public function update_brand($id, $brand)
     {
         $query = $this->db->placehold("UPDATE __brands SET ?% WHERE id=? LIMIT 1", $brand, intval($id));
@@ -101,29 +102,31 @@ class Brands extends Simpla
         return $id;
     }
 
-    /*
-    *
-    * Удаление бренда
-    * @param $id
-    *
-    */
+    /**
+     * Удаление бренда
+     *
+     * @param int $id
+     * @return void
+     */
     public function delete_brand($id)
     {
         if (!empty($id)) {
             $this->delete_image($id);
+
             $query = $this->db->placehold("DELETE FROM __brands WHERE id=? LIMIT 1", $id);
             $this->db->query($query);
+
             $query = $this->db->placehold("UPDATE __products SET brand_id=NULL WHERE brand_id=?", $id);
             $this->db->query($query);
         }
     }
 
-    /*
-    *
-    * Удаление изображения бренда
-    * @param $id
-    *
-    */
+    /**
+     * Удаление изображения бренда
+     *
+     * @param  int $brand_id
+     * @return void
+     */
     public function delete_image($brand_id)
     {
         $query = $this->db->placehold("SELECT image FROM __brands WHERE id=?", intval($brand_id));

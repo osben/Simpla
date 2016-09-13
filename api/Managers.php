@@ -30,10 +30,14 @@ class Managers extends Simpla
         }
     }
 
+    /**
+     * @return array
+     */
     public function get_managers()
     {
-        $lines = explode("\n", @file_get_contents($this->config->root_dir.$this->passwd_file));
         $managers = array();
+
+        $lines = explode("\n", @file_get_contents($this->config->root_dir.$this->passwd_file));
         foreach ($lines as $line) {
             if (!empty($line)) {
                 $manager = null;
@@ -56,11 +60,19 @@ class Managers extends Simpla
         return $managers;
     }
 
+    /**
+     * @param array $filter
+     * @return int
+     */
     public function count_managers($filter = array())
     {
         return count($this->get_managers());
     }
 
+    /**
+     * @param  string $login
+     * @return bool|mixed
+     */
     public function get_manager($login = null)
     {
         // Если не запрашивается по логину, отдаём текущего менеджера или false
@@ -84,6 +96,10 @@ class Managers extends Simpla
         return false;
     }
 
+    /**
+     * @param $manager
+     * @return bool
+     */
     public function add_manager($manager)
     {
         $manager = (object)$manager;
@@ -112,6 +128,11 @@ class Managers extends Simpla
         }
     }
 
+    /**
+     * @param $login
+     * @param $manager
+     * @return bool
+     */
     public function update_manager($login, $manager)
     {
         $manager = (object)$manager;
@@ -152,6 +173,10 @@ class Managers extends Simpla
         return false;
     }
 
+    /**
+     * @param $login
+     * @return bool
+     */
     public function delete_manager($login)
     {
         $lines = explode("\n", @file_get_contents($this->passwd_file));
@@ -165,6 +190,10 @@ class Managers extends Simpla
         return true;
     }
 
+    /**
+     * @param $plainpasswd
+     * @return string
+     */
     private function crypt_apr1_md5($plainpasswd)
     {
         $salt = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz0123456789"), 0, 8);
@@ -205,6 +234,10 @@ class Managers extends Simpla
         return "$"."apr1"."$".$salt."$".$tmp;
     }
 
+    /**
+     * @param $module
+     * @return bool
+     */
     public function access($module)
     {
         $manager = $this->get_manager();

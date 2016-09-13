@@ -33,6 +33,7 @@ class Money extends Simpla
         $this->init_currencies();
     }
 
+
     private function init_currencies()
     {
         $this->currencies = array();

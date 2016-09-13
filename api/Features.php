@@ -13,7 +13,10 @@ require_once('Simpla.php');
 
 class Features extends Simpla
 {
-
+    /**
+     * @param  array $filter
+     * @return object
+     */
     public function get_features($filter = array())
     {
         $category_id_filter = '';
@@ -43,6 +46,10 @@ class Features extends Simpla
         return $this->db->results();
     }
 
+    /**
+     * @param  int $id
+     * @return object
+     */
     public function get_feature($id)
     {
         // Выбираем свойство

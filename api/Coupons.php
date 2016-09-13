@@ -14,13 +14,13 @@ require_once('Simpla.php');
 class Coupons extends Simpla
 {
 
-    /*
-    *
-    * Функция возвращает купон по его id или url
-    * (в зависимости от типа аргумента, int - id, string - code)
-    * @param $id id или code купона
-    *
-    */
+    /**
+     * Функция возвращает купон по его id или url
+     * (в зависимости от типа аргумента, int - id, string - code)
+     *
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_coupon($id)
     {
         if (gettype($id) == 'string') {
@@ -41,12 +41,12 @@ class Coupons extends Simpla
         }
     }
 
-    /*
-    *
-    * Функция возвращает массив купонов, удовлетворяющих фильтру
-    * @param $filter
-    *
-    */
+    /**
+     * Функция возвращает массив купонов, удовлетворяющих фильтру
+     *
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_coupons($filter = array())
     {
         // По умолчанию
@@ -100,12 +100,12 @@ class Coupons extends Simpla
     }
 
 
-    /*
-    *
-    * Функция вычисляет количество постов, удовлетворяющих фильтру
-    * @param $filter
-    *
-    */
+    /**
+     * Функция вычисляет количество постов, удовлетворяющих фильтру
+     *
+     * @param array $filter
+     * @return bool|object|string
+     */
     public function count_coupons($filter = array())
     {
         $coupon_id_filter = '';
@@ -132,12 +132,12 @@ class Coupons extends Simpla
         }
     }
 
-    /*
-    *
-    * Создание купона
-    * @param $coupon
-    *
-    */
+    /**
+     * Создание купона
+     *
+     * @param $coupon
+     * @return bool|mixed
+     */
     public function add_coupon($coupon)
     {
         if (empty($coupon->single)) {
@@ -152,13 +152,13 @@ class Coupons extends Simpla
         }
     }
 
-
-    /*
-    *
-    * Обновить купон(ы)
-    * @param $id, $coupon
-    *
-    */
+    /**
+     * Удалить купон
+     *
+     * @param $id
+     * @param $coupon
+     * @return mixed
+     */
     public function update_coupon($id, $coupon)
     {
         $query = $this->db->placehold("UPDATE __coupons SET ?% WHERE id in(?@) LIMIT ?", $coupon, (array)$id, count((array)$id));
@@ -167,12 +167,12 @@ class Coupons extends Simpla
     }
 
 
-    /*
-    *
-    * Удалить купон
-    * @param $id
-    *
-    */
+    /**
+     * Удалить купон
+     *
+     * @param $id
+     * @return mixed
+     */
     public function delete_coupon($id)
     {
         if (!empty($id)) {

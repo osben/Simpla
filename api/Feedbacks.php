@@ -14,7 +14,10 @@ require_once('Simpla.php');
 
 class Feedbacks extends Simpla
 {
-
+    /**
+     * @param  int $id
+     * @return bool|object
+     */
     public function get_feedback($id)
     {
         $query = $this->db->placehold("SELECT f.id, f.name, f.email, f.ip, f.message, f.date FROM __feedbacks f WHERE id=? LIMIT 1", intval($id));
@@ -26,6 +29,11 @@ class Feedbacks extends Simpla
         }
     }
 
+    /**
+     * @param  array $filter
+     * @param  bool $new_on_top
+     * @return array|bool
+     */
     public function get_feedbacks($filter = array(), $new_on_top = false)
     {
         // По умолчанию
@@ -63,6 +71,10 @@ class Feedbacks extends Simpla
         return $this->db->results();
     }
 
+    /**
+     * @param  array $filter
+     * @return bool|object|string
+     */
     public function count_feedbacks($filter = array())
     {
         $keyword_filter = '';
@@ -81,7 +93,10 @@ class Feedbacks extends Simpla
         return $this->db->result('count');
     }
 
-
+    /**
+     * @param  array|object $feedback
+     * @return bool|mixed
+     */
     public function add_feedback($feedback)
     {
         $query = $this->db->placehold('INSERT INTO __feedbacks
@@ -97,7 +112,11 @@ class Feedbacks extends Simpla
         return $id;
     }
 
-
+    /**
+     * @param  int $id
+     * @param  object $feedback
+     * @return mixed
+     */
     public function update_feedback($id, $feedback)
     {
         $date_query = '';
@@ -111,7 +130,10 @@ class Feedbacks extends Simpla
         return $id;
     }
 
-
+    /**
+     * @param  int $id
+     * @return void
+     */
     public function delete_feedback($id)
     {
         if (!empty($id)) {

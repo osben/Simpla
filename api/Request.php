@@ -9,9 +9,13 @@
  *
  */
 
-
 require_once('Simpla.php');
 
+/**
+ * API для работы с запросами GET, POST и т.д.
+ *
+ * Class Request
+ */
 class Request extends Simpla
 {
 
@@ -31,15 +35,13 @@ class Request extends Simpla
     }
 
     /**
-    * Определение request-метода обращения к странице (GET, POST)
-    * Если задан аргумент функции (название метода, в любом регистре), возвращает true или false
-    * Если аргумент не задан, возвращает имя метода
-    * Пример:
-    *
-    *	if($simpla->request->method('post'))
-    *		print 'Request method is POST';
-    *
-    */
+     * Определение request-метода обращения к странице (GET, POST)
+     * Если задан аргумент функции (название метода, в любом регистре), возвращает true или false
+     * Если аргумент не задан, возвращает имя метода
+     *
+     * @param  null|string $method
+     * @return bool
+     */
     public function method($method = null)
     {
         if (!empty($method)) {
@@ -49,10 +51,15 @@ class Request extends Simpla
     }
 
     /**
-    * Возвращает переменную _GET, отфильтрованную по заданному типу, если во втором параметре указан тип фильтра
-    * Второй параметр $type может иметь такие значения: integer, string, boolean
-    * Если $type не задан, возвращает переменную в чистом виде
-    */
+     * Возвращает переменную _GET, отфильтрованную по заданному типу, если во втором параметре указан тип фильтра
+     * Второй параметр $type может иметь такие значения: integer, string, boolean
+     * Если $type не задан, возвращает переменную в чистом виде
+     * TODO обьединить с $this->post();
+     *
+     * @param  $name
+     * @param  null $type
+     * @return array|bool|int|mixed|null|string
+     */
     public function get($name, $type = null)
     {
         $val = null;
@@ -80,10 +87,14 @@ class Request extends Simpla
     }
 
     /**
-    * Возвращает переменную _POST, отфильтрованную по заданному типу, если во втором параметре указан тип фильтра
-    * Второй параметр $type может иметь такие значения: integer, string, boolean
-    * Если $type не задан, возвращает переменную в чистом виде
-    */
+     * Возвращает переменную _POST, отфильтрованную по заданному типу, если во втором параметре указан тип фильтра
+     * Второй параметр $type может иметь такие значения: integer, string, boolean
+     * Если $type не задан, возвращает переменную в чистом виде
+     *
+     * @param  null|string $name
+     * @param  null|string $type
+     * @return bool|int|null|string
+     */
     public function post($name = null, $type = null)
     {
         $val = null;
@@ -109,10 +120,14 @@ class Request extends Simpla
     }
 
     /**
-    * Возвращает переменную _FILES
-    * Обычно переменные _FILES являются двухмерными массивами, поэтому можно указать второй параметр,
-    * например, чтобы получить имя загруженного файла: $filename = $simpla->request->files('myfile', 'name');
-    */
+     * Возвращает переменную _FILES
+     * Обычно переменные _FILES являются двухмерными массивами, поэтому можно указать второй параметр,
+     * например, чтобы получить имя загруженного файла: $filename = $simpla->request->files('myfile', 'name');
+     *
+     * @param  $name
+     * @param  null $name2
+     * @return null
+     */
     public function files($name, $name2 = null)
     {
         if (!empty($name2) && !empty($_FILES[$name][$name2])) {
@@ -126,8 +141,10 @@ class Request extends Simpla
 
     /**
      * Рекурсивная чистка магических слешей
+     *
+     * @param $var
+     * @return array|string
      */
-
     private function stripslashes_recursive($var)
     {
         if (is_array($var)) {
@@ -142,10 +159,11 @@ class Request extends Simpla
         }
     }
 
-
     /**
-    * Проверка сессии
-    */
+     * Проверка сессии
+     *
+     * @return bool
+     */
     public function check_session()
     {
         if (!empty($_POST)) {
@@ -157,10 +175,10 @@ class Request extends Simpla
         return true;
     }
 
-
     /**
-    * URL
-    */
+     * @param  array $params
+     * @return string
+     */
     public function url($params = array())
     {
         $url = @parse_url($_SERVER["REQUEST_URI"]);

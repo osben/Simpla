@@ -35,6 +35,8 @@ class Database extends Simpla
 
     /**
      * Подключение к базе данных
+     *
+     * @return bool|mysqli
      */
     public function connect()
     {
@@ -69,6 +71,8 @@ class Database extends Simpla
 
     /**
      * Закрываем подключение к базе данных
+     *
+     * @return bool
      */
     public function disconnect()
     {
@@ -79,10 +83,11 @@ class Database extends Simpla
         }
     }
 
-
     /**
      * Запрос к базе. Обазятелен первый аргумент - текст запроса.
      * При указании других аргументов автоматически выполняется placehold() для запроса с подстановкой этих аргументов
+     *
+     * @return mixed
      */
     public function query()
     {
@@ -97,7 +102,10 @@ class Database extends Simpla
 
 
     /**
-     *  Экранирование
+     * Экранирование
+     *
+     * @param $str
+     * @return mixed
      */
     public function escape($str)
     {
@@ -107,6 +115,8 @@ class Database extends Simpla
 
     /**
      * Плейсхолдер для запросов. Пример работы: $query = $db->placehold('SELECT name FROM products WHERE id=?', $id);
+     *
+     * @return bool|mixed|string
      */
     public function placehold()
     {
@@ -127,9 +137,11 @@ class Database extends Simpla
         }
     }
 
-
     /**
      * Возвращает результаты запроса. Необязательный второй аргумент указывает какую колонку возвращать вместо всего массива колонок
+     *
+     * @param  null|string $field
+     * @return array|bool
      */
     public function results($field = null)
     {
@@ -155,13 +167,15 @@ class Database extends Simpla
 
     /**
      * Возвращает первый результат запроса. Необязательный второй аргумент указывает какую колонку возвращать вместо всего массива колонок
+     *
+     * @param null $field
+     * @return bool|object|string
      */
     public function result($field = null)
     {
-        $result = array();
         if (!$this->res) {
             $this->error_msg = "Could not execute query to database";
-            return 0;
+            return false;
         }
         $row = $this->res->fetch_object();
         if (!empty($field) && isset($row->$field)) {
@@ -175,6 +189,8 @@ class Database extends Simpla
 
     /**
      * Возвращает последний вставленный id
+     *
+     * @return mixed
      */
     public function insert_id()
     {
@@ -183,6 +199,8 @@ class Database extends Simpla
 
     /**
      * Возвращает количество выбранных строк
+     *
+     * @return mixed
      */
     public function num_rows()
     {
@@ -191,6 +209,8 @@ class Database extends Simpla
 
     /**
      * Возвращает количество затронутых строк
+     *
+     * @return mixed
      */
     public function affected_rows()
     {
@@ -199,6 +219,9 @@ class Database extends Simpla
 
     /**
      * Компиляция плейсхолдера
+     *
+     * @param $tmpl
+     * @return array
      */
     private function sql_compile_placeholder($tmpl)
     {
@@ -235,6 +258,11 @@ class Database extends Simpla
 
     /**
      * Выполнение плейсхолдера
+     *
+     * @param $tmpl
+     * @param $args
+     * @param $errormsg
+     * @return bool|string
      */
     private function sql_placeholder_ex($tmpl, $args, &$errormsg)
     {
@@ -380,6 +408,9 @@ class Database extends Simpla
         }
     }
 
+    /**
+     * @param $filename
+     */
     public function dump($filename)
     {
         $h = fopen($filename, 'w');
@@ -393,6 +424,9 @@ class Database extends Simpla
         fclose($h);
     }
 
+    /**
+     * @param $filename
+     */
     public function restore($filename)
     {
         $templine = '';
@@ -419,7 +453,10 @@ class Database extends Simpla
         fclose($h);
     }
 
-
+    /**
+     * @param $table
+     * @param $h
+     */
     private function dump_table($table, $h)
     {
         $sql = "SELECT * FROM `$table`;";

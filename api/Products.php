@@ -13,18 +13,22 @@ require_once('Simpla.php');
 
 class Products extends Simpla
 {
+
     /**
-    * Функция возвращает товары
-    * Возможные значения фильтра:
-    * id - id товара или их массив
-    * category_id - id категории или их массив
-    * brand_id - id бренда или их массив
-    * page - текущая страница, integer
-    * limit - количество товаров на странице, integer
-    * sort - порядок товаров, возможные значения: position(по умолчанию), name, price
-    * keyword - ключевое слово для поиска
-    * features - фильтр по свойствам товара, массив (id свойства => значение свойства)
-    */
+     * Функция возвращает товары
+     * Возможные значения фильтра:
+     * id - id товара или их массив
+     * category_id - id категории или их массив
+     * brand_id - id бренда или их массив
+     * page - текущая страница, integer
+     * limit - количество товаров на странице, integer
+     * sort - порядок товаров, возможные значения: position(по умолчанию), name, price
+     * keyword - ключевое слово для поиска
+     * features - фильтр по свойствам товара, массив (id свойства => значение свойства)
+     *
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_products($filter = array())
     {
         // По умолчанию
@@ -154,13 +158,16 @@ class Products extends Simpla
     }
 
     /**
-    * Функция возвращает количество товаров
-    * Возможные значения фильтра:
-    * category_id - id категории или их массив
-    * brand_id - id бренда или их массив
-    * keyword - ключевое слово для поиска
-    * features - фильтр по свойствам товара, массив (id свойства => значение свойства)
-    */
+     * Функция возвращает количество товаров
+     * Возможные значения фильтра:
+     * category_id - id категории или их массив
+     * brand_id - id бренда или их массив
+     * keyword - ключевое слово для поиска
+     * features - фильтр по свойствам товара, массив (id свойства => значение свойства)
+     *
+     * @param array $filter
+     * @return bool|object|string
+     */
     public function count_products($filter = array())
     {
         $category_id_filter = '';
@@ -235,12 +242,12 @@ class Products extends Simpla
         return $this->db->result('count');
     }
 
-
     /**
-    * Функция возвращает товар по id
-    * @param	$id
-    * @retval	object
-    */
+     * Функция возвращает товар по id
+     *
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_product($id)
     {
         if (is_int($id)) {
@@ -272,6 +279,11 @@ class Products extends Simpla
         return $product;
     }
 
+    /**
+     * @param $id
+     * @param $product
+     * @return bool
+     */
     public function update_product($id, $product)
     {
         $query = $this->db->placehold("UPDATE __products SET ?% WHERE id in (?@) LIMIT ?", $product, (array)$id, count((array)$id));
@@ -282,6 +294,10 @@ class Products extends Simpla
         }
     }
 
+    /**
+     * @param $product
+     * @return bool|mixed
+     */
     public function add_product($product)
     {
         $product = (array) $product;
@@ -310,11 +326,12 @@ class Products extends Simpla
     }
 
 
-    /*
-    *
-    * Удалить товар
-    *
-    */
+    /**
+     * Удалить товар
+     *
+     * @param $id
+     * @return bool
+     */
     public function delete_product($id)
     {
         if (!empty($id)) {
@@ -370,6 +387,10 @@ class Products extends Simpla
         return false;
     }
 
+    /**
+     * @param $id
+     * @return bool|mixed
+     */
     public function duplicate_product($id)
     {
         $product = $this->get_product($id);
@@ -426,7 +447,10 @@ class Products extends Simpla
         return $new_id;
     }
 
-
+    /**
+     * @param array $product_id
+     * @return array|bool
+     */
     public function get_related_products($product_id = array())
     {
         if (empty($product_id)) {
@@ -447,7 +471,14 @@ class Products extends Simpla
         return $this->db->results();
     }
 
-    // Функция возвращает связанные товары
+    /**
+     * Функция возвращает связанные товары
+     *
+     * @param $product_id
+     * @param $related_id
+     * @param int $position
+     * @return mixed
+     */
     public function add_related_product($product_id, $related_id, $position=0)
     {
         $query = $this->db->placehold("INSERT IGNORE INTO __related_products SET product_id=?, related_id=?, position=?", $product_id, $related_id, $position);
@@ -455,14 +486,22 @@ class Products extends Simpla
         return $related_id;
     }
 
-    // Удаление связанного товара
+    /**
+     * Удаление связанного товара
+     *
+     * @param $product_id
+     * @param $related_id
+     */
     public function delete_related_product($product_id, $related_id)
     {
         $query = $this->db->placehold("DELETE FROM __related_products WHERE product_id=? AND related_id=? LIMIT 1", intval($product_id), intval($related_id));
         $this->db->query($query);
     }
 
-
+    /**
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_images($filter = array())
     {
         $product_id_filter = '';
@@ -479,7 +518,13 @@ class Products extends Simpla
         return $this->db->results();
     }
 
-    public function add_image($product_id, $filename, $name = '')
+    /**
+     * @param  $product_id
+     * @param  $filename
+     * @param  string $name
+     * @return bool|mixed|object|string
+     */
+    public function add_image($product_id, $filename)
     {
         $query = $this->db->placehold("SELECT id FROM __images WHERE product_id=? AND filename=?", $product_id, $filename);
         $this->db->query($query);
@@ -494,6 +539,11 @@ class Products extends Simpla
         return($id);
     }
 
+    /**
+     * @param $id
+     * @param $image
+     * @return mixed
+     */
     public function update_image($id, $image)
     {
         $query = $this->db->placehold("UPDATE __images SET ?% WHERE id=?", $image, $id);
@@ -502,6 +552,9 @@ class Products extends Simpla
         return($id);
     }
 
+    /**
+     * @param $id
+     */
     public function delete_image($id)
     {
         $query = $this->db->placehold("SELECT filename FROM __images WHERE id=?", $id);
@@ -528,11 +581,12 @@ class Products extends Simpla
         }
     }
 
-    /*
-    *
-    * Следующий товар
-    *
-    */
+    /**
+     * Следующий товар
+     *
+     * @param  int $id
+     * @return bool|object|string
+     */
     public function get_next_product($id)
     {
         $this->db->query("SELECT position FROM __products WHERE id=? LIMIT 1", $id);
@@ -551,11 +605,12 @@ class Products extends Simpla
         return $this->get_product((integer)$this->db->result('id'));
     }
 
-    /*
-    *
-    * Предыдущий товар
-    *
-    */
+    /**
+     * Предыдущий товар
+     *
+     * @param  int $id
+     * @return bool|object|string
+     */
     public function get_prev_product($id)
     {
         $this->db->query("SELECT position FROM __products WHERE id=? LIMIT 1", $id);

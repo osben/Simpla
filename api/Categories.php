@@ -18,7 +18,12 @@ class Categories extends Simpla
     // Дерево категорий
     private $categories_tree;
 
-    // Функция возвращает массив категорий
+    /**
+     * Функция возвращает массив категорий
+     *
+     * @param array $filter
+     * @return array
+     */
     public function get_categories($filter = array())
     {
         if (!isset($this->categories_tree)) {
@@ -41,7 +46,12 @@ class Categories extends Simpla
         return $this->all_categories;
     }
 
-    // Функция возвращает id категорий для заданного товара
+    /**
+     * Функция возвращает id категорий для заданного товара
+     *
+     * @param $product_id
+     * @return array|bool
+     */
     public function get_product_categories($product_id)
     {
         $query = $this->db->placehold("SELECT product_id, category_id, position FROM __products_categories WHERE product_id in(?@) ORDER BY position", (array)$product_id);
@@ -49,7 +59,11 @@ class Categories extends Simpla
         return $this->db->results();
     }
 
-    // Функция возвращает id категорий для всех товаров
+    /**
+     * Функция возвращает id категорий для всех товаров
+     *
+     * @return array|bool
+     */
     public function get_products_categories()
     {
         $query = $this->db->placehold("SELECT product_id, category_id, position FROM __products_categories ORDER BY position");
@@ -57,7 +71,11 @@ class Categories extends Simpla
         return $this->db->results();
     }
 
-    // Функция возвращает дерево категорий
+    /**
+     * Функция возвращает дерево категорий
+     *
+     * @return mixed
+     */
     public function get_categories_tree()
     {
         if (!isset($this->categories_tree)) {
@@ -67,7 +85,12 @@ class Categories extends Simpla
         return $this->categories_tree;
     }
 
-    // Функция возвращает заданную категорию
+    /**
+     * Функция возвращает заданную категорию
+     *
+     * @param $id
+     * @return bool
+     */
     public function get_category($id)
     {
         if (!isset($this->all_categories)) {
@@ -86,7 +109,12 @@ class Categories extends Simpla
         return false;
     }
 
-    // Добавление категории
+    /**
+     * Добавление категории
+     *
+     * @param $category
+     * @return mixed
+     */
     public function add_category($category)
     {
         $category = (array)$category;
@@ -112,7 +140,13 @@ class Categories extends Simpla
         return $id;
     }
 
-    // Изменение категории
+    /**
+     * Изменение категории
+     *
+     * @param $id
+     * @param $category
+     * @return int
+     */
     public function update_category($id, $category)
     {
         $query = $this->db->placehold("UPDATE __categories SET ?% WHERE id=? LIMIT 1", $category, intval($id));
@@ -122,7 +156,12 @@ class Categories extends Simpla
         return intval($id);
     }
 
-    // Удаление категории
+    /**
+     * Удаление категории
+     *
+     * @param $ids
+     * @return mixed
+     */
     public function delete_category($ids)
     {
         $ids = (array) $ids;
@@ -142,21 +181,36 @@ class Categories extends Simpla
         return $id;
     }
 
-    // Добавить категорию к заданному товару
+    /**
+     * Добавить категорию к заданному товару
+     *
+     * @param $product_id
+     * @param $category_id
+     * @param int $position
+     */
     public function add_product_category($product_id, $category_id, $position=0)
     {
         $query = $this->db->placehold("INSERT IGNORE INTO __products_categories SET product_id=?, category_id=?, position=?", $product_id, $category_id, $position);
         $this->db->query($query);
     }
 
-    // Удалить категорию заданного товара
+    /**
+     * Удалить категорию заданного товара
+     *
+     * @param $product_id
+     * @param $category_id
+     */
     public function delete_product_category($product_id, $category_id)
     {
         $query = $this->db->placehold("DELETE FROM __products_categories WHERE product_id=? AND category_id=? LIMIT 1", intval($product_id), intval($category_id));
         $this->db->query($query);
     }
 
-    // Удалить изображение категории
+    /**
+     * Удалить изображение категории
+     *
+     * @param $categories_ids
+     */
     public function delete_image($categories_ids)
     {
         $categories_ids = (array) $categories_ids;

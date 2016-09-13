@@ -15,6 +15,10 @@ require_once('Simpla.php');
 class Orders extends Simpla
 {
 
+    /**
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_order($id)
     {
         if (is_int($id)) {
@@ -36,6 +40,10 @@ class Orders extends Simpla
         }
     }
 
+    /**
+     * @param array $filter
+     * @return array
+     */
     public function get_orders($filter = array())
     {
         // По умолчанию
@@ -103,6 +111,10 @@ class Orders extends Simpla
         return $orders;
     }
 
+    /**
+     * @param array $filter
+     * @return bool|object|string
+     */
     public function count_orders($filter = array())
     {
         $keyword_filter = '';
@@ -139,6 +151,11 @@ class Orders extends Simpla
         return $this->db->result('count');
     }
 
+    /**
+     * @param $id
+     * @param $order
+     * @return mixed
+     */
     public function update_order($id, $order)
     {
         $query = $this->db->placehold("UPDATE __orders SET ?%, modified=now() WHERE id=? LIMIT 1", $order, intval($id));
@@ -147,6 +164,9 @@ class Orders extends Simpla
         return $id;
     }
 
+    /**
+     * @param $id
+     */
     public function delete_order($id)
     {
         if (!empty($id)) {
@@ -161,6 +181,10 @@ class Orders extends Simpla
         }
     }
 
+    /**
+     * @param $order
+     * @return mixed
+     */
     public function add_order($order)
     {
         $order = (object)$order;
@@ -175,6 +199,10 @@ class Orders extends Simpla
         return $id;
     }
 
+    /**
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_label($id)
     {
         $query = $this->db->placehold("SELECT * FROM __labels WHERE id=? LIMIT 1", intval($id));
@@ -182,6 +210,9 @@ class Orders extends Simpla
         return $this->db->result();
     }
 
+    /**
+     * @return array|bool
+     */
     public function get_labels()
     {
         $query = $this->db->placehold("SELECT * FROM __labels ORDER BY position");
@@ -189,12 +220,13 @@ class Orders extends Simpla
         return $this->db->results();
     }
 
-    /*
-    *
-    * Создание метки заказов
-    * @param $label
-    *
-    */
+
+    /**
+     * Создание метки заказов
+     *
+     * @param $label
+     * @return bool|mixed
+     */
     public function add_label($label)
     {
         $query = $this->db->placehold('INSERT INTO __labels SET ?%', $label);
@@ -208,12 +240,13 @@ class Orders extends Simpla
     }
 
 
-    /*
-    *
-    * Обновить метку
-    * @param $id, $label
-    *
-    */
+    /**
+     * Обновить метку
+     *
+     * @param $id
+     * @param $label
+     * @return mixed
+     */
     public function update_label($id, $label)
     {
         $query = $this->db->placehold("UPDATE __labels SET ?% WHERE id in(?@) LIMIT ?", $label, (array)$id, count((array)$id));
@@ -221,12 +254,12 @@ class Orders extends Simpla
         return $id;
     }
 
-    /*
-    *
-    * Удалить метку
-    * @param $id
-    *
-    */
+    /**
+     * Удалить метку
+     *
+     * @param $id
+     * @return bool|mixed
+     */
     public function delete_label($id)
     {
         if (!empty($id)) {
@@ -240,6 +273,10 @@ class Orders extends Simpla
         }
     }
 
+    /**
+     * @param array $order_id
+     * @return array|bool
+     */
     public function get_order_labels($order_id = array())
     {
         if (empty($order_id)) {
@@ -260,6 +297,10 @@ class Orders extends Simpla
         return $this->db->results();
     }
 
+    /**
+     * @param $id
+     * @param $labels_ids
+     */
     public function update_order_labels($id, $labels_ids)
     {
         $labels_ids = (array)$labels_ids;
@@ -272,6 +313,10 @@ class Orders extends Simpla
         }
     }
 
+    /**
+     * @param $id
+     * @param $labels_ids
+     */
     public function add_order_labels($id, $labels_ids)
     {
         $labels_ids = (array)$labels_ids;
@@ -282,6 +327,10 @@ class Orders extends Simpla
         }
     }
 
+    /**
+     * @param $id
+     * @param $labels_ids
+     */
     public function delete_order_labels($id, $labels_ids)
     {
         $labels_ids = (array)$labels_ids;
@@ -292,7 +341,10 @@ class Orders extends Simpla
         }
     }
 
-
+    /**
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_purchase($id)
     {
         $query = $this->db->placehold("SELECT * FROM __purchases WHERE id=? LIMIT 1", intval($id));
@@ -300,6 +352,10 @@ class Orders extends Simpla
         return $this->db->result();
     }
 
+    /**
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_purchases($filter = array())
     {
         $order_id_filter = '';
@@ -312,6 +368,11 @@ class Orders extends Simpla
         return $this->db->results();
     }
 
+    /**
+     * @param $id
+     * @param $purchase
+     * @return bool
+     */
     public function update_purchase($id, $purchase)
     {
         $purchase = (object)$purchase;
@@ -354,6 +415,10 @@ class Orders extends Simpla
         return $id;
     }
 
+    /**
+     * @param $purchase
+     * @return mixed
+     */
     public function add_purchase($purchase)
     {
         $purchase = (object)$purchase;
@@ -417,6 +482,10 @@ class Orders extends Simpla
         return $purchase_id;
     }
 
+    /**
+     * @param $id
+     * @return bool
+     */
     public function delete_purchase($id)
     {
         $purchase = $this->get_purchase($id);
@@ -442,7 +511,10 @@ class Orders extends Simpla
         return true;
     }
 
-
+    /**
+     * @param $order_id
+     * @return bool
+     */
     public function close($order_id)
     {
         $order = $this->get_order(intval($order_id));
@@ -480,6 +552,10 @@ class Orders extends Simpla
         return $order->id;
     }
 
+    /**
+     * @param $order_id
+     * @return bool
+     */
     public function open($order_id)
     {
         $order = $this->get_order(intval($order_id));
@@ -502,6 +578,10 @@ class Orders extends Simpla
         return $order->id;
     }
 
+    /**
+     * @param $order_id
+     * @return bool
+     */
     public function pay($order_id)
     {
         $order = $this->get_order(intval($order_id));
@@ -517,6 +597,10 @@ class Orders extends Simpla
         return $order->id;
     }
 
+    /**
+     * @param $order_id
+     * @return bool
+     */
     private function update_total_price($order_id)
     {
         $order = $this->get_order(intval($order_id));
@@ -529,7 +613,11 @@ class Orders extends Simpla
         return $order->id;
     }
 
-
+    /**
+     * @param $id
+     * @param null $status
+     * @return bool|object|string
+     */
     public function get_next_order($id, $status = null)
     {
         $f = '';
@@ -545,6 +633,11 @@ class Orders extends Simpla
         }
     }
 
+    /**
+     * @param $id
+     * @param null $status
+     * @return bool|object|string
+     */
     public function get_prev_order($id, $status = null)
     {
         $f = '';

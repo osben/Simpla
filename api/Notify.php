@@ -12,6 +12,14 @@
 
 class Notify extends Simpla
 {
+    /**
+     * @param string $to
+     * @param string $subject
+     * @param string$message
+     * @param string $from
+     * @param string $reply_to
+     * @return void
+     */
     public function email($to, $subject, $message, $from = '', $reply_to = '')
     {
         $headers = "MIME-Version: 1.0\n" ;
@@ -26,6 +34,10 @@ class Notify extends Simpla
         @mail($to, $subject, $message, $headers);
     }
 
+    /**
+     * @param  int $order_id
+     * @return bool|void
+     */
     public function email_order_user($order_id)
     {
         if (!($order = $this->orders->get_order(intval($order_id))) || empty($order->email)) {
@@ -84,7 +96,10 @@ class Notify extends Simpla
         $this->email($order->email, $subject, $email_template, $this->settings->notify_from_email);
     }
 
-
+    /**
+     * @param $order_id
+     * @return bool
+     */
     public function email_order_admin($order_id)
     {
         if (!($order = $this->orders->get_order(intval($order_id)))) {
@@ -147,7 +162,10 @@ class Notify extends Simpla
     }
 
 
-
+    /**
+     * @param $comment_id
+     * @return bool
+     */
     public function email_comment_admin($comment_id)
     {
         if (!($comment = $this->comments->get_comment(intval($comment_id)))) {
@@ -169,6 +187,11 @@ class Notify extends Simpla
         $this->email($this->settings->comment_email, $subject, $email_template, $this->settings->notify_from_email);
     }
 
+    /**
+     * @param $user_id
+     * @param $code
+     * @return bool
+     */
     public function email_password_remind($user_id, $code)
     {
         if (!($user = $this->users->get_user(intval($user_id)))) {
@@ -187,6 +210,10 @@ class Notify extends Simpla
         $this->design->smarty->clearAssign('code');
     }
 
+    /**
+     * @param $feedback_id
+     * @return bool
+     */
     public function email_feedback_admin($feedback_id)
     {
         if (!($feedback = $this->feedbacks->get_feedback(intval($feedback_id)))) {

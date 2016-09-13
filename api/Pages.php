@@ -15,12 +15,12 @@ require_once('Simpla.php');
 class Pages extends Simpla
 {
 
-    /*
-    *
-    * Функция возвращает страницу по ее id или url (в зависимости от типа)
-    * @param $id id или url страницы
-    *
-    */
+    /**
+     * Функция возвращает страницу по ее id или url (в зависимости от типа)
+     *
+     * @param $id
+     * @return bool|object|string
+     */
     public function get_page($id)
     {
         if (gettype($id) == 'string') {
@@ -36,12 +36,12 @@ class Pages extends Simpla
         return $this->db->result();
     }
 
-    /*
-    *
-    * Функция возвращает массив страниц, удовлетворяющих фильтру
-    * @param $filter
-    *
-    */
+    /**
+     * Функция возвращает массив страниц, удовлетворяющих фильтру
+     *
+     * @param array $filter
+     * @return array
+     */
     public function get_pages($filter = array())
     {
         $menu_filter = '';
@@ -68,11 +68,12 @@ class Pages extends Simpla
         return $pages;
     }
 
-    /*
-    *
-    * Создание страницы
-    *
-    */
+    /**
+     * Создание страницы
+     *
+     * @param $page
+     * @return bool|mixed
+     */
     public function add_page($page)
     {
         $query = $this->db->placehold('INSERT INTO __pages SET ?%', $page);
@@ -85,11 +86,13 @@ class Pages extends Simpla
         return $id;
     }
 
-    /*
-    *
-    * Обновить страницу
-    *
-    */
+    /**
+     * Обновить страницу
+     *
+     * @param $id
+     * @param $page
+     * @return bool
+     */
     public function update_page($id, $page)
     {
         $query = $this->db->placehold('UPDATE __pages SET ?% WHERE id in (?@)', $page, (array)$id);
@@ -99,11 +102,12 @@ class Pages extends Simpla
         return $id;
     }
 
-    /*
-    *
-    * Удалить страницу
-    *
-    */
+    /**
+     * Удалить страницу
+     *
+     * @param $id
+     * @return bool
+     */
     public function delete_page($id)
     {
         if (!empty($id)) {
@@ -115,28 +119,28 @@ class Pages extends Simpla
         return false;
     }
 
-    /*
-    *
-    * Функция возвращает массив меню
-    *
-    */
+    /**
+     * Функция возвращает массив меню
+     *
+     * @return array
+     */
     public function get_menus()
     {
         $menus = array();
-        $query = "SELECT * FROM __menu ORDER BY position";
-        $this->db->query($query);
+
+        $this->db->query("SELECT * FROM __menu ORDER BY position");
         foreach ($this->db->results() as $menu) {
             $menus[$menu->id] = $menu;
         }
         return $menus;
     }
 
-    /*
-    *
-    * Функция возвращает меню по id
-    * @param $id
-    *
-    */
+    /**
+     * Функция возвращает меню по id
+     *
+     * @param $menu_id
+     * @return bool|object|string
+     */
     public function get_menu($menu_id)
     {
         $query = $this->db->placehold("SELECT * FROM __menu WHERE id=? LIMIT 1", intval($menu_id));

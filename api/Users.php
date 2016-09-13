@@ -11,17 +11,32 @@
 
 require_once('Simpla.php');
 
+/**
+ * API Покупатели
+ *
+ * Class Users
+ */
 class Users extends Simpla
 {
-    // осторожно, при изменении соли испортятся текущие пароли пользователей
+    /**
+     * TODO надо вынести в config/config.php
+     * осторожно, при изменении соли испортятся текущие пароли пользователей
+     *
+     * @var string
+     */
     private $salt = '8e86a279d6e182b3c811c559e6b15484';
 
+    /**
+     * @param  array $filter
+     * @return array
+     */
     public function get_users($filter = array())
     {
         $limit = 1000;
         $page = 1;
         $group_id_filter = '';
         $keyword_filter = '';
+        $order = 'u.name';
 
         if (isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -42,7 +57,7 @@ class Users extends Simpla
             }
         }
 
-        $order = 'u.name';
+
         if (!empty($filter['sort'])) {
             switch ($filter['sort']) {
                 case 'date':
@@ -64,11 +79,16 @@ class Users extends Simpla
 										WHERE 1
 											$group_id_filter
 											$keyword_filter
-										ORDER BY $order $sql_limit");
+										ORDER BY $order
+										$sql_limit");
         $this->db->query($query);
         return $this->db->results();
     }
 
+    /**
+     * @param  array $filter
+     * @return int
+     */
     public function count_users($filter = array())
     {
         $group_id_filter = '';
@@ -96,6 +116,10 @@ class Users extends Simpla
         return $this->db->result('count');
     }
 
+    /**
+     * @param  int $id
+     * @return bool|object
+     */
     public function get_user($id)
     {
         if (gettype($id) == 'string') {
@@ -119,6 +143,10 @@ class Users extends Simpla
         return $user;
     }
 
+    /**
+     * @param  object|array $user
+     * @return bool|int
+     */
     public function add_user($user)
     {
         $user = (array)$user;
@@ -140,6 +168,11 @@ class Users extends Simpla
         return $this->db->insert_id();
     }
 
+    /**
+     * @param  int $id
+     * @param  object|array $user
+     * @return int
+     */
     public function update_user($id, $user)
     {
         $user = (array)$user;
@@ -151,6 +184,10 @@ class Users extends Simpla
         return $id;
     }
 
+    /**
+     * @param  int $id
+     * @return bool
+     */
     public function delete_user($id)
     {
         if (!empty($id)) {
@@ -165,6 +202,9 @@ class Users extends Simpla
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function get_groups()
     {
         // Выбираем группы
@@ -175,6 +215,10 @@ class Users extends Simpla
         return $this->db->results();
     }
 
+    /**
+     * @param  int $id
+     * @return object
+     */
     public function get_group($id)
     {
         // Выбираем группу
@@ -188,7 +232,10 @@ class Users extends Simpla
         return $group;
     }
 
-
+    /**
+     * @param  $group
+     * @return int
+     */
     public function add_group($group)
     {
         $query = $this->db->placehold("INSERT INTO __groups SET ?%", $group);
@@ -196,6 +243,11 @@ class Users extends Simpla
         return $this->db->insert_id();
     }
 
+    /**
+     * @param  $id
+     * @param  $group
+     * @return int
+     */
     public function update_group($id, $group)
     {
         $query = $this->db->placehold("UPDATE __groups SET ?% WHERE id=? LIMIT 1", $group, intval($id));
@@ -203,6 +255,10 @@ class Users extends Simpla
         return $id;
     }
 
+    /**
+     * @param  $id
+     * @return bool
+     */
     public function delete_group($id)
     {
         if (!empty($id)) {
@@ -217,6 +273,11 @@ class Users extends Simpla
         return false;
     }
 
+    /**
+     * @param  $email
+     * @param  $password
+     * @return bool|int
+     */
     public function check_password($email, $password)
     {
         $encpassword = md5($this->salt.$password.md5($password));

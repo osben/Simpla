@@ -12,18 +12,24 @@
 
 require_once('Simpla.php');
 
+/**
+ * API Варианты товаров
+ *
+ * Class Variants
+ */
 class Variants extends Simpla
 {
     /**
-    * Функция возвращает варианты товара
-    * @param	$filter
-    * @retval	array
-    */
+     * Функция возвращает варианты товара
+     *
+     * @param	$filter
+     * @return 	array
+     */
     public function get_variants($filter = array())
     {
         $product_id_filter = '';
         $variant_id_filter = '';
-        $instock_filter = '';
+        $in_stock_filter = '';
 
         if (!empty($filter['product_id'])) {
             $product_id_filter = $this->db->placehold('AND v.product_id in(?@)', (array)$filter['product_id']);
@@ -34,7 +40,7 @@ class Variants extends Simpla
         }
 
         if (!empty($filter['in_stock']) && $filter['in_stock']) {
-            $instock_filter = $this->db->placehold('AND (v.stock>0 OR v.stock IS NULL)');
+            $in_stock_filter = $this->db->placehold('AND (v.stock>0 OR v.stock IS NULL)');
         }
 
         if (!$product_id_filter && !$variant_id_filter) {
@@ -43,11 +49,10 @@ class Variants extends Simpla
 
         $query = $this->db->placehold("SELECT v.id, v.product_id , v.price, NULLIF(v.compare_price, 0) as compare_price, v.sku, IFNULL(v.stock, ?) as stock, (v.stock IS NULL) as infinity, v.name, v.attachment, v.position
 					FROM __variants AS v
-					WHERE
-					1
-					$product_id_filter
-					$variant_id_filter
-					$instock_filter
+					WHERE 1
+					    $product_id_filter
+					    $variant_id_filter
+					    $in_stock_filter
 					ORDER BY v.position
 					", $this->settings->max_order_amount);
 
@@ -55,7 +60,12 @@ class Variants extends Simpla
         return $this->db->results();
     }
 
-
+    /**
+     * Функция возвращает вариант
+     *
+     * @param  int $id
+     * @return bool|object
+     */
     public function get_variant($id)
     {
         if (empty($id)) {
@@ -71,6 +81,11 @@ class Variants extends Simpla
         return $variant;
     }
 
+    /**
+     * @param  int $id
+     * @param  array|object $variant
+     * @return int
+     */
     public function update_variant($id, $variant)
     {
         $query = $this->db->placehold("UPDATE __variants SET ?% WHERE id=? LIMIT 1", $variant, intval($id));
@@ -78,6 +93,10 @@ class Variants extends Simpla
         return $id;
     }
 
+    /**
+     * @param  array|object $variant
+     * @return int
+     */
     public function add_variant($variant)
     {
         $query = $this->db->placehold("INSERT INTO __variants SET ?%", $variant);
@@ -85,24 +104,36 @@ class Variants extends Simpla
         return $this->db->insert_id();
     }
 
+    /**
+     * @param  int $id
+     * @return void
+     */
     public function delete_variant($id)
     {
         if (!empty($id)) {
+
             $this->delete_attachment($id);
-            $query = $this->db->placehold("DELETE FROM __variants WHERE id = ? LIMIT 1", intval($id));
-            $this->db->query($query);
+
+            $this->db->query("DELETE FROM __variants WHERE id = ? LIMIT 1", intval($id));
+
             $this->db->query('UPDATE __purchases SET variant_id=NULL WHERE variant_id=?', intval($id));
         }
     }
 
+    /**
+     * @param  int $id
+     * @return void
+     */
     public function delete_attachment($id)
     {
         $query = $this->db->placehold("SELECT attachment FROM __variants WHERE id=?", $id);
         $this->db->query($query);
         $filename = $this->db->result('attachment');
+
         $query = $this->db->placehold("SELECT 1 FROM __variants WHERE attachment=? AND id!=?", $filename, $id);
         $this->db->query($query);
         $exists = $this->db->num_rows();
+
         if (!empty($filename) && $exists == 0) {
             @unlink($this->config->root_dir.'/'.$this->config->downloads_dir.$filename);
         }

@@ -11,6 +11,32 @@
 
 /**
  * Основной класс Simpla для доступа к API Simpla
+ *
+ * Class Simpla
+ * @property Config $config
+ * @property Request $request
+ * @property Database $db
+ * @property Settings $settings
+ * @property Design $design
+ * @property Products $products
+ * @property Variants $variants
+ * @property Categories $categories
+ * @property Brands $brands
+ * @property Features $features
+ * @property Money $money
+ * @property Pages $pages
+ * @property Blog $blog
+ * @property Cart $cart
+ * @property Image $image
+ * @property Delivery $delivery
+ * @property Payment $payment
+ * @property Orders $orders
+ * @property Users $users
+ * @property Coupons $coupons
+ * @property Comments $comments
+ * @property Feedbacks $feedbacks
+ * @property Notify $notify
+ * @property Managers $managers
  */
 class Simpla
 {
@@ -47,6 +73,8 @@ class Simpla
 
     /**
      * Конструктор оставим пустым, но определим его на случай обращения parent::__construct() в классах API
+     *
+     * Simpla constructor.
      */
     public function __construct()
     {
@@ -80,11 +108,20 @@ class Simpla
         // Возвращаем созданный объект
         return self::$objects[$name];
     }
-
     /*
-        Вспомогательные методы
-    */
+     * Вспомогательные методы
+     * TODO подумать над удобной реализацией
+     */
 
+    /**
+     * Функция для смены кодировки строки
+     *
+     * @param  string $str
+     * @param  $to_encoding
+     * @param  $from_encoding
+     * @param  bool $alt
+     * @return bool|string
+     */
     public function convert_str_encoding($str, $to_encoding, $from_encoding, $alt = false)
     {
         if (function_exists('iconv')) {

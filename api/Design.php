@@ -16,6 +16,9 @@ class Design extends Simpla
 {
     public $smarty;
 
+    /**
+     * Design constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -61,11 +64,20 @@ class Design extends Simpla
         }
     }
 
+    /**
+     * @param $var
+     * @param $value
+     * @return Smarty_Internal_Data
+     */
     public function assign($var, $value)
     {
         return $this->smarty->assign($var, $value);
     }
 
+    /**
+     * @param $template
+     * @return string
+     */
     public function fetch($template)
     {
         // Передаем в дизайн то, что может понадобиться в нем
@@ -74,26 +86,42 @@ class Design extends Simpla
         return $this->smarty->fetch($template);
     }
 
+    /**
+     * @param $dir
+     */
     public function set_templates_dir($dir)
     {
         $this->smarty->template_dir = $dir;
     }
 
+    /**
+     * @param $dir
+     */
     public function set_compiled_dir($dir)
     {
         $this->smarty->compile_dir = $dir;
     }
 
+    /**
+     * @param $name
+     * @return string
+     */
     public function get_var($name)
     {
         return $this->smarty->getTemplateVars($name);
     }
 
+    /**
+     *
+     */
     public function clear_cache()
     {
         $this->smarty->clearAllCache();
     }
 
+    /**
+     * @return bool
+     */
     private function is_mobile_browser()
     {
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -216,7 +244,13 @@ class Design extends Simpla
         }
     }
 
-
+    /**
+     * @param $filename
+     * @param int $width
+     * @param int $height
+     * @param bool $set_watermark
+     * @return string
+     */
     public function resize_modifier($filename, $width=0, $height=0, $set_watermark=false)
     {
         $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark);
@@ -231,11 +265,19 @@ class Design extends Simpla
         return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
     }
 
+    /**
+     * @param $text
+     * @return string
+     */
     public function token_modifier($text)
     {
         return $this->config->token($text);
     }
 
+    /**
+     * @param $params
+     * @return string
+     */
     public function url_modifier($params)
     {
         if (is_array(reset($params))) {
@@ -245,6 +287,13 @@ class Design extends Simpla
         }
     }
 
+    /**
+     * @param $number
+     * @param $singular
+     * @param $plural1
+     * @param null $plural2
+     * @return null
+     */
     public function plural_modifier($number, $singular, $plural1, $plural2=null)
     {
         $number = abs($number);
@@ -270,6 +319,10 @@ class Design extends Simpla
         }
     }
 
+    /**
+     * @param array $params
+     * @return bool|mixed
+     */
     public function first_modifier($params = array())
     {
         if (!is_array($params)) {
@@ -278,6 +331,11 @@ class Design extends Simpla
         return reset($params);
     }
 
+    /**
+     * @param $array
+     * @param int $num
+     * @return array
+     */
     public function cut_modifier($array, $num=1)
     {
         if ($num>=0) {
@@ -287,6 +345,11 @@ class Design extends Simpla
         }
     }
 
+    /**
+     * @param $date
+     * @param null $format
+     * @return false|string
+     */
     public function date_modifier($date, $format = null)
     {
         if (empty($date)) {
@@ -295,11 +358,21 @@ class Design extends Simpla
         return date(empty($format)?$this->settings->date_format:$format, strtotime($date));
     }
 
+    /**
+     * @param $date
+     * @param null $format
+     * @return false|string
+     */
     public function time_modifier($date, $format = null)
     {
         return date(empty($format)?'H:i':$format, strtotime($date));
     }
 
+    /**
+     * @param $params
+     * @param $smarty
+     * @return bool
+     */
     public function api_plugin($params, &$smarty)
     {
         if (!isset($params['module']) || !isset($params['method'])) {

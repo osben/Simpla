@@ -14,11 +14,11 @@ require_once('Simpla.php');
 class Cart extends Simpla
 {
 
-    /*
-    *
-    * Функция возвращает корзину
-    *
-    */
+    /**
+     * Функция возвращает корзину
+     *
+     * @return stdClass
+     */
     public function get_cart()
     {
         $cart = new stdClass();
@@ -97,11 +97,12 @@ class Cart extends Simpla
         return $cart;
     }
 
-    /*
-    *
-    * Добавление варианта товара в корзину
-    *
-    */
+    /**
+     * Добавление варианта товара в корзину
+     *
+     * @param $variant_id
+     * @param int $amount
+     */
     public function add_item($variant_id, $amount = 1)
     {
         $amount = max(1, $amount);
@@ -122,11 +123,12 @@ class Cart extends Simpla
         }
     }
 
-    /*
-    *
-    * Обновление количества товара
-    *
-    */
+    /**
+     * Обновление количества товара
+     *
+     * @param $variant_id
+     * @param int $amount
+     */
     public function update_item($variant_id, $amount = 1)
     {
         $amount = max(1, $amount);
@@ -144,32 +146,30 @@ class Cart extends Simpla
     }
 
 
-    /*
-    *
-    * Удаление товара из корзины
-    *
-    */
+    /**
+     * Удаление товара из корзины
+     *
+     * @param $variant_id
+     */
     public function delete_item($variant_id)
     {
         unset($_SESSION['shopping_cart'][$variant_id]);
     }
 
-    /*
-    *
-    * Очистка корзины
-    *
-    */
+    /**
+     * Очистка корзины
+     */
     public function empty_cart()
     {
         unset($_SESSION['shopping_cart']);
         unset($_SESSION['coupon_code']);
     }
 
-    /*
-    *
-    * Применить купон
-    *
-    */
+    /**
+     * Применить купон
+     *
+     * @param $coupon_code
+     */
     public function apply_coupon($coupon_code)
     {
         $coupon = $this->coupons->get_coupon((string)$coupon_code);

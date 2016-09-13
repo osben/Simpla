@@ -14,13 +14,13 @@ require_once('Simpla.php');
 class Blog extends Simpla
 {
 
-    /*
-    *
-    * Функция возвращает пост по его id или url
-    * (в зависимости от типа аргумента, int - id, string - url)
-    * @param $id id или url поста
-    *
-    */
+    /**
+     * Функция возвращает пост по его id или url
+     * (в зависимости от типа аргумента, int - id, string - url)
+     *
+     * @param  int $id
+     * @return object|bool
+     */
     public function get_post($id)
     {
         if (is_int($id)) {
@@ -40,12 +40,12 @@ class Blog extends Simpla
         }
     }
 
-    /*
-    *
-    * Функция возвращает массив постов, удовлетворяющих фильтру
-    * @param $filter
-    *
-    */
+    /**
+     * Функция возвращает массив постов, удовлетворяющих фильтру
+     *
+     * @param array $filter
+     * @return array|bool
+     */
     public function get_posts($filter = array())
     {
         // По умолчанию
@@ -93,13 +93,12 @@ class Blog extends Simpla
         return $this->db->results();
     }
 
-
-    /*
-    *
-    * Функция вычисляет количество постов, удовлетворяющих фильтру
-    * @param $filter
-    *
-    */
+    /**
+     * Функция вычисляет количество постов, удовлетворяющих фильтру
+     *
+     * @param  array $filter
+     * @return int|bool
+     */
     public function count_posts($filter = array())
     {
         $post_id_filter = '';
@@ -135,12 +134,10 @@ class Blog extends Simpla
         }
     }
 
-    /*
-    *
-    * Создание поста
-    * @param $post
-    *
-    */
+    /**
+     * @param  object $post
+     * @return bool|int
+     */
     public function add_post($post)
     {
         if (!isset($post->date)) {
@@ -158,13 +155,13 @@ class Blog extends Simpla
         }
     }
 
-
-    /*
-    *
-    * Обновить пост(ы)
-    * @param $post
-    *
-    */
+    /**
+     * Обновить пост(ы)
+     *
+     * @param  int $id
+     * @param  array|object $post
+     * @return int
+     */
     public function update_post($id, $post)
     {
         $query = $this->db->placehold("UPDATE __blog SET ?% WHERE id in(?@) LIMIT ?", $post, (array)$id, count((array)$id));
@@ -172,13 +169,12 @@ class Blog extends Simpla
         return $id;
     }
 
-
-    /*
-    *
-    * Удалить пост
-    * @param $id
-    *
-    */
+    /**
+     * Удалить пост
+     *
+     * @param  int $id
+     * @return bool
+     */
     public function delete_post($id)
     {
         if (!empty($id)) {
@@ -193,13 +189,12 @@ class Blog extends Simpla
         return false;
     }
 
-
-    /*
-    *
-    * Следующий пост
-    * @param $post
-    *
-    */
+    /**
+     * Следующий пост
+     *
+     * @param  int $id
+     * @return object|bool
+     */
     public function get_next_post($id)
     {
         $this->db->query("SELECT date FROM __blog WHERE id=? LIMIT 1", $id);
@@ -217,12 +212,12 @@ class Blog extends Simpla
         }
     }
 
-    /*
-    *
-    * Предыдущий пост
-    * @param $post
-    *
-    */
+    /**
+     * Предыдущий пост
+     *
+     * @param  int $id
+     * @return object|bool
+     */
     public function get_prev_post($id)
     {
         $this->db->query("SELECT date FROM __blog WHERE id=? LIMIT 1", $id);
