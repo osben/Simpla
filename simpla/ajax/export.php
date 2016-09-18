@@ -146,7 +146,6 @@ class ExportAjax extends Simpla
 
                 if (isset($variants)) {
                     foreach ($variants as $variant) {
-                        $result = array();
                         $result =  $product;
                         foreach ($variant as $name=>$value) {
                             $result[$name]=$value;
