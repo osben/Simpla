@@ -11,7 +11,7 @@
 
 require_once('../../api/Simpla.php');
 
-class ExportAjax extends Simpla
+class ExportUsersAjax extends Simpla
 {
     private $columns_names = array(
             'name'            =>    'Имя',
@@ -69,7 +69,6 @@ class ExportAjax extends Simpla
         $filter['keyword'] = $this->request->get('keyword');
 
         // Выбираем пользователей
-        $users = array();
         foreach ($this->users->get_users($filter) as $u) {
             $str = array();
             foreach ($this->columns_names as $n=>$c) {
@@ -81,17 +80,19 @@ class ExportAjax extends Simpla
 
         $total_users = $this->users->count_users($filter);
 
+        fclose($f);
+
         if ($this->users_count*$page < $total_users) {
             return array('end'=>false, 'page'=>$page, 'totalpages'=>$total_users/$this->users_count);
         } else {
             return array('end'=>true, 'page'=>$page, 'totalpages'=>$total_users/$this->users_count);
         }
 
-        fclose($f);
+
     }
 }
 
-$export_ajax = new ExportAjax();
+$export_ajax = new ExportUsersAjax();
 $json = json_encode($export_ajax->fetch());
 header("Content-type: application/json; charset=utf-8");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

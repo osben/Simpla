@@ -26,6 +26,35 @@ class ExportAdmin extends Simpla
             $this->design->assign('message_error', 'iconv_or_mb_convert_encoding');
         }
 
+        if ($this->request->method('post')) {
+            switch ($this->request->post('action')) {
+                case 'delete': {
+                    $names = $this->request->post('check');
+
+                    foreach ($names as $name) {
+                        unlink($this->export_files_dir . $name);
+                    }
+                    break;
+                }
+            }
+        }
+
+        $export_files = glob($this->export_files_dir . "*.csv");
+
+        $exports = array();
+        if (is_array($export_files)) {
+            foreach ($export_files as $export_file) {
+                $export = new stdClass;
+                $export->name = basename($export_file);
+                $export->size = filesize($export_file);
+                $exports[] = $export;
+            }
+        }
+        $exports = array_reverse($exports);
+        $this->design->assign('exports', $exports);
+
+        $this->design->assign('backup_files_dir', $dir);
+
         return $this->design->fetch('export.tpl');
     }
 }
