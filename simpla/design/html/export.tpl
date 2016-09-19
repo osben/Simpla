@@ -73,7 +73,7 @@
 <script src="{$config->root_url}/simpla/design/js/piecon/piecon.js"></script>
 <script>
 	var filename = 'export_{trim($manager->login)}_{date("Y_m_d_G_i_s")}.csv';
-
+	{literal}
 	$(function () {
 
 		// On document load
@@ -151,12 +151,11 @@
 				return false;
 		});
 	});
+	{/literal}
 </script>
 
 <style>
-	#list {
-		margin-top: 20px;
-	}
+	#list { margin-top: 20px; }
 	.ui-progressbar-value { background-image: url(design/images/progress.gif); background-position:left; border-color: #009ae2;}
 	#progressbar{ clear: both; height:29px; }
 	#result{ clear: both; width:100%;}
