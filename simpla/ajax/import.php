@@ -24,11 +24,11 @@ class ImportAjax extends Simpla
             'description'=>      array('description', 'описание'),
             'images'=>           array('images', 'изображения')
             );
-    
+
     // Соответствие имени колонки и поля в базе
     private $internal_columns_names = array();
 
-    private $import_files_dir      = '../files/import/'; // Временная папка		
+    private $import_files_dir      = '../files/import/'; // Временная папка
     private $import_file           = 'import.csv';           // Временный файл
     private $category_delimiter = ',';                       // Разделитель каегорий в файле
     private $subcategory_delimiter = '/';                    // Разделитель подкаегорий в файле
@@ -44,9 +44,9 @@ class ImportAjax extends Simpla
 
         // Для корректной работы установим локаль UTF-8
         setlocale(LC_ALL, 'ru_RU.UTF-8');
-        
+
         $result = new stdClass;
-        
+
         // Определяем колонки из первой строки файла
         $f = fopen($this->import_files_dir.$this->import_file, 'r');
         $this->columns = fgetcsv($f, null, $this->column_delimiter);
@@ -63,15 +63,15 @@ class ImportAjax extends Simpla
         if (!in_array('name', $this->columns) && !in_array('sku', $this->columns)) {
             return false;
         }
-        
+
         // Переходим на заданную позицию, если импортируем не сначала
         if ($from = $this->request->get('from')) {
             fseek($f, $from);
         }
-        
+
         // Массив импортированных товаров
         $imported_items = array();
-        
+
         // Проходимся по строкам, пока не конец файла
         // или пока не импортировано достаточно строк для одного запроса
         for ($k=0; !feof($f) && $k<$this->products_count; $k++) {
@@ -89,22 +89,22 @@ class ImportAjax extends Simpla
                 }
             }
             }
-            
+
             // Импортируем этот товар
             if ($imported_item = $this->import_item($product)) {
                 $imported_items[] = $imported_item;
             }
         }
-        
+
         // Запоминаем на каком месте закончили импорт
         $from = ftell($f);
-        
+
         // И закончили ли полностью весь файл
         $result->end = feof($f);
 
         fclose($f);
         $size = filesize($this->import_files_dir.$this->import_file);
-        
+
         // Создаем объект результата
         $result->from = $from;          // На каком месте остановились
         $result->totalsize = $size;     // Размер всего файла
@@ -112,12 +112,12 @@ class ImportAjax extends Simpla
 
         return $result;
     }
-    
+
     // Импорт одного товара $item[column_name] = value;
     private function import_item($item)
     {
         $imported_item = new stdClass;
-        
+
         // Проверим не пустое ли название и артинкул (должно быть хоть что-то из них)
         if (empty($item['name']) && empty($item['sku'])) {
             return false;
@@ -125,7 +125,7 @@ class ImportAjax extends Simpla
 
         // Подготовим товар для добавления в базу
         $product = array();
-        
+
         if (isset($item['name'])) {
             $product['name'] = trim($item['name']);
         }
@@ -149,7 +149,7 @@ class ImportAjax extends Simpla
         if (isset($item['description'])) {
             $product['body'] = trim($item['description']);
         }
-    
+
         if (isset($item['visible'])) {
             $product['visible'] = intval($item['visible']);
         }
@@ -157,13 +157,13 @@ class ImportAjax extends Simpla
         if (isset($item['featured'])) {
             $product['featured'] = intval($item['featured']);
         }
-    
+
         if (!empty($item['url'])) {
             $product['url'] = trim($item['url']);
         } elseif (!empty($item['name'])) {
             $product['url'] = $this->translit($item['name']);
         }
-    
+
         // Если задан бренд
         if (!empty($item['brand'])) {
             $item['brand'] = trim($item['brand']);
@@ -174,7 +174,7 @@ class ImportAjax extends Simpla
                 $product['brand_id'] = $this->brands->add_brand(array('name'=>$item['brand'], 'meta_title'=>$item['brand'], 'meta_keywords'=>$item['brand'], 'meta_description'=>$item['brand']));
             }
         }
-        
+
         // Если задана категория
         $category_id = null;
         $categories_ids = array();
@@ -184,22 +184,22 @@ class ImportAjax extends Simpla
             }
             $category_id = reset($categories_ids);
         }
-    
+
         // Подготовим вариант товара
         $variant = array();
-        
+
         if (isset($item['variant'])) {
             $variant['name'] = trim($item['variant']);
         }
-            
+
         if (isset($item['price'])) {
             $variant['price'] = str_replace(',', '.', str_replace(' ', '', trim($item['price'])));
         }
-            
+
         if (isset($item['compare_price'])) {
             $variant['compare_price'] = trim($item['compare_price']);
         }
-            
+
         if (isset($item['stock'])) {
             if ($item['stock'] == '') {
                 $variant['stock'] = null;
@@ -207,11 +207,11 @@ class ImportAjax extends Simpla
                 $variant['stock'] = trim($item['stock']);
             }
         }
-            
+
         if (isset($item['sku'])) {
             $variant['sku'] = trim($item['sku']);
         }
-        
+
         // Если задан артикул варианта, найдем этот вариант и соответствующий товар
         if (!empty($variant['sku'])) {
             $this->db->query('SELECT v.id as variant_id, v.product_id FROM __variants v, __products p WHERE v.sku=? AND v.product_id = p.id LIMIT 1', $variant['sku']);
@@ -225,14 +225,14 @@ class ImportAjax extends Simpla
                 if (!empty($variant)) {
                     $this->variants->update_variant($result->variant_id, $variant);
                 }
-                
+
                 $product_id = $result->product_id;
                 $variant_id = $result->variant_id;
                 // Обновлен
                 $imported_item->status = 'updated';
             }
         }
-        
+
         // Если на прошлом шаге товар не нашелся, и задано хотя бы название товара
         if ((empty($product_id) || empty($variant_id)) && isset($item['name'])) {
             if (!empty($variant['sku']) && empty($variant['name'])) {
@@ -242,7 +242,7 @@ class ImportAjax extends Simpla
             } else {
                 $this->db->query('SELECT v.id as variant_id, p.id as product_id FROM __products p LEFT JOIN __variants v ON v.product_id=p.id WHERE p.name=? LIMIT 1', $item['name']);
             }
-            
+
             $r =  $this->db->result();
             if ($r) {
                 $product_id = $r->product_id;
@@ -269,19 +269,19 @@ class ImportAjax extends Simpla
                 $imported_item->status = 'added';
             }
         }
-        
+
         if (!empty($variant_id) && !empty($product_id)) {
             // Нужно вернуть обновленный товар
             $imported_item->variant = $this->variants->get_variant(intval($variant_id));
             $imported_item->product = $this->products->get_product(intval($product_id));
-    
+
             // Добавляем категории к товару
             if (!empty($categories_ids)) {
                 foreach ($categories_ids as $c_id) {
                     $this->categories->add_product_category($product_id, $c_id);
                 }
             }
-    
+
             // Изображения товаров
             if (isset($item['images'])) {
                 // Изображений может быть несколько, через запятую
@@ -291,7 +291,7 @@ class ImportAjax extends Simpla
                     if (!empty($image)) {
                         // Имя файла
                         $image_filename = pathinfo($image, PATHINFO_BASENAME);
-                        
+
                         // Добавляем изображение только если такого еще нет в этом товаре
                         $this->db->query('SELECT filename FROM __images WHERE product_id=? AND (filename=? OR filename=?) LIMIT 1', $product_id, $image_filename, $image);
                         if (!$this->db->result('filename')) {
@@ -310,7 +310,7 @@ class ImportAjax extends Simpla
                         if (!$feature_id = $this->db->result('id')) {
                             $feature_id = $this->features->add_feature(array('name'=>$feature_name));
                         }
-                            
+
                         $this->features->add_feature_category($feature_id, $category_id);
                         $this->features->update_option($product_id, $feature_id, $feature_value);
                     }
@@ -319,8 +319,8 @@ class ImportAjax extends Simpla
             return $imported_item;
         }
     }
-    
-    
+
+
     // Отдельная функция для импорта категории
     private function import_category($category)
     {
@@ -332,7 +332,7 @@ class ImportAjax extends Simpla
         $names = preg_split($regex, $category, 0, PREG_SPLIT_DELIM_CAPTURE);
         $id = null;
         $parent = 0;
-        
+
         // Для каждой категории
         foreach ($names as $name) {
             // Заменяем \/ на /
@@ -341,7 +341,7 @@ class ImportAjax extends Simpla
                 // Найдем категорию по имени
                 $this->db->query('SELECT id FROM __categories WHERE name=? AND parent_id=?', $name, $parent);
                 $id = $this->db->result('id');
-                
+
                 // Если не найдена - добавим ее
                 if (empty($id)) {
                     $id = $this->categories->add_category(array('name'=>$name, 'parent_id'=>$parent, 'meta_title'=>$name,  'meta_keywords'=>$name,  'meta_description'=>$name, 'url'=>$this->translit($name)));
@@ -364,7 +364,7 @@ class ImportAjax extends Simpla
         $res = strtolower($res);
         return $res;
     }
-    
+
     // Фозвращает внутреннее название колонки по названию колонки в файле
     private function internal_column_name($name)
     {
@@ -384,9 +384,9 @@ class ImportAjax extends Simpla
 
 $import_ajax = new ImportAjax();
 header("Content-type: application/json; charset=UTF-8");
-header("Cache-Control: must-revalidate");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 header("Expires: -1");
-        
+
 $json = json_encode($import_ajax->import());
 print $json;
