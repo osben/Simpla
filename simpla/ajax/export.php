@@ -48,10 +48,15 @@ class ExportAjax extends Simpla
         // Эксель кушает только 1251
         $this->db->query('SET NAMES cp1251');
 
+        // Если пердали имя файла, то записуем в него
+        if ($filename = $this->request->get('filename')) {
+            $this->filename = $filename;
+        }
+
         // Страница, которую экспортируем
-        $page = $this->request->get('page', 'integer');
-        if (empty($page) || $page==1) {
-            $page = 1;
+        $page = max($this->request->get('page', 'integer'), 1);
+
+        if ($page == 1) {
             // Если начали сначала - удалим старый файл экспорта
             if (is_writable($this->export_files_dir.$this->filename)) {
                 unlink($this->export_files_dir.$this->filename);
@@ -150,7 +155,7 @@ class ExportAjax extends Simpla
                         foreach ($variant as $name=>$value) {
                             $result[$name]=$value;
                         }
-
+                        $res = array();
                         foreach ($this->columns_names as $internal_name=>$column_name) {
                             if (isset($result[$internal_name])) {
                                 $res[$internal_name] = $result[$internal_name];
@@ -164,6 +169,8 @@ class ExportAjax extends Simpla
             }
         }
 
+        fclose($f);
+
         $total_products = $this->products->count_products();
 
         if ($this->products_count*$page < $total_products) {
@@ -172,7 +179,7 @@ class ExportAjax extends Simpla
             return array('end'=>true, 'page'=>$page, 'totalpages'=>$total_products/$this->products_count);
         }
 
-        fclose($f);
+
     }
 }
 
