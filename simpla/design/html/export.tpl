@@ -37,7 +37,7 @@
 					<div class="row">
 						{if $message_error != 'no_permission'}
 							<div class="checkbox cell">
-								<input type="checkbox" name="check[]" value="{$export->name}"/>
+								<input title="выбрать" type="checkbox" name="check[]" value="{$export->name}"/>
 							</div>
 						{/if}
 						<div class="name cell">
@@ -59,10 +59,10 @@
 					<label id="check_all" class="dash_link">Выбрать все</label>
 
 					<span id="select">
-					<select name="action">
-						<option value="delete">Удалить</option>
-					</select>
-				</span>
+						<select title="Выбрать действие" name="action">
+							<option value="delete">Удалить</option>
+						</select>
+					</span>
 
 					<input id="apply_action" class="button_green" type="submit" value="Применить">
 				</div>

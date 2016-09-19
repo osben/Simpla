@@ -49,7 +49,7 @@ class ExportAjax extends Simpla
         $this->db->query('SET NAMES cp1251');
 
         // Если пердали имя файла, то записуем в него
-        if ($filename = $this->request->get('filename')) {
+        if ($filename = $this->request->get('filename', 'string')) {
             $this->filename = $filename;
         }
 
