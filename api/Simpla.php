@@ -40,7 +40,12 @@
  */
 class Simpla
 {
-    // Свойства - Классы API
+
+    /**
+     * Свойства - Классы API
+     *
+     * @var array
+     */
     private $classes = array(
         'config'     => 'Config',
         'request'    => 'Request',
@@ -78,11 +83,14 @@ class Simpla
      */
     public function __construct()
     {
-        //error_reporting(E_ALL & !E_STRICT);
+        error_reporting(E_ALL);
     }
 
     /**
      * Магический метод, создает нужный объект API
+     *
+     * @param $name
+     * @return mixed|null
      */
     public function __get($name)
     {

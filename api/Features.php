@@ -170,11 +170,6 @@ class Features extends Simpla
             return array();
         }
 
-        $group_by = '';
-        if (isset($filter['feature_id'])) {
-            $group_by = 'GROUP BY feature_id, value';
-        }
-
         if (isset($filter['feature_id'])) {
             $feature_id_filter = $this->db->placehold('AND po.feature_id in(?@)', (array)$filter['feature_id']);
         }
@@ -228,7 +223,7 @@ class Features extends Simpla
         $query = $this->db->placehold("SELECT f.id as feature_id, f.name, po.value, po.product_id
 										FROM __options po
 										LEFT JOIN __features f ON f.id=po.feature_id
-										WHERE po.product_id in(?@)
+										WHERE po.product_id IN(?@)
 										ORDER BY f.position", (array)$product_id);
 
         $this->db->query($query);

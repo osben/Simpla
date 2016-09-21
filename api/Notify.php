@@ -15,7 +15,7 @@ class Notify extends Simpla
     /**
      * @param string $to
      * @param string $subject
-     * @param string$message
+     * @param string $message
      * @param string $from
      * @param string $reply_to
      * @return void
@@ -159,6 +159,7 @@ class Notify extends Simpla
             $email_template = $this->design->fetch($this->config->root_dir.'simpla/design/html/email_order_admin.tpl');
         $subject = $this->design->get_var('subject');
         $this->email($this->settings->order_email, $subject, $email_template, $this->settings->notify_from_email);
+
     }
 
 

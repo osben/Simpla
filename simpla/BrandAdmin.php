@@ -27,7 +27,7 @@ class BrandAdmin extends Simpla
             $brand->meta_title = $this->request->post('meta_title');
             $brand->meta_keywords = $this->request->post('meta_keywords');
             $brand->meta_description = $this->request->post('meta_description');
-            
+
             // Не допустить одинаковые URL разделов.
             if (($c = $this->brands->get_brand($brand->url)) && $c->id!=$brand->id) {
                 $this->design->assign('message_error', 'url_exists');
@@ -51,7 +51,7 @@ class BrandAdmin extends Simpla
                 $image = $this->request->files('image');
                 if (!empty($image['name']) && in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), $this->allowed_image_extentions)) {
                     $this->brands->delete_image($brand->id);
-                    move_uploaded_file($image['tmp_name'], $this->root_dir.$this->config->brands_images_dir.$image['name']);
+                    move_uploaded_file($image['tmp_name'], $this->config->root_dir.$this->config->brands_images_dir.$image['name']);
                     $this->brands->update_brand($brand->id, array('image'=>$image['name']));
                 }
                 $brand = $this->brands->get_brand($brand->id);
@@ -60,9 +60,9 @@ class BrandAdmin extends Simpla
             $brand->id = $this->request->get('id', 'integer');
             $brand = $this->brands->get_brand($brand->id);
         }
-        
+
         $this->design->assign('brand', $brand);
-        
+
         return  $this->design->fetch('brand.tpl');
     }
 }

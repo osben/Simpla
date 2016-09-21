@@ -75,6 +75,6 @@ class FeaturesAdmin extends Simpla
         $this->design->assign('category', $category);
         $this->design->assign('features', $features);
 
-        return $this->body = $this->design->fetch('features.tpl');
+        return $this->design->fetch('features.tpl');
     }
 }

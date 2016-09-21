@@ -129,7 +129,6 @@ class OrdersAdmin extends Simpla
         }
 
         // Метки заказов
-        $orders_labels = array();
         foreach ($this->orders->get_order_labels(array_keys($orders)) as $ol) {
             $orders[$ol->order_id]->labels[] = $ol;
         }

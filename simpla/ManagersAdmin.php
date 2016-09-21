@@ -40,6 +40,6 @@ class ManagersAdmin extends Simpla
         $this->design->assign('managers', $managers);
         $this->design->assign('managers_count', $managers_count);
 
-        return $this->body = $this->design->fetch('managers.tpl');
+        return $this->design->fetch('managers.tpl');
     }
 }

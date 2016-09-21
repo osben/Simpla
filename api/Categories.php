@@ -89,7 +89,7 @@ class Categories extends Simpla
      * Функция возвращает заданную категорию
      *
      * @param $id
-     * @return bool
+     * @return bool|object
      */
     public function get_category($id)
     {

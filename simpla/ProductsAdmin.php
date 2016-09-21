@@ -193,7 +193,7 @@ class ProductsAdmin extends Simpla
                         $query = $this->db->placehold("UPDATE IGNORE __products_categories set category_id=? WHERE product_id=? ORDER BY position DESC LIMIT 1", $category_id, $id);
                         $this->db->query($query);
                         if ($this->db->affected_rows() == 0) {
-                            $query = $this->db->query("INSERT IGNORE INTO __products_categories set category_id=?, product_id=?", $category_id, $id);
+                            $this->db->query("INSERT IGNORE INTO __products_categories set category_id=?, product_id=?", $category_id, $id);
                         }
                     }
                     break;

@@ -45,6 +45,7 @@ class UsersAdmin extends Simpla
             }
         }
 
+        $groups = array();
         foreach ($this->users->get_groups() as $g) {
             $groups[$g->id] = $g;
         }
@@ -93,6 +94,6 @@ class UsersAdmin extends Simpla
         $this->design->assign('users', $users);
         $this->design->assign('users_count', $users_count);
 
-        return $this->body = $this->design->fetch('users.tpl');
+        return $this->design->fetch('users.tpl');
     }
 }

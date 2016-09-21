@@ -27,7 +27,7 @@ class CurrencyAdmin extends Simpla
                     $currencies[$i]->$n = $v;
                 }
             }
-
+            // TODO откуда тут $currencies ?
             $currencies_ids = array();
             foreach ($currencies as $currency) {
                 if ($currency->id) {

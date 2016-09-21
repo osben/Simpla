@@ -76,21 +76,21 @@ class View extends Simpla
             $this->design->assign('page', $this->page);
 
             // Передаем в дизайн то, что может понадобиться в нем
-            $this->design->assign('currencies',    $this->currencies);
+            $this->design->assign('currencies',  $this->currencies);
             $this->design->assign('currency',    $this->currency);
             $this->design->assign('user',        $this->user);
-            $this->design->assign('group',        $this->group);
+            $this->design->assign('group',       $this->group);
 
-            $this->design->assign('config',        $this->config);
+            $this->design->assign('config',      $this->config);
             $this->design->assign('settings',    $this->settings);
 
             // Настраиваем плагины для смарти
-            $this->design->smarty->registerPlugin("function", "get_posts",                    array($this, 'get_posts_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_brands",                    array($this, 'get_brands_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_browsed_products",        array($this, 'get_browsed_products'));
-            $this->design->smarty->registerPlugin("function", "get_featured_products",        array($this, 'get_featured_products_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_new_products",            array($this, 'get_new_products_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_discounted_products",    array($this, 'get_discounted_products_plugin'));
+            $this->design->smarty->registerPlugin("function", "get_posts",               array($this, 'get_posts_plugin'));
+            $this->design->smarty->registerPlugin("function", "get_brands",              array($this, 'get_brands_plugin'));
+            $this->design->smarty->registerPlugin("function", "get_browsed_products",    array($this, 'get_browsed_products'));
+            $this->design->smarty->registerPlugin("function", "get_featured_products",   array($this, 'get_featured_products_plugin'));
+            $this->design->smarty->registerPlugin("function", "get_new_products",        array($this, 'get_new_products_plugin'));
+            $this->design->smarty->registerPlugin("function", "get_discounted_products", array($this, 'get_discounted_products_plugin'));
         }
     }
 
@@ -119,7 +119,7 @@ class View extends Simpla
         }
     }
 
-    public function get_brands_plugin($params, &$smarty)
+    public function get_brands_plugin($params, $smarty)
     {
         if (!isset($params['visible'])) {
             $params['visible'] = 1;

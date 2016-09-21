@@ -30,7 +30,7 @@ if (is_file($file) && is_writable($file) && !is_file($simpla->config->root_dir.'
 
 $result= true;
 header("Content-type: application/json; charset=UTF-8");
-header("Cache-Control: must-revalidate");
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 header("Expires: -1");
 $json = json_encode($result);

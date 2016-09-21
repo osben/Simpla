@@ -28,9 +28,9 @@ class CategoryAdmin extends Simpla
             $category->meta_title = $this->request->post('meta_title');
             $category->meta_keywords = $this->request->post('meta_keywords');
             $category->meta_description = $this->request->post('meta_description');
-            
+
             $category->description = $this->request->post('description');
-    
+
             // Не допустить одинаковые URL разделов.
             if (($c = $this->categories->get_category($category->url)) && $c->id!=$category->id) {
                 $this->design->assign('message_error', 'url_exists');
@@ -54,7 +54,7 @@ class CategoryAdmin extends Simpla
                 $image = $this->request->files('image');
                 if (!empty($image['name']) && in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), $this->allowed_image_extentions)) {
                     $this->categories->delete_image($category->id);
-                    move_uploaded_file($image['tmp_name'], $this->root_dir.$this->config->categories_images_dir.$image['name']);
+                    move_uploaded_file($image['tmp_name'], $this->config->root_dir.$this->config->categories_images_dir.$image['name']);
                     $this->categories->update_category($category->id, array('image'=>$image['name']));
                 }
                 $category = $this->categories->get_category(intval($category->id));
@@ -63,7 +63,7 @@ class CategoryAdmin extends Simpla
             $category->id = $this->request->get('id', 'integer');
             $category = $this->categories->get_category($category->id);
         }
-        
+
         $categories = $this->categories->get_categories_tree();
 
         $this->design->assign('category', $category);

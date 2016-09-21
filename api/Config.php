@@ -11,6 +11,44 @@
 
 require_once('Simpla.php');
 
+/**
+ * Class Config
+ * @property string $license
+ * @property string $db_server
+ * @property string $db_user
+ * @property string $db_password
+ * @property string $db_name Имя базы данных
+ * @property string $db_prefix
+ * @property string $db_charset
+ * @property string $db_sql_mode
+ * @property string $error_reporting
+ * @property string $php_charset
+ * @property string $php_locale_collate
+ * @property string $php_locale_ctype
+ * @property string $php_locale_monetary
+ * @property string $php_locale_numeric
+ * @property string $php_locale_time
+ * @property string $logfile
+ * @property string $smarty_compile_check
+ * @property string $smarty_caching
+ * @property string $smarty_cache_lifetime
+ * @property string $smarty_debugging
+ * @property string $smarty_html_minify
+ * @property string $use_imagick
+ * @property string $original_images_dir
+ * @property string $resized_images_dir
+ * @property string $categories_images_dir
+ * @property string $brands_images_dir
+ * @property string $watermark_file
+ * @property string $downloads_dir
+ * @property string $host
+ * @property string $protocol
+ * @property string $root_url
+ * @property string $subfolder
+ * @property string $root_dir
+ * @property string $max_upload_filesize
+ * @property string $salt
+ */
 class Config
 {
     public $version = '2.3.7';

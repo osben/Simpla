@@ -136,20 +136,20 @@ class Coupons extends Simpla
      * Создание купона
      *
      * @param $coupon
-     * @return bool|mixed
+     * @return int|bool
      */
     public function add_coupon($coupon)
     {
         if (empty($coupon->single)) {
             $coupon->single = 0;
         }
-        $query = $this->db->placehold("INSERT INTO __coupons SET ?%", $coupon);
 
-        if (!$this->db->query($query)) {
-            return false;
-        } else {
+        $query = $this->db->placehold("INSERT INTO __coupons SET ?%", $coupon);
+        if($this->db->query($query)) {
             return $this->db->insert_id();
         }
+
+        return false;
     }
 
     /**
@@ -157,12 +157,14 @@ class Coupons extends Simpla
      *
      * @param $id
      * @param $coupon
-     * @return mixed
+     * @return bool|int
      */
     public function update_coupon($id, $coupon)
     {
-        $query = $this->db->placehold("UPDATE __coupons SET ?% WHERE id in(?@) LIMIT ?", $coupon, (array)$id, count((array)$id));
-        $this->db->query($query);
+        $query = $this->db->placehold("UPDATE __coupons SET ?% WHERE id IN(?@) LIMIT ?", $coupon, (array)$id, count((array)$id));
+        if (!$this->db->query($query)) {
+            return false;
+        }
         return $id;
     }
 
@@ -171,13 +173,16 @@ class Coupons extends Simpla
      * Удалить купон
      *
      * @param $id
-     * @return mixed
+     * @return bool
      */
     public function delete_coupon($id)
     {
         if (!empty($id)) {
             $query = $this->db->placehold("DELETE FROM __coupons WHERE id=? LIMIT 1", intval($id));
-            return $this->db->query($query);
+            if($this->db->query($query)) {
+                return true;
+            }
         }
+        return false;
     }
 }

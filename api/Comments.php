@@ -46,6 +46,7 @@ class Comments extends Simpla
         $type_filter = '';
         $keyword_filter = '';
         $approved_filter = '';
+        $ip = '';
 
         if (isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));

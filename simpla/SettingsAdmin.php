@@ -14,12 +14,14 @@ require_once('api/Simpla.php');
 class SettingsAdmin extends Simpla
 {
     private $allowed_image_extentions = array('png', 'gif', 'jpg', 'jpeg', 'ico');
+    private $passwd_file;
+    private $htaccess_file;
 
     public function fetch()
     {
+
         $this->passwd_file = $this->config->root_dir.'/simpla/.passwd';
         $this->htaccess_file = $this->config->root_dir.'/simpla/.htaccess';
-
 
         $managers = $this->managers->get_managers();
         $this->design->assign('managers', $managers);

@@ -9,7 +9,7 @@
             $result = new stdClass;
             $result->suggestions = array();
             $result->query = $this->request->get('query', 'string');
-            
+
             if (!empty($result->query)) {
                 $kw = $this->db->escape($result->query);
 
@@ -21,8 +21,6 @@
 									ORDER BY p.name
 									LIMIT ?", $this->limit);
                 $products = $this->db->results();
-
-                $suggestions = array();
 
                 foreach ($products as $product) {
                     $suggestion = new stdClass();

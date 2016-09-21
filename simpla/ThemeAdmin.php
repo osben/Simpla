@@ -32,15 +32,16 @@ class ThemeAdmin extends Simpla
                             $this->settings->theme = $new_name;
                         }
                     } elseif (is_file($this->themes_dir.$new_name) && $new_name!=$old_name) {
-                        $message_error = 'name_exists';
+                        //$message_error = 'name_exists';
                     }
                 }
             }
 
-            $action = $this->request->post('action');
+
             $action_theme  = $this->request->post('theme');
 
-            switch ($this->request->post('action')) {
+            $action = $this->request->post('action');
+            switch ($action) {
                 case 'set_main_theme':
                 {
                     $this->settings->theme = $action_theme;
@@ -129,6 +130,7 @@ class ThemeAdmin extends Simpla
 
     private function get_themes()
     {
+        $themes = array();
         if ($handle = opendir($this->themes_dir)) {
             while (false !== ($file = readdir($handle))) {
                 if (is_dir($this->themes_dir.'/'.$file) && $file[0] != '.') {

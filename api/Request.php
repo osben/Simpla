@@ -40,7 +40,7 @@ class Request extends Simpla
      * Если аргумент не задан, возвращает имя метода
      *
      * @param  null|string $method
-     * @return bool
+     * @return bool|string
      */
     public function method($method = null)
     {
@@ -58,7 +58,7 @@ class Request extends Simpla
      *
      * @param  $name
      * @param  null $type
-     * @return array|bool|int|mixed|null|string
+     * @return mixed
      */
     public function get($name, $type = null)
     {
@@ -93,7 +93,7 @@ class Request extends Simpla
      *
      * @param  null|string $name
      * @param  null|string $type
-     * @return bool|int|null|string
+     * @return mixed
      */
     public function post($name = null, $type = null)
     {
@@ -126,7 +126,7 @@ class Request extends Simpla
      *
      * @param  $name
      * @param  null $name2
-     * @return null
+     * @return string|null
      */
     public function files($name, $name2 = null)
     {

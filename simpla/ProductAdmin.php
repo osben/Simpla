@@ -19,7 +19,6 @@ class ProductAdmin extends Simpla
         $product_categories = array();
         $variants = array();
         $images = array();
-        $product_features = array();
         $related_products = array();
 
         if ($this->request->method('post') && !empty($_POST)) {
@@ -53,6 +52,7 @@ class ProductAdmin extends Simpla
             // Категории товара
             $product_categories = $this->request->post('categories');
             if (is_array($product_categories)) {
+                $pc = array();
                 foreach ($product_categories as $c) {
                     $x = new stdClass;
                     $x->id = $c;
@@ -64,6 +64,7 @@ class ProductAdmin extends Simpla
             // Свойства товара
             $options = $this->request->post('options');
             if (is_array($options)) {
+                $po = array();
                 foreach ($options as $f_id=>$val) {
                     $po[$f_id] = new stdClass;
                     $po[$f_id]->feature_id = $f_id;
@@ -74,6 +75,7 @@ class ProductAdmin extends Simpla
 
             // Связанные товары
             if (is_array($this->request->post('related_products'))) {
+                $rp = array();
                 foreach ($this->request->post('related_products') as $p) {
                     $rp[$p] = new stdClass;
                     $rp[$p]->product_id = $product->id;
@@ -311,6 +313,7 @@ class ProductAdmin extends Simpla
         }
 
         if (!empty($related_products)) {
+            $r_products = array();
             foreach ($related_products as &$r_p) {
                 $r_products[$r_p->related_id] = &$r_p;
             }

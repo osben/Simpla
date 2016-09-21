@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Simpla CMS
  *
@@ -141,7 +142,7 @@ class Database extends Simpla
      * Возвращает результаты запроса. Необязательный второй аргумент указывает какую колонку возвращать вместо всего массива колонок
      *
      * @param  null|string $field
-     * @return array|bool
+     * @return array|object|bool
      */
     public function results($field = null)
     {

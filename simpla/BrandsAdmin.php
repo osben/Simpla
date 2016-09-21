@@ -38,7 +38,7 @@ class BrandsAdmin extends Simpla
         $brands = $this->brands->get_brands();
 
         $this->design->assign('brands', $brands);
-        
-        return $this->body = $this->design->fetch('brands.tpl');
+
+        return $this->design->fetch('brands.tpl');
     }
 }

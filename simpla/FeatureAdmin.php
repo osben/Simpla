@@ -48,6 +48,6 @@ class FeatureAdmin extends Simpla
         $this->design->assign('feature', $feature);
         $this->design->assign('feature_categories', $feature_categories);
 
-        return $this->body = $this->design->fetch('feature.tpl');
+        return $this->design->fetch('feature.tpl');
     }
 }

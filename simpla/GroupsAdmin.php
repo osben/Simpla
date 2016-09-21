@@ -35,6 +35,6 @@ class GroupsAdmin extends Simpla
 
         $this->design->assign('groups', $groups);
 
-        return $this->body = $this->design->fetch('groups.tpl');
+        return $this->design->fetch('groups.tpl');
     }
 }

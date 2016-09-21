@@ -53,8 +53,6 @@ class ExportAdmin extends Simpla
         $exports = array_reverse($exports);
         $this->design->assign('exports', $exports);
 
-        $this->design->assign('backup_files_dir', $dir);
-
         return $this->design->fetch('export.tpl');
     }
 }

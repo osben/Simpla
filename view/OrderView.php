@@ -116,7 +116,7 @@ class OrderView extends View
 
 
         // Выводим заказ
-        return $this->body = $this->design->fetch('order.tpl');
+        return $this->design->fetch('order.tpl');
     }
 
     private function download()

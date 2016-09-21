@@ -129,10 +129,10 @@ class ProductsView extends View
         ///////////////////////////////////////////////
 
 
-        $discount = 0;
-        if (isset($_SESSION['user_id']) && $user = $this->users->get_user(intval($_SESSION['user_id']))) {
-            $discount = $user->discount;
-        }
+//        $discount = 0;
+//        if (isset($_SESSION['user_id']) && $user = $this->users->get_user(intval($_SESSION['user_id']))) {
+//            $discount = $user->discount;
+//        }
 
         // Товары
         $products = array();
@@ -208,7 +208,6 @@ class ProductsView extends View
         }
 
 
-        $this->body = $this->design->fetch('products.tpl');
-        return $this->body;
+        return $this->design->fetch('products.tpl');
     }
 }

@@ -31,6 +31,7 @@ class Products extends Simpla
      */
     public function get_products($filter = array())
     {
+
         // По умолчанию
         $limit = 100;
         $page = 1;
