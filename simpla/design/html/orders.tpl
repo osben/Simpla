@@ -25,12 +25,12 @@
 	<input class="search_button" type="submit" value=""/>
 </div>
 </form>
-	
+
 {* Заголовок *}
 <div id="header">
-	<h1>{if $orders_count}{$orders_count}{else}Нет{/if} заказ{$orders_count|plural:'':'ов':'а'}</h1>		
+	<h1>{if $orders_count}{$orders_count}{else}Нет{/if} заказ{$orders_count|plural:'':'ов':'а'}</h1>
 	<a class="add" href="{url module=OrderAdmin}">Добавить заказ</a>
-</div>	
+</div>
 
 {if $message_error}
 <!-- Системное сообщение -->
@@ -44,21 +44,21 @@
 
 {if $orders}
 <div id="main_list">
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-	
+
 	<form id="form_list" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
-		<div id="list">		
+		<div id="list">
 			{foreach $orders as $order}
 			<div class="{if $order->paid}green{/if} row">
 		 		<div class="checkbox cell">
-					<input type="checkbox" name="check[]" value="{$order->id}"/>				
+					<input type="checkbox" name="check[]" value="{$order->id}"/>
 				</div>
-				<div class="order_date cell">				 	
+				<div class="order_date cell">
 	 				{$order->date|date} в {$order->date|time}
 				</div>
 				<div class="order_name cell">
@@ -68,7 +68,7 @@
 	 				<a href="{url module=OrderAdmin id=$order->id return=$smarty.server.REQUEST_URI}">Заказ №{$order->id}</a> {$order->name|escape}
 	 				{if $order->note}
 	 				<div class="note">{$order->note|escape}</div>
-	 				{/if} 	 			
+	 				{/if}
 				</div>
 				<div class="icons cell">
 					<a href='{url module=OrderAdmin id=$order->id view=print}'  target="_blank" class="print" title="Печать заказа"></a>
@@ -81,8 +81,8 @@
 					{if $order->paid}
 						<img src='design/images/cash_stack.png' alt='Оплачен' title='Оплачен'>
 					{else}
-						<img src='design/images/cash_stack_gray.png' alt='Не оплачен' title='Не оплачен'>				
-					{/if}			 	
+						<img src='design/images/cash_stack_gray.png' alt='Не оплачен' title='Не оплачен'>
+					{/if}
 				</div>
 				{if $keyword}
 				<div class="icons cell">
@@ -104,10 +104,10 @@
 			</div>
 			{/foreach}
 		</div>
-	
+
 		<div id="action">
 		<label id='check_all' class="dash_link">Выбрать все</label>
-	
+
 		<span id="select">
 		<select name="action">
 			{if $status!==0}<option value="set_status_0">В новые</option>{/if}
@@ -122,22 +122,22 @@
 			<option value="delete">Удалить выбранные заказы</option>
 		</select>
 		</span>
-	
+
 		<input id="apply_action" class="button_green" type="submit" value="Применить">
-		
+
 		</div>
 	</form>
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-		
+
 </div>
 {/if}
 
 <!-- Меню -->
 <div id="right_menu">
-	
+
 	{if $labels}
 	<!-- Метки -->
 	<ul id="labels">
@@ -145,12 +145,12 @@
 		{foreach $labels as $l}
 		<li data-label-id="{$l->id}" {if $label->id==$l->id}class="selected"{/if}>
 		<span style="background-color:#{$l->color};" class="order_label"></span>
-		<a href="{url label=$l->id}">{$l->name}</a></li>
+		<a href="{url label=$l->id page=null}">{$l->name}</a></li>
 		{/foreach}
 	</ul>
 	<!-- Метки -->
 	{/if}
-	
+
 </div>
 <!-- Меню  (The End) -->
 
@@ -169,7 +169,7 @@ $(function() {
 		scrollSensitivity: 40,
 		opacity:           0.7
 	});
-	
+
 
 	$("#main_list #list .row").droppable({
 		activeClass: "drop_active",
@@ -178,12 +178,12 @@ $(function() {
 		drop: function(event, ui){
 			label_id = $(ui.helper).attr('data-label-id');
 			$(this).find('input[type="checkbox"][name*="check"]').attr('checked', true);
-			$(this).closest("form").find('select[name="action"] option[value=set_label_'+label_id+']').attr("selected", "selected");		
+			$(this).closest("form").find('select[name="action"] option[value=set_label_'+label_id+']').attr("selected", "selected");
 			$(this).closest("form").submit();
-			return false;	
-		}		
+			return false;
+		}
 	});
-	
+
 	// Раскраска строк
 	function colorize()
 	{
@@ -196,9 +196,9 @@ $(function() {
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
@@ -210,7 +210,7 @@ $(function() {
 	$("form").submit(function() {
 		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
 			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-				return false;	
+				return false;
 	});
 });
 
