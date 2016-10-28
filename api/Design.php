@@ -131,7 +131,7 @@ class Design extends Simpla
         $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark);
         $resized_filename_encoded = $resized_filename;
 
-        if (substr($resized_filename_encoded, 0, 7) == 'http://') {
+        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
             $resized_filename_encoded = rawurlencode($resized_filename_encoded);
         }
 
