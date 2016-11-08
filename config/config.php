@@ -48,7 +48,7 @@ smarty_caching = false;
 smarty_cache_lifetime = 0;
 smarty_debugging = false;
 smarty_html_minify = false;
- 
+
 [images]
 ;Использовать imagemagick для обработки изображений (вместо gd)
 use_imagick = true;
@@ -72,3 +72,6 @@ watermark_file = simpla/files/watermark/watermark.png;
 
 ;Директория хранения цифровых товаров
 downloads_dir = files/downloads/;
+
+[debug]
+debug = false;
