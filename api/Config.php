@@ -41,6 +41,7 @@ require_once('Simpla.php');
  * @property string $brands_images_dir
  * @property string $watermark_file
  * @property string $downloads_dir
+ * @property string $debug
  * @property string $host
  * @property string $protocol
  * @property string $root_url

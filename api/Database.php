@@ -66,6 +66,10 @@ class Database extends Simpla
             if ($this->config->db_timezone) {
                 $this->mysqli->query('SET time_zone = "'.$this->config->db_timezone.'"');
             }
+            if ($this->config->debug) {
+                $this->mysqli->query('SET profiling = 1');
+                $this->mysqli->query('SET profiling_history_size = 100');
+            }
         }
         return $this->mysqli;
     }
@@ -98,6 +102,8 @@ class Database extends Simpla
 
         $args = func_get_args();
         $q = call_user_func_array(array($this, 'placehold'), $args);
+        // fix формата запроса, что бы при дебаге влез в 300 символов
+        $q = preg_replace('/\s+/', ' ', $q);
         return $this->res = $this->mysqli->query($q);
     }
 
