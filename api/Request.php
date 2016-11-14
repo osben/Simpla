@@ -181,8 +181,11 @@ class Request extends Simpla
      */
     public function url($params = array())
     {
+        $query = array();
         $url = @parse_url($_SERVER["REQUEST_URI"]);
-        parse_str($url['query'], $query);
+        if(isset($url['query'])) {
+            parse_str($url['query'], $query);
+        }
 
         if (get_magic_quotes_gpc()) {
             foreach ($query as &$v) {
@@ -209,8 +212,7 @@ class Request extends Simpla
             $url['query'] = null;
         }
 
-        $result = http_build_url(null, $url);
-        return $result;
+        return http_build_url(null, $url);
     }
 }
 
