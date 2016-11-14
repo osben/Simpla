@@ -124,14 +124,15 @@ class Image extends Simpla
             return false;
         }
 
+        $parse_url = parse_url($filename);
+
         // Имя оригинального файла
-        $basename = explode('&', pathinfo($filename, PATHINFO_BASENAME));
-        $uploaded_file = array_shift($basename);
-        $base = urldecode(pathinfo($uploaded_file, PATHINFO_FILENAME));
-        $ext = pathinfo($uploaded_file, PATHINFO_EXTENSION);
+        $basename = basename($parse_url['path']);
+        $base = $this->correct_filename(pathinfo($basename, PATHINFO_FILENAME));
+        $ext = pathinfo($basename, PATHINFO_EXTENSION);
 
         // Если такой файл существует, нужно придумать другое название
-        $new_name = urldecode($uploaded_file);
+        $new_name = $base.'.'.$ext;
 
         while (file_exists($this->config->root_dir.$this->config->original_images_dir.$new_name)) {
             $new_base = pathinfo($new_name, PATHINFO_FILENAME);
@@ -141,6 +142,7 @@ class Image extends Simpla
                 $new_name = $base.'_1.'.$ext;
             }
         }
+
         $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
 
         // Перед долгим копированием займем это имя
