@@ -451,42 +451,6 @@ class Image extends Simpla
     }
 
     /**
-     * @param $fn1
-     * @param $fn2
-     * @return bool
-     * @todo Возможно можно удалить, так как данный метод не используется
-     */
-    private function files_identical($fn1, $fn2)
-    {
-        $buffer_len = 1024;
-        if (!$fp1 = fopen(dirname(dirname(__FILE__)).'/'.$fn1, 'rb')) {
-            return false;
-        }
-
-        if (!$fp2 = fopen($fn2, 'rb')) {
-            fclose($fp1);
-            return false;
-        }
-
-        $same = true;
-        while (!feof($fp1) and !feof($fp2)) {
-            if (fread($fp1, $buffer_len) !== fread($fp2, $buffer_len)) {
-                $same = false;
-                break;
-            }
-        }
-
-        if (feof($fp1) !== feof($fp2)) {
-            $same = false;
-        }
-
-        fclose($fp1);
-        fclose($fp2);
-
-        return $same;
-    }
-
-    /**
      * @param $filename
      * @return mixed|string
      */
