@@ -294,8 +294,9 @@ class Image extends Simpla
             $watermark_x = min(($dst_w-$owidth)*$watermark_offet_x/100, $dst_w);
             $watermark_y = min(($dst_h-$oheight)*$watermark_offet_y/100, $dst_h);
 
-            imagecopy($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight);
+            //imagecopy($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight);
             //imagecopymerge($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight, $watermark_opacity*100);
+            $this->imagecopymerge_alpha($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight, $watermark_opacity*100);
         }
 
 
@@ -499,5 +500,40 @@ class Image extends Simpla
         $res = preg_replace("/[^a-zA-Z0-9\.\-\_]+/ui", '', $res);
         $res = strtolower($res);
         return $res;
+    }
+
+     /**
+     * merge two true colour images while maintaining alpha transparency of both
+     * images.
+     *
+     * known issues : Opacity values other than 100% get a bit screwy, the source
+     *                composition determines how much this issue will annoy you.
+     *                if in doubt, use as you would imagecopy_alpha (i.e. keep
+     *                opacity at 100%)
+     *
+     * @access public
+     *
+     * @param  resource $dst  Destination image link resource
+     * @param  resource $src  Source image link resource
+     * @param  int      $dstX x-coordinate of destination point
+     * @param  int      $dstY y-coordinate of destination point
+     * @param  int      $srcX x-coordinate of source point
+     * @param  int      $srcY y-coordinate of source point
+     * @param  int      $w    Source width
+     * @param  int      $h    Source height
+     * @param  int      $pct  Opacity or source image
+     ******************************************************************************/
+    private function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct)
+    {
+        // creating a cut resource
+        $cut = imagecreatetruecolor($src_w, $src_h);
+        // copying relevant section from background to the cut resource
+        imagecopy($cut, $dst_im, 0, 0, $dst_x, $dst_y, $src_w, $src_h);
+
+        // copying relevant section from watermark to the cut resource
+        imagecopy($cut, $src_im, 0, 0, $src_x, $src_y, $src_w, $src_h);
+
+        // insert cut resource to destination image
+        imagecopymerge($dst_im, $cut, $dst_x, $dst_y, 0, 0, $src_w, $src_h, $pct);
     }
 }
