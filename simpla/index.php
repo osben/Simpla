@@ -42,7 +42,7 @@ header("Content-type: text/html; charset=UTF-8");
 print $backend->fetch();
 
 // Отладочная информация
-if ($view->config->debug) {
+if ($backend->config->debug) {
     print "<!--\r\n";
     $exec_time = round(microtime(true)-$time_start, 5);
 
