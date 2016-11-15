@@ -50,6 +50,7 @@ class Design extends Simpla
         $this->smarty->cache_dir = 'cache';
 
         $this->smarty->registerPlugin('modifier', 'resize',        array($this, 'resize_modifier'));
+        $this->smarty->registerPlugin('modifier', 'crop',        array($this, 'crop_modifier'));
         $this->smarty->registerPlugin('modifier', 'token',        array($this, 'token_modifier'));
         $this->smarty->registerPlugin('modifier', 'plural',        array($this, 'plural_modifier'));
         $this->smarty->registerPlugin('function', 'url',        array($this, 'url_modifier'));
@@ -119,6 +120,7 @@ class Design extends Simpla
         $this->smarty->clearAllCache();
     }
 
+
     /**
      * @param $filename
      * @param int $width
@@ -128,7 +130,7 @@ class Design extends Simpla
      */
     public function resize_modifier($filename, $width=0, $height=0, $set_watermark=false)
     {
-        $resized_filename = $this->image->add_resize_params($filename, $width, $height, $set_watermark);
+        $resized_filename = $this->image->add_resize_params($filename, '', $width, $height, $set_watermark);
         $resized_filename_encoded = $resized_filename;
 
         if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
@@ -139,7 +141,27 @@ class Design extends Simpla
 
         return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
     }
+    /**
+     * TODO объединить resize_modifier и crop_modifier
+     * @param $filename
+     * @param int $width
+     * @param int $height
+     * @param bool $set_watermark
+     * @return string
+     */
+    public function crop_modifier($filename, $width=0, $height=0, $set_watermark=false)
+    {
+        $resized_filename = $this->image->add_resize_params($filename, 'crop', $width, $height, $set_watermark);
+        $resized_filename_encoded = $resized_filename;
 
+        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
+            $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+        }
+
+        $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+
+        return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
+    }
     /**
      * @param $text
      * @return string

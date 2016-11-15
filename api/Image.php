@@ -31,7 +31,7 @@ class Image extends Simpla
      */
     public function resize($filename)
     {
-        list($source_file, $width, $height, $set_watermark) = $this->get_resize_params($filename);
+        list($source_file, $type, $width, $height, $set_watermark) = $this->get_resize_params($filename);
 
         // Если вайл удаленный (http://), зальем его себе
         if (substr($source_file, 0, 7) == 'http://' || substr($source_file, 0, 8) == 'https://') {
@@ -39,13 +39,11 @@ class Image extends Simpla
             if (!$original_file = $this->download_image($source_file)) {
                 return false;
             }
-
-            $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark);
         } else {
             $original_file = $source_file;
         }
 
-        $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark);
+        $resized_file = $this->add_resize_params($original_file, $type, $width, $height, $set_watermark);
 
 
         // Пути к папкам с картинками
@@ -66,15 +64,15 @@ class Image extends Simpla
         }
 
         if (class_exists('Imagick') && $this->config->use_imagick) {
-            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency, $sharpen);
+            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency, $sharpen);
         } else {
-            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency);
+            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency);
         }
 
         return $preview_dir.$resized_file;
     }
 
-    public function add_resize_params($filename, $width=0, $height=0, $set_watermark=false)
+    public function add_resize_params($filename, $type='', $width=0, $height=0, $set_watermark=false)
     {
         if ('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
             $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
@@ -84,9 +82,10 @@ class Image extends Simpla
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
         if ($width>0 || $height>0) {
-            $resized_filename = $file.'.'.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'').'.'.$ext;
+            $resized_filename = $file.'.'.$type.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'').'.'.$ext;
         } else {
-            $resized_filename = $file.'.'.($set_watermark?'w.':'').$ext;
+            // TODO fix этот вариант сейчас не работает
+            $resized_filename = $file.'.'.$type.($set_watermark?'w':'').'.'.$ext;
         }
 
         return $resized_filename;
@@ -99,17 +98,18 @@ class Image extends Simpla
     public function get_resize_params($filename)
     {
         // Определаяем параметры ресайза
-        if (!preg_match('/(.+)\.([0-9]*)x([0-9]*)(w)?\.([^\.]+)$/', $filename, $matches)) {
+        if (!preg_match('/(.+)\.(resize|crop)?([0-9]*)x([0-9]*)(w)?\.([^\.]+)$/', $filename, $matches)) {
             return false;
         }
 
         $file = $matches[1];                    // имя запрашиваемого файла
-        $width = $matches[2];                    // ширина будущего изображения
-        $height = $matches[3];                    // высота будущего изображения
-        $set_watermark = $matches[4] == 'w';    // ставить ли водяной знак
-        $ext = $matches[5];                        // расширение файла
+        $type = $matches[2];                    // ресайз или кроп
+        $width = $matches[3];                   // ширина будущего изображения
+        $height = $matches[4];                  // высота будущего изображения
+        $set_watermark = $matches[5] == 'w';    // ставить ли водяной знак
+        $ext = $matches[6];                     // расширение файла
 
-        return array($file.'.'.$ext, $width, $height, $set_watermark);
+        return array($file.'.'.$ext, $type, $width, $height, $set_watermark);
     }
 
     /**
@@ -124,14 +124,15 @@ class Image extends Simpla
             return false;
         }
 
+        $parse_url = parse_url($filename);
+
         // Имя оригинального файла
-        $basename = explode('&', pathinfo($filename, PATHINFO_BASENAME));
-        $uploaded_file = array_shift($basename);
-        $base = urldecode(pathinfo($uploaded_file, PATHINFO_FILENAME));
-        $ext = pathinfo($uploaded_file, PATHINFO_EXTENSION);
+        $basename = basename($parse_url['path']);
+        $base = $this->correct_filename(pathinfo($basename, PATHINFO_FILENAME));
+        $ext = pathinfo($basename, PATHINFO_EXTENSION);
 
         // Если такой файл существует, нужно придумать другое название
-        $new_name = urldecode($uploaded_file);
+        $new_name = $base.'.'.$ext;
 
         while (file_exists($this->config->root_dir.$this->config->original_images_dir.$new_name)) {
             $new_base = pathinfo($new_name, PATHINFO_FILENAME);
@@ -141,6 +142,7 @@ class Image extends Simpla
                 $new_name = $base.'_1.'.$ext;
             }
         }
+
         $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
 
         // Перед долгим копированием займем это имя
@@ -192,9 +194,10 @@ class Image extends Simpla
      * @param int $watermark_opacity
      * @return bool
      */
-    private function image_constrain_gd($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1)
+    private function image_constrain_gd($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1)
     {
-        $quality = 100;
+        // todo вынести в настройки
+        $quality = 90;
 
         // Параметры исходного изображения
         @list($src_w, $src_h, $src_type) = array_values(getimagesize($src_file));
@@ -205,7 +208,7 @@ class Image extends Simpla
         }
 
         // Нужно ли обрезать?
-        if (!$watermark && ($src_w <= $max_w) && ($src_h <= $max_h)) {
+        if (!$watermark && ($src_w <= $max_w) && ($src_h <= $max_h) && $type == 'resize') {
             // Нет - просто скопируем файл
             if (!copy($src_file, $dst_file)) {
                 return false;
@@ -213,28 +216,28 @@ class Image extends Simpla
             return true;
         }
 
-        // Размеры превью при пропорциональном уменьшении
-        @list($dst_w, $dst_h) = $this->calc_contrain_size($src_w, $src_h, $max_w, $max_h);
-
         // Читаем изображение
         switch ($src_type) {
-        case 'image/jpeg':
-            $src_img = imageCreateFromJpeg($src_file);
-            break;
-        case 'image/gif':
-            $src_img = imageCreateFromGif($src_file);
-            break;
-        case 'image/png':
-            $src_img = imageCreateFromPng($src_file);
-            imagealphablending($src_img, true);
-            break;
-        default:
-            return false;
+            case 'image/jpeg':
+                $src_img = imageCreateFromJpeg($src_file);
+                break;
+            case 'image/gif':
+                $src_img = imageCreateFromGif($src_file);
+                break;
+            case 'image/png':
+                $src_img = imageCreateFromPng($src_file);
+                imagealphablending($src_img, true);
+                break;
+            default:
+                return false;
         }
 
         if (empty($src_img)) {
             return false;
         }
+
+        // Размеры превью при пропорциональном уменьшении
+        @list($dst_w, $dst_h) = $this->calc_contrain_size($src_w, $src_h, $max_w, $max_h, $type);
 
         $src_colors = imagecolorstotal($src_img);
 
@@ -283,6 +286,24 @@ class Image extends Simpla
             return false;
         }
 
+        if ($type == 'crop') {
+            $x0 = ($dst_w - $max_w) / 2;
+            $y0 = ($dst_h - $max_h) / 2;
+            $_dst_img = imagecreatetruecolor($max_w, $max_h);
+
+            imagecopy(
+                $_dst_img,
+                $dst_img,
+                0, 0,
+                $x0, $y0,
+                $max_w, $max_h
+            );
+
+            $dst_img = $_dst_img;
+            $dst_w = $max_w;
+            $dst_h = $max_h;
+        }
+
         // Watermark
         if (!empty($watermark) && is_readable($watermark)) {
             $overlay = imagecreatefrompng($watermark);
@@ -313,15 +334,15 @@ class Image extends Simpla
 
         // Сохраняем изображение
         switch ($src_type) {
-        case 'image/jpeg':
-            return imageJpeg($dst_img, $dst_file, $quality);
-        case 'image/gif':
-            return imageGif($dst_img, $dst_file, $quality);
-        case 'image/png':
-            imagesavealpha($dst_img, true);
-            return imagePng($dst_img, $dst_file, $quality);
-        default:
-            return false;
+            case 'image/jpeg':
+                return imageJpeg($dst_img, $dst_file, $quality);
+            case 'image/gif':
+                return imageGif($dst_img, $dst_file, $quality);
+            case 'image/png':
+                imagesavealpha($dst_img, true);
+                return imagePng($dst_img, $dst_file, $quality);
+            default:
+                return false;
         }
     }
 
@@ -339,7 +360,7 @@ class Image extends Simpla
      * @param float $sharpen
      * @return bool
      */
-    private function image_constrain_imagick($src_file, $dst_file, $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1, $sharpen=0.2)
+    private function image_constrain_imagick($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1, $sharpen=0.2)
     {
         $thumb = new Imagick();
 
@@ -362,10 +383,19 @@ class Image extends Simpla
         }
 
         // Размеры превью при пропорциональном уменьшении
-        list($dst_w, $dst_h) = $this->calc_contrain_size($src_w, $src_h, $max_w, $max_h);
+        list($dst_w, $dst_h) = $this->calc_contrain_size($src_w, $src_h, $max_w, $max_h, $type);
 
         // Уменьшаем
-        $thumb->thumbnailImage($dst_w, $dst_h);
+        if ($type == 'crop') {
+            $x0 = ($dst_w - $max_w) / 2;
+            $y0 = ($dst_h - $max_h) / 2;
+            $thumb->thumbnailImage($dst_w, $dst_h);
+            $dst_w = $max_w;
+            $dst_h = $max_h;
+            $thumb->cropImage($dst_w, $dst_h, $x0, $y0);
+        } else {
+            $thumb->thumbnailImage($dst_w, $dst_h);
+        }
 
         // Устанавливаем водяной знак
         if ($watermark && is_readable($watermark)) {
@@ -405,7 +435,9 @@ class Image extends Simpla
         // Убираем комменты и т.п. из картинки
         $thumb->stripImage();
 
-        //		$thumb->setImageCompressionQuality(100);
+        // TODO вынести в настройки
+        $quality = 90;
+        $thumb->setImageCompressionQuality($quality);
 
         // Записываем картинку
         if (!$thumb->writeImages($dst_file, true)) {
@@ -430,7 +462,7 @@ class Image extends Simpla
      * @param int $max_h максимальная высота
      * @return array|bool
      */
-    private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0)
+    private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0, $type = 'resize')
     {
         if ($src_w == 0 || $src_h == 0) {
             return false;
@@ -438,67 +470,43 @@ class Image extends Simpla
 
         $dst_w = $src_w;
         $dst_h = $src_h;
+        // image cropping calculator
+        if ($type == 'crop') {
+            $source_aspect_ratio = $src_w / $src_h;
+            $desired_aspect_ratio = $max_w / $max_h;
 
-        if ($src_w > $max_w && $max_w>0) {
-            $dst_h = $src_h * ($max_w/$src_w);
-            $dst_w = $max_w;
-        }
-        if ($dst_h > $max_h && $max_h>0) {
-            $dst_w = $dst_w * ($max_h/$dst_h);
-            $dst_h = $max_h;
-        }
-        return array($dst_w, $dst_h);
-    }
-
-    /**
-     * @param $fn1
-     * @param $fn2
-     * @return bool
-     * @todo Возможно можно удалить, так как данный метод не используется
-     */
-    private function files_identical($fn1, $fn2)
-    {
-        $buffer_len = 1024;
-        if (!$fp1 = fopen(dirname(dirname(__FILE__)).'/'.$fn1, 'rb')) {
-            return false;
-        }
-
-        if (!$fp2 = fopen($fn2, 'rb')) {
-            fclose($fp1);
-            return false;
-        }
-
-        $same = true;
-        while (!feof($fp1) and !feof($fp2)) {
-            if (fread($fp1, $buffer_len) !== fread($fp2, $buffer_len)) {
-                $same = false;
-                break;
+            if ($source_aspect_ratio > $desired_aspect_ratio) {
+                $dst_h = $max_h;
+                $dst_w = ( int ) ($max_h * $source_aspect_ratio);
+            } else {
+                $dst_w = $max_w;
+                $dst_h = ( int ) ($max_w / $source_aspect_ratio);
+            }
+        } else {
+            // image resize calculator
+            if ($src_w > $max_w && $max_w>0) {
+                $dst_h = $src_h * ($max_w/$src_w);
+                $dst_w = $max_w;
+            }
+            if ($dst_h > $max_h && $max_h>0) {
+                $dst_w = $dst_w * ($max_h/$dst_h);
+                $dst_h = $max_h;
             }
         }
-
-        if (feof($fp1) !== feof($fp2)) {
-            $same = false;
-        }
-
-        fclose($fp1);
-        fclose($fp2);
-
-        return $same;
+        return array($dst_w, $dst_h);
     }
 
     /**
      * @param $filename
      * @return mixed|string
      */
-    private function correct_filename($filename)
+    public function correct_filename($filename)
     {
-        $ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я");
-        $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch---Y-y---E-e-YU-yu-YA-ya");
-
+        $ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я- ");
+        $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-_-Y-y-_-E-e-YU-yu-YA-ya-_");
         $res = str_replace($ru, $en, $filename);
-        $res = preg_replace("/[\s]+/ui", '-', $res);
-        $res = preg_replace("/[^a-zA-Z0-9\.\-\_]+/ui", '', $res);
         $res = strtolower($res);
+        $res = preg_replace("/[^a-z0-9_]/", "", $res);
         return $res;
     }
 
@@ -510,8 +518,6 @@ class Image extends Simpla
      *                composition determines how much this issue will annoy you.
      *                if in doubt, use as you would imagecopy_alpha (i.e. keep
      *                opacity at 100%)
-     *
-     * @access public
      *
      * @param  resource $dst  Destination image link resource
      * @param  resource $src  Source image link resource
