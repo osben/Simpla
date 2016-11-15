@@ -39,8 +39,6 @@ class Image extends Simpla
             if (!$original_file = $this->download_image($source_file)) {
                 return false;
             }
-
-            $resized_file = $this->add_resize_params($original_file, $width, $height, $set_watermark);
         } else {
             $original_file = $source_file;
         }
