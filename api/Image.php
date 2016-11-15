@@ -473,8 +473,6 @@ class Image extends Simpla
      *                if in doubt, use as you would imagecopy_alpha (i.e. keep
      *                opacity at 100%)
      *
-     * @access public
-     *
      * @param  resource $dst  Destination image link resource
      * @param  resource $src  Source image link resource
      * @param  int      $dstX x-coordinate of destination point
