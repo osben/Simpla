@@ -430,7 +430,7 @@ class Image extends Simpla
      * @param int $max_h максимальная высота
      * @return array|bool
      */
-    private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0)
+    private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0, $type = 'resize')
     {
         if ($src_w == 0 || $src_h == 0) {
             return false;
@@ -438,14 +438,28 @@ class Image extends Simpla
 
         $dst_w = $src_w;
         $dst_h = $src_h;
+        // image cropping calculator
+        if ($type == 'crop') {
+            $source_aspect_ratio = $src_w / $src_h;
+            $desired_aspect_ratio = $max_w / $max_h;
 
-        if ($src_w > $max_w && $max_w>0) {
-            $dst_h = $src_h * ($max_w/$src_w);
-            $dst_w = $max_w;
-        }
-        if ($dst_h > $max_h && $max_h>0) {
-            $dst_w = $dst_w * ($max_h/$dst_h);
-            $dst_h = $max_h;
+            if ($source_aspect_ratio > $desired_aspect_ratio) {
+                $dst_h = $max_h;
+                $dst_w = ( int ) ($max_h * $source_aspect_ratio);
+            } else {
+                $dst_w = $max_w;
+                $dst_h = ( int ) ($max_w / $source_aspect_ratio);
+            }
+        } else {
+            // image resize calculator
+            if ($src_w > $max_w && $max_w>0) {
+                $dst_h = $src_h * ($max_w/$src_w);
+                $dst_w = $max_w;
+            }
+            if ($dst_h > $max_h && $max_h>0) {
+                $dst_w = $dst_w * ($max_h/$dst_h);
+                $dst_h = $max_h;
+            }
         }
         return array($dst_w, $dst_h);
     }
