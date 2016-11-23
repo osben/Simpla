@@ -1,6 +1,6 @@
 {* Письмо восстановления пароля *}
-	
-{$subject = 'Новый пароль' scope=parent}
+
+{$subject = 'Новый пароль' scope=root}
 <html>
 	<body>
 		<p>{$user->name|escape}, на сайте <a href='http://{$config->root_url}/'>{$settings->site_name}</a> был сделан запрос на восстановление вашего пароля.</p>

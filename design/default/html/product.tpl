@@ -1,7 +1,7 @@
 {* Страница товара *}
 
 {* Канонический адрес страницы *}
-{$canonical="/products/{$product->url}" scope=parent}
+{$canonical="/products/{$product->url}" scope=root}
 
 <!-- Хлебные крошки /-->
 <div id="path">

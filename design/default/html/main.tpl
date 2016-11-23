@@ -2,10 +2,10 @@
 
 {* Для того чтобы обернуть центральный блок в шаблон, отличный от index.tpl *}
 {* Укажите нужный шаблон строкой ниже. Это работает и для других модулей *}
-{$wrapper = 'index.tpl' scope=parent}
+{$wrapper = 'index.tpl' scope=root}
 
 {* Канонический адрес страницы *}
-{$canonical="" scope=parent}
+{$canonical="" scope=root}
 
 {* Заголовок страницы *}
 <h1>{$page->header}</h1>
@@ -24,7 +24,7 @@
 	{foreach $featured_products as $product}
 	<!-- Товар-->
 	<li class="product">
-		
+
 		<!-- Фото товара -->
 		{if $product->image}
 		<div class="image">
@@ -36,7 +36,7 @@
 		<!-- Название товара -->
 		<h3><a data-product="{$product->id}" href="products/{$product->url}">{$product->name|escape}</a></h3>
 		<!-- Название товара (The End) -->
-		
+
 
 		{if $product->variants|count > 0}
 		<!-- Выбор варианта товара -->
@@ -67,7 +67,7 @@
 	</li>
 	<!-- Товар (The End)-->
 	{/foreach}
-			
+
 </ul>
 {/if}
 
@@ -83,7 +83,7 @@
 
 	<!-- Товар-->
 	<li class="product">
-		
+
 		<!-- Фото товара -->
 		{if $product->image}
 		<div class="image">
@@ -125,9 +125,9 @@
 	</li>
 	<!-- Товар (The End)-->
 	{/foreach}
-			
+
 </ul>
-{/if}	
+{/if}
 
 
 {* Акционные товары *}
@@ -140,7 +140,7 @@
 	{foreach $discounted_products as $product}
 	<!-- Товар-->
 	<li class="product">
-		
+
 		<!-- Фото товара -->
 		{if $product->image}
 		<div class="image">
@@ -152,7 +152,7 @@
 		<!-- Название товара -->
 		<h3><a data-product="{$product->id}" href="products/{$product->url}">{$product->name|escape}</a></h3>
 		<!-- Название товара (The End) -->
-		
+
 		{if $product->variants|count > 0}
 		<!-- Выбор варианта товара -->
 		<form class="variants" action="/cart">
@@ -182,6 +182,6 @@
 	</li>
 	<!-- Товар (The End)-->
 	{/foreach}
-			
+
 </ul>
 {/if}

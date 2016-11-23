@@ -1,6 +1,6 @@
 {* Шаблон письма пользователю о заказе *}
 
-{$subject = "Заказ №`$order->id`" scope=parent}
+{$subject = "Заказ №`$order->id`" scope=root}
 <h1 style="font-weight:normal;font-family:arial;">
 	<a href="{$config->root_url}/order/{$order->url}">Ваш заказ №{$order->id}</a>
 	на сумму {$order->total_price|convert:$currency->id}&nbsp;{$currency->sign}
@@ -14,7 +14,7 @@
 		</td>
 		<td style="padding:6px; width:330; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;">
 			{if $order->status == 0}
-				ждет обработки      
+				ждет обработки
 			{elseif $order->status == 1}
 				в обработке
 			{elseif $order->status == 2}
@@ -119,7 +119,7 @@
 		</td>
 	</tr>
 	{/foreach}
-	
+
 	{if $order->discount}
 	<tr>
 		<td style="padding:6px; width:100; padding:6px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;"></td>
@@ -155,7 +155,7 @@
 		</td>
 	</tr>
 	{/if}
-	
+
 	<tr>
 		<td style="padding:6px; width:100; padding:6px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;"></td>
 		<td style="padding:6px; background-color:#f0f0f0; border:1px solid #e0e0e0;font-family:arial;font-weight:bold;">

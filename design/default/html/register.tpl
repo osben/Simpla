@@ -1,9 +1,9 @@
 {* Страница регистрации *}
 
 {* Канонический адрес страницы *}
-{$canonical="/user/register" scope=parent}
+{$canonical="/user/register" scope=root}
 
-{$meta_title = "Регистрация" scope=parent}
+{$meta_title = "Регистрация" scope=root}
 
 <h1>Регистрация</h1>
 

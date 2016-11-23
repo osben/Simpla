@@ -1,7 +1,7 @@
 {* Список записей блога *}
 
 {* Канонический адрес страницы *}
-{$canonical="/blog" scope=parent}
+{$canonical="/blog" scope=root}
 
 <!-- Заголовок /-->
 <h1>{$page->name}</h1>
@@ -18,7 +18,6 @@
 	</li>
 	{/foreach}
 </ul>
-<!-- Статьи #End /-->    
+<!-- Статьи #End /-->
 
 {include file='pagination.tpl'}
-          

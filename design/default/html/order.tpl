@@ -1,8 +1,8 @@
 {* Страница заказа *}
 
-{$meta_title = "Ваш заказ №`$order->id`" scope=parent}
+{$meta_title = "Ваш заказ №`$order->id`" scope=root}
 
-<h1>Ваш заказ №{$order->id} 
+<h1>Ваш заказ №{$order->id}
 {if $order->status == 0}принят{/if}
 {if $order->status == 1}в обработке{elseif $order->status == 2}выполнен{/if}
 {if $order->paid == 1}, оплачен{else}{/if}
@@ -20,7 +20,7 @@
 		<a href="products/{$purchase->product->url}"><img src="{$image->filename|resize:50:50}" alt="{$product->name|escape}"></a>
 		{/if}
 	</td>
-	
+
 	{* Название товара *}
 	<td class="name">
 		<a href="/products/{$purchase->product->url}">{$purchase->product_name|escape}</a>
@@ -182,7 +182,7 @@
     	<li>
     		<div class="checkbox">
     			<input type=radio name=payment_method_id value='{$payment_method->id}' {if $payment_method@first}checked{/if} id=payment_{$payment_method->id}>
-    		</div>			
+    		</div>
 			<h3><label for=payment_{$payment_method->id}>	{$payment_method->name}, к оплате {$order->total_price|convert:$payment_method->currency_id}&nbsp;{$all_currencies[$payment_method->currency_id]->sign}</label></h3>
 			<div class="description">
 			{$payment_method->description}
@@ -196,7 +196,7 @@
 {* Выбраный способ оплаты *}
 {elseif $payment_method}
 <h2>Способ оплаты &mdash; {$payment_method->name}
-<form method=post><input type=submit name='reset_payment_method' value='Выбрать другой способ оплаты'></form>	
+<form method=post><input type=submit name='reset_payment_method' value='Выбрать другой способ оплаты'></form>
 </h2>
 <p>
 {$payment_method->description}
@@ -212,4 +212,3 @@
 {/if}
 
 
- 
