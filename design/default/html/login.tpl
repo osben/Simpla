@@ -1,10 +1,10 @@
 {* Страница входа пользователя *}
 
 {* Канонический адрес страницы *}
-{$canonical="/user/login" scope=parent}
+{$canonical="/user/login" scope=root}
 
-{$meta_title = "Вход" scope=parent}
-   
+{$meta_title = "Вход" scope=root}
+
 <h1>Вход</h1>
 
 {if $error}

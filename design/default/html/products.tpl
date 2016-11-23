@@ -2,15 +2,15 @@
 
 {* Канонический адрес страницы *}
 {if $category && $brand}
-{$canonical="/catalog/{$category->url}/{$brand->url}" scope=parent}
+{$canonical="/catalog/{$category->url}/{$brand->url}" scope=root}
 {elseif $category}
-{$canonical="/catalog/{$category->url}" scope=parent}
+{$canonical="/catalog/{$category->url}" scope=root}
 {elseif $brand}
-{$canonical="/brands/{$brand->url}" scope=parent}
+{$canonical="/brands/{$brand->url}" scope=root}
 {elseif $keyword}
-{$canonical="/products?keyword={$keyword|escape}" scope=parent}
+{$canonical="/products?keyword={$keyword|escape}" scope=root}
 {else}
-{$canonical="/products" scope=parent}
+{$canonical="/products" scope=root}
 {/if}
 
 <!-- Хлебные крошки /-->
@@ -19,7 +19,7 @@
 	{if $category}
 	{foreach $category->path as $cat}
 	› <a href="catalog/{$cat->url}">{$cat->name|escape}</a>
-	{/foreach}  
+	{/foreach}
 	{if $brand}
 	› <a href="catalog/{$cat->url}/{$brand->url}">{$brand->name|escape}</a>
 	{/if}
@@ -94,7 +94,7 @@
 {* Сортировка *}
 {if $products|count>0}
 <div class="sort">
-	Сортировать по 
+	Сортировать по
 	<a {if $sort=='position'} class="selected"{/if} href="{url sort=position page=null}">умолчанию</a>
 	<a {if $sort=='price'}    class="selected"{/if} href="{url sort=price page=null}">цене</a>
 	<a {if $sort=='name'}     class="selected"{/if} href="{url sort=name page=null}">названию</a>
@@ -111,7 +111,7 @@
 	{foreach $products as $product}
 	<!-- Товар-->
 	<li class="product">
-		
+
 		<!-- Фото товара -->
 		{if $product->image}
 		<div class="image">
@@ -128,7 +128,7 @@
 		<!-- Описание товара -->
 		<div class="annotation">{$product->annotation}</div>
 		<!-- Описание товара (The End) -->
-		
+
 		{if $product->variants|count > 0}
 		<!-- Выбор варианта товара -->
 		<form class="variants" action="/cart">
@@ -156,14 +156,14 @@
 		{/if}
 
 		</div>
-		
+
 	</li>
 	<!-- Товар (The End)-->
 	{/foreach}
-			
+
 </ul>
 
-{include file='pagination.tpl'}	
+{include file='pagination.tpl'}
 <!-- Список товаров (The End)-->
 
 {else}
