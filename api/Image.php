@@ -506,7 +506,7 @@ class Image extends Simpla
         $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-_-Y-y-_-E-e-YU-yu-YA-ya-_");
         $res = str_replace($ru, $en, $filename);
         $res = strtolower($res);
-        $res = preg_replace("/[^a-z0-9_]/", "", $res);
+        $res = preg_replace("/[^a-z0-9_-]/", "", $res);
         return $res;
     }
 
