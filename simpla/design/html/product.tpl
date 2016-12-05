@@ -26,7 +26,7 @@ $(function() {
 		$("#product_categories ul li:last").clone(false).appendTo('#product_categories ul').fadeIn('slow').find("select[name*=categories]:last").focus();
 		$("#product_categories ul li:last span.add").hide();
 		$("#product_categories ul li:last span.delete").show();
-		return false;		
+		return false;
 	});
 
 	// Удаление категории
@@ -40,7 +40,7 @@ $(function() {
 	// Сортировка вариантов
 	$("table.related_products").sortable({ items: 'tr' , axis: 'y',  cancel: '#header', handle: '.move_zone' });
 
-	
+
 	// Сортировка связанных товаров
 	$(".sortable").sortable({
 		items: "div.row",
@@ -49,7 +49,7 @@ $(function() {
 		opacity:0.7,
 		handle: '.move_zone'
 	});
-		
+
 
 	// Сортировка изображений
 	$(".images ul").sortable({ tolerance: 'pointer'});
@@ -77,9 +77,9 @@ $(function() {
 		$(document).on('dragenter', function (e){
 			$("#dropZone").css('border', '1px dotted #8cbf32').css('background-color', '#c5ff8d');
 		});
-	
+
 		dropInput = $('.dropInput').last().clone();
-		
+
 		function handleFileSelect(evt){
 			var files = evt.target.files; // FileList object
 			// Loop through the FileList and render image files as thumbnails.
@@ -101,7 +101,7 @@ $(function() {
 					clone_input.show();
 		        };
 		      })(f);
-		
+
 		      // Read in the image file as a data URL.
 		      reader.readAsDataURL(f);
 		    }
@@ -129,9 +129,9 @@ $(function() {
 		$(this).hide();
 		$(this).closest('li').find('div.browse_attachment').show('fast');
 		$(this).closest('li').find('input[name*=attachment]').attr('disabled', false);
-		return false;		
+		return false;
 	});
-	
+
 	// Удалить файл к варианту
 	$('#variants_block a.remove_attachment').click(function() {
 		closest_li = $(this).closest('li');
@@ -139,7 +139,7 @@ $(function() {
 		$(this).hide('fast');
 		closest_li.find('input[name*=delete_attachment]').val('1');
 		closest_li.find('a.add_attachment').show('fast');
-		return false;		
+		return false;
 	});
 
 
@@ -154,12 +154,12 @@ $(function() {
 		else
 		{
 			$('#variants_block .variant_name').show('slow');
-			$('#variants_block').removeClass('single_variant');		
+			$('#variants_block').removeClass('single_variant');
 		}
-		return false;		
+		return false;
 	});
-	
-	
+
+
 	function show_category_features(category_id)
 	{
 		$('ul.prop_ul').empty();
@@ -171,7 +171,7 @@ $(function() {
 				for(i=0; i<data.length; i++)
 				{
 					feature = data[i];
-					
+
 					line = $("<li><label class=property></label><input class='simpla_inp' type='text'/></li>");
 					var new_line = line.clone(true);
 					new_line.find("label.property").text(feature.name);
@@ -188,7 +188,7 @@ $(function() {
 		});
 		return false;
 	}
-	
+
 	// Изменение набора свойств при изменении категории
 	$('select[name="categories[]"]:first').change(function() {
 		show_category_features($("option:selected",this).val());
@@ -203,35 +203,35 @@ $(function() {
 			params: {feature_id:feature_id},
 			noCache: false
 		});
-	}); 	
-	
+	});
+
 	// Добавление нового свойства товара
 	var new_feature = $('#new_feature').clone(true);
 	$('#new_feature').remove().removeAttr('id');
 	$('#add_new_feature').click(function() {
 		$(new_feature).clone(true).appendTo('ul.new_features').fadeIn('slow').find("input[name*=new_feature_name]").focus();
-		return false;		
+		return false;
 	});
 
-	
+
 	// Удаление связанного товара
 	$(".related_products a.delete").live('click', function() {
 		 $(this).closest("div.row").fadeOut(200, function() { $(this).remove(); });
 		 return false;
 	});
- 
 
-	// Добавление связанного товара 
+
+	// Добавление связанного товара
 	var new_related_product = $('#new_related_product').clone(true);
 	$('#new_related_product').remove().removeAttr('id');
- 
+
 	$("input#related_products").autocomplete({
 		serviceUrl:'ajax/search_products.php',
 		minChars:0,
-		noCache: false, 
+		noCache: false,
 		onSelect:
 			function(suggestion){
-				$("input#related_products").val('').focus().blur(); 
+				$("input#related_products").val('').focus().blur();
 				new_item = new_related_product.clone().appendTo('.related_products');
 				new_item.removeAttr('id');
 				new_item.find('a.related_product_name').html(suggestion.data.name);
@@ -251,7 +251,7 @@ $(function() {
 			}
 
 	});
-  
+
 
 	// infinity
 	$("input[name*=variant][name*=stock]").focus(function() {
@@ -264,49 +264,23 @@ $(function() {
 		if($(this).val() == '')
 			$(this).val('∞');
 	});
-	
+
 	// Волшебные изображения
 	name_changed = false;
 	$("input[name=name]").change(function() {
 		name_changed = true;
 		images_loaded = 0;
-	});	
-	images_num = 8;
-	images_loaded = 0;
-	old_wizar_dicon_src = $('#images_wizard img').attr('src');
-	$('#images_wizard').click(function() {
-		
-		$('#images_wizard img').attr('src', 'design/images/loader.gif');
-		if(name_changed)
-			$('div.images ul li.wizard').remove();
-		name_changed = false;
-		key = $('input[name=name]').val();
-		$.ajax({
- 			 url: "ajax/get_images.php",
- 			 	data: {keyword: key, start: images_loaded},
- 			 	dataType: 'json',
-  				success: function(data){
-    				for(i=0; i<Math.min(data.length, images_num); i++)
-    				{
-	    				image_url = data[i];
-						$("<li class=wizard><a href='' class='delete'><img src='design/images/cross-circle-frame.png'></a><a href='"+image_url+"' target=_blank><img onerror='$(this).closest(\"li\").remove();' src='"+image_url+"' /><input name=images_urls[] type=hidden value='"+image_url+"'></a></li>").appendTo('div .images ul');
-    				}
-					$('#images_wizard img').attr('src', old_wizar_dicon_src);
-					images_loaded += images_num;
-  				}
-		});
-		return false;
 	});
-	
+
 	// Волшебное описание
 	name_changed = false;
 	captcha_code = '';
 	$("input[name=name]").change(function() {
 		name_changed = true;
-	});	
+	});
 	old_prop_wizard_icon_src = $('#properties_wizard img').attr('src');
 	$('#properties_wizard').click(function() {
-		
+
 		$('#properties_wizard img').attr('src', 'design/images/loader.gif');
 		$('#captcha_form').remove();
 		if(name_changed)
@@ -319,13 +293,13 @@ $(function() {
  			 	data: {keyword: key, captcha: captcha_code},
  			 	dataType: 'json',
   				success: function(data){
- 
+
   					captcha_code = '';
 					$('#properties_wizard img').attr('src', old_prop_wizard_icon_src);
 
 					// Если запрашивают капчу
 					if(data.captcha)
-					{	 
+					{
 						captcha_form = $("<form id='captcha_form'><img src='data:image/png;base64,"+data.captcha+"' align='absmiddle'><input id='captcha_input' type=text><input type=submit value='Ok'></form>");
 						$("#properties_wizard").parent().append(captcha_form);
 						$('#captcha_input').focus();
@@ -338,7 +312,7 @@ $(function() {
 					}
 					else
   					if(data.product)
-  					{ 
+  					{
   						$('li#new_feature').remove();
 	    				for(i=0; i<data.product.options.length; i++)
 	    				{
@@ -346,7 +320,7 @@ $(function() {
 	    					option_value = data.product.options[i].value;
 							// Добавление нового свойства товара
 							exists = false;
-														
+
 							if(!$('label.property:visible').filter(function(){ return $(this).text().toLowerCase() === option_name.toLowerCase();}).closest('li').find('input[name*=options]').val(option_value).length)
 							{
 								f = $(new_feature).clone(true);
@@ -355,8 +329,8 @@ $(function() {
 								f.appendTo('ul.new_features').fadeIn('slow').find("input[name*=new_feature_name]");
 							}
 	   					}
-	   					
-   					}				
+
+   					}
 				},
 				error: function(xhr, textStatus, errorThrown){
                 	alert("Error: " +textStatus);
@@ -364,14 +338,14 @@ $(function() {
 		});
 		return false;
 	});
-	
+
 
 	// Автозаполнение мета-тегов
 	meta_title_touched = true;
 	meta_keywords_touched = true;
 	meta_description_touched = true;
 	url_touched = true;
-	
+
 	if($('input[name="meta_title"]').val() == generate_meta_title() || $('input[name="meta_title"]').val() == '')
 		meta_title_touched = false;
 	if($('input[name="meta_keywords"]').val() == generate_meta_keywords() || $('input[name="meta_keywords"]').val() == '')
@@ -380,16 +354,16 @@ $(function() {
 		meta_description_touched = false;
 	if($('input[name="url"]').val() == generate_url() || $('input[name="url"]').val() == '')
 		url_touched = false;
-		
+
 	$('input[name="meta_title"]').change(function() { meta_title_touched = true; });
 	$('input[name="meta_keywords"]').change(function() { meta_keywords_touched = true; });
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
 	$('input[name="url"]').change(function() { url_touched = true; });
-	
+
 	$('input[name="name"]').keyup(function() { set_meta(); });
 	$('select[name="brand_id"]').change(function() { set_meta(); });
 	$('select[name="categories[]"]').change(function() { set_meta(); });
-	
+
 });
 
 function set_meta()
@@ -421,7 +395,7 @@ function generate_meta_keywords()
 		c = $(this).find('option:selected').attr('category_name');
 		if(typeof(c) == 'string' && c != '')
     		result += ', '+c;
-	}); 
+	});
 	return result;
 }
 
@@ -441,22 +415,22 @@ function generate_url()
 	url = $('input[name="name"]').val();
 	url = url.replace(/[\s]+/gi, '-');
 	url = translit(url);
-	url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();	
+	url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();
 	return url;
 }
 
 function translit(str)
 {
-	var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")   
-	var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")   
+	var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")
+	var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")
  	var res = '';
 	for(var i=0, l=str.length; i<l; i++)
-	{ 
-		var s = str.charAt(i), n = ru.indexOf(s); 
-		if(n >= 0) { res += en[n]; } 
-		else { res += s; } 
-    } 
-    return res;  
+	{
+		var s = str.charAt(i), n = ru.indexOf(s);
+		if(n >= 0) { res += en[n]; }
+		else { res += s; }
+    }
+    return res;
 }
 
 </script>
@@ -486,8 +460,8 @@ overflow-y: auto;
 	{if $smarty.get.return}
 	<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
-	
-	<span class="share">		
+
+	<span class="share">
 		<a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/products/{$product->url|urlencode}&title={$product->name|urlencode}&description={$product->annotation|urlencode}&image={$product_images.0->filename|resize:1000:1000|urlencode}&noparse=true","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
   		<img src="{$config->root_url}/simpla/design/images/vk_icon.png" /></a>
 		<a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/products/{$product->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
@@ -495,7 +469,7 @@ overflow-y: auto;
 		<a href="#" onClick='window.open("http://twitter.com/share?text={$product->name|urlencode}&url={$config->root_url|urlencode}/products/{$product->url|urlencode}&hashtags={$product->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
   		<img src="{$config->root_url}/simpla/design/images/twitter_icon.png" /></a>
 	</span>
-	
+
 </div>
 <!-- Системное сообщение (The End)-->
 {/if}
@@ -517,16 +491,16 @@ overflow-y: auto;
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 
  	<div id="name">
-		<input class="name" name=name type="text" value="{$product->name|escape}"/> 
-		<input name=id type="hidden" value="{$product->id|escape}"/> 
+		<input class="name" name=name type="text" value="{$product->name|escape}"/>
+		<input name=id type="hidden" value="{$product->id|escape}"/>
 		<div class="checkbox">
 			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $product->visible}checked{/if}/> <label for="active_checkbox">Активен</label>
 		</div>
 		<div class="checkbox">
 			<input name=featured value="1" type="checkbox" id="featured_checkbox" {if $product->featured}checked{/if}/> <label for="featured_checkbox">Рекомендуемый</label>
 		</div>
-	</div> 
-	
+	</div>
+
 	<div id="product_brand" {if !$brands}style='display:none;'{/if}>
 		<label>Бренд</label>
 		<select name="brand_id">
@@ -536,8 +510,8 @@ overflow-y: auto;
         	{/foreach}
 		</select>
 	</div>
-	
-	
+
+
 	<div id="product_categories" {if !$categories}style='display:none;'{/if}>
 		<label>Категория</label>
 		<div>
@@ -556,7 +530,7 @@ overflow-y: auto;
 					<span {if not $smarty.foreach.categories.first}style='display:none;'{/if} class="add"><i class="dash_link">Дополнительная категория</i></span>
 					<span {if $smarty.foreach.categories.first}style='display:none;'{/if} class="delete"><i class="dash_link">Удалить</i></span>
 				</li>
-				{/foreach}		
+				{/foreach}
 			</ul>
 		</div>
 	</div>
@@ -566,10 +540,10 @@ overflow-y: auto;
 	<div id="variants_block" {assign var=first_variant value=$product_variants|@first}{if $product_variants|@count <= 1 && !$first_variant->name}class=single_variant{/if}>
 		<ul id="header">
 			<li class="variant_move"></li>
-			<li class="variant_name">Название варианта</li>	
-			<li class="variant_sku">Артикул</li>	
-			<li class="variant_price">Цена, {$currency->sign}</li>	
-			<li class="variant_discount">Старая, {$currency->sign}</li>	
+			<li class="variant_name">Название варианта</li>
+			<li class="variant_sku">Артикул</li>
+			<li class="variant_price">Цена, {$currency->sign}</li>
+			<li class="variant_discount">Старая, {$currency->sign}</li>
 			<li class="variant_amount">Кол-во</li>
 		</ul>
 		<div id="variants">
@@ -582,7 +556,7 @@ overflow-y: auto;
 			<li class="variant_discount">  <input name="variants[compare_price][]" type="text"   value="{$variant->compare_price|escape}" /></li>
 			<li class="variant_amount">    <input name="variants[stock][]"         type="text"   value="{if $variant->infinity || $variant->stock == ''}∞{else}{$variant->stock|escape}{/if}" />{$settings->units}</li>
 			<li class="variant_download">
-			
+
 				{if $variant->attachment}
 					<span class=attachment_name>{$variant->attachment|truncate:25:'...':false:true}</span>
 					<a href='#' class=remove_attachment><img src='design/images/bullet_delete.png'  title="Удалить цифровой товар"></a>
@@ -594,10 +568,10 @@ overflow-y: auto;
 					<input type=file name=attachment[]>
 					<input type=hidden name=delete_attachment[]>
 				</div>
-			
+
 			</li>
 		</ul>
-		{/foreach}		
+		{/foreach}
 		</div>
 		<ul id=new_variant style='display:none;'>
 			<li class="variant_move"><div class="move_zone"></div></li>
@@ -618,11 +592,11 @@ overflow-y: auto;
 		<input class="button_green button_save" type="submit" name="" value="Сохранить" />
 		<span class="add" id="add_variant"><i class="dash_link">Добавить вариант</i></span>
  	</div>
-	<!-- Варианты товара (The End)--> 
-	
+	<!-- Варианты товара (The End)-->
+
  	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-			
+
 		<!-- Параметры страницы -->
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
@@ -634,12 +608,12 @@ overflow-y: auto;
 			</ul>
 		</div>
 		<!-- Параметры страницы (The End)-->
-				
+
 		<div class="block layer" {if !$categories}style='display:none;'{/if}>
 			<h2>Свойства товара
 			<a href="#" id=properties_wizard><img src="design/images/wand.png" alt="Подобрать автоматически" title="Подобрать автоматически"/></a>
 			</h2>
-			
+
 			<ul class="prop_ul">
 				{foreach $features as $feature}
 					{assign var=feature_id value=$feature->id}
@@ -651,11 +625,11 @@ overflow-y: auto;
 				<li id=new_feature><label class=property><input type=text name=new_features_names[]></label><input class="simpla_inp" type="text" name=new_features_values[] /></li>
 			</ul>
 			<span class="add"><i class="dash_link" id="add_new_feature">Добавить новое свойство</i></span>
-			<input class="button_green button_save" type="submit" name="" value="Сохранить" />			
+			<input class="button_green button_save" type="submit" name="" value="Сохранить" />
 		</div>
-		
+
 		<!-- Свойства товара (The End)-->
-		
+
 		{*
 		<!-- Экспорт-->
 		<div class="block">
@@ -667,18 +641,16 @@ overflow-y: auto;
 		</div>
 		<!-- Свойства товара (The End)-->
 		*}
-			
+
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
-	<!-- Правая колонка свойств товара -->	
+	<!-- Левая колонка свойств товара (The End)-->
+
+	<!-- Правая колонка свойств товара -->
 	<div id="column_right">
-		
-		<!-- Изображения товара -->	
+
+		<!-- Изображения товара -->
 		<div class="block layer images">
-			<h2>Изображения товара
-			<a href="#" id=images_wizard><img src="design/images/wand.png" alt="Подобрать автоматически" title="Подобрать автоматически"/></a>
-			</h2>
+			<h2>Изображения товара</h2>
 			<ul>{foreach $product_images as $image}<li>
 					<a href='#' class="delete"><img src='design/images/cross-circle-frame.png'></a>
 					<img src="{$image->filename|resize:100:100}" alt="" />
@@ -736,23 +708,23 @@ overflow-y: auto;
 		</div>
 
 		<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-		
+
 	</div>
-	<!-- Правая колонка свойств товара (The End)--> 
+	<!-- Правая колонка свойств товара (The End)-->
 
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Краткое описание</h2>
 		<textarea name="annotation" class="editor_small">{$product->annotation|escape}</textarea>
 	</div>
-		
-	<div class="block">		
+
+	<div class="block">
 		<h2>Полное  описание</h2>
 		<textarea name="body" class="editor_large">{$product->body|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	
+
 </form>
 <!-- Основная форма (The End) -->
 
