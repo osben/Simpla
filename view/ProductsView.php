@@ -18,7 +18,7 @@ class ProductsView extends View
     {
         // GET-Параметры
         $category_url    = $this->request->get('category', 'string');
-        $brand_url        = $this->request->get('brand', 'string');
+        $brand_url       = $this->request->get('brand', 'string');
 
         $filter = array();
         $filter['visible'] = 1;
@@ -128,61 +128,17 @@ class ProductsView extends View
         // Постраничная навигация END
         ///////////////////////////////////////////////
 
-
-//        $discount = 0;
-//        if (isset($_SESSION['user_id']) && $user = $this->users->get_user(intval($_SESSION['user_id']))) {
-//            $discount = $user->discount;
-//        }
-
         // Товары
-        $products = array();
-        foreach ($this->products->get_products($filter) as $p) {
-            $products[$p->id] = $p;
-        }
+        $products = $this->products->get_products_compile($filter);
 
         // Если искали товар и найден ровно один - перенаправляем на него
-        if (!empty($keyword) && $products_count == 1) {
+        if (!empty($keyword) && !empty($products) && $products_count == 1) {
+            $p = reset($products);
             header('Location: '.$this->config->root_url.'/products/'.$p->url);
-        }
+            exit();
+		}
 
-        if (!empty($products)) {
-            $products_ids = array_keys($products);
-            foreach ($products as &$product) {
-                $product->variants = array();
-                $product->images = array();
-                $product->properties = array();
-            }
-
-            $variants = $this->variants->get_variants(array('product_id'=>$products_ids, 'in_stock'=>true));
-
-            foreach ($variants as &$variant) {
-                //$variant->price *= (100-$discount)/100;
-                $products[$variant->product_id]->variants[] = $variant;
-            }
-
-            $images = $this->products->get_images(array('product_id'=>$products_ids));
-            foreach ($images as $image) {
-                $products[$image->product_id]->images[] = $image;
-            }
-
-            foreach ($products as &$product) {
-                if (isset($product->variants[0])) {
-                    $product->variant = $product->variants[0];
-                }
-                if (isset($product->images[0])) {
-                    $product->image = $product->images[0];
-                }
-            }
-
-
-            /*
-            $properties = $this->features->get_options(array('product_id'=>$products_ids));
-            foreach($properties as $property)
-                $products[$property->product_id]->options[] = $property;
-            */
-
-            $this->design->assign('products', $products);
-        }
+        $this->design->assign('products', $products);
 
         // Выбираем бренды, они нужны нам в шаблоне
         if (!empty($category)) {
@@ -206,7 +162,6 @@ class ProductsView extends View
         } elseif (isset($keyword)) {
             $this->design->assign('meta_title', $keyword);
         }
-
 
         return $this->design->fetch('products.tpl');
     }

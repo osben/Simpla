@@ -13,7 +13,6 @@ require_once('View.php');
 
 class ProductView extends View
 {
-
     public function fetch()
     {
         $product_url = $this->request->get('product_url', 'string');
@@ -96,37 +95,13 @@ class ProductView extends View
 
         // Связанные товары
         $related_ids = array();
-        $related_products = array();
         foreach ($this->products->get_related_products($product->id) as $p) {
             $related_ids[] = $p->related_id;
-            $related_products[$p->related_id] = null;
         }
         if (!empty($related_ids)) {
-            foreach ($this->products->get_products(array('id'=>$related_ids, 'limit' => count($related_ids), 'in_stock'=>1, 'visible'=>1)) as $p) {
-                $related_products[$p->id] = $p;
-            }
+            $products = $this->products->get_products_compile(array('id'=>$related_ids, 'limit' => count($related_ids), 'in_stock'=>1, 'visible'=>1));
 
-            $related_products_images = $this->products->get_images(array('product_id'=>array_keys($related_products)));
-            foreach ($related_products_images as $related_product_image) {
-                if (isset($related_products[$related_product_image->product_id])) {
-                    $related_products[$related_product_image->product_id]->images[] = $related_product_image;
-                }
-            }
-            $related_products_variants = $this->variants->get_variants(array('product_id'=>array_keys($related_products), 'in_stock'=>1));
-            foreach ($related_products_variants as $related_product_variant) {
-                if (isset($related_products[$related_product_variant->product_id])) {
-                    $related_products[$related_product_variant->product_id]->variants[] = $related_product_variant;
-                }
-            }
-            foreach ($related_products as $id=>$r) {
-                if (is_object($r)) {
-                    $r->image = &$r->images[0];
-                    $r->variant = &$r->variants[0];
-                } else {
-                    unset($related_products[$id]);
-                }
-            }
-            $this->design->assign('related_products', $related_products);
+            $this->design->assign('related_products', $products);
         }
 
         // Отзывы о товаре

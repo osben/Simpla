@@ -17,9 +17,8 @@
 <tr>
 	{* Изображение товара *}
 	<td class="image">
-		{$image = $purchase->product->images|first}
-		{if $image}
-		<a href="products/{$purchase->product->url}"><img src="{$image->filename|resize:50:50}" alt="{$product->name|escape}"></a>
+		{if $purchase->product->image}
+		<a href="products/{$purchase->product->url}"><img src="{$purchase->product->image->filename|resize:50:50}" alt="{$product->name|escape}"></a>
 		{/if}
 	</td>
 

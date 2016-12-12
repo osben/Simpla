@@ -60,36 +60,20 @@ class OrderView extends View
         }
 
         $products_ids = array();
-        $variants_ids = array();
         foreach ($purchases as $purchase) {
             $products_ids[] = $purchase->product_id;
-            $variants_ids[] = $purchase->variant_id;
-        }
-        $products = array();
-        foreach ($this->products->get_products(array('id'=>$products_ids, 'limit' => count($products_ids))) as $p) {
-            $products[$p->id] = $p;
         }
 
-        $images = $this->products->get_images(array('product_id'=>$products_ids));
-        foreach ($images as $image) {
-            $products[$image->product_id]->images[] = $image;
-        }
-
-        $variants = array();
-        foreach ($this->variants->get_variants(array('id'=>$variants_ids)) as $v) {
-            $variants[$v->id] = $v;
-        }
-
-        foreach ($variants as $variant) {
-            $products[$variant->product_id]->variants[] = $variant;
-        }
+        $products = $this->products->get_products_compile(array('id'=>$products_ids, 'limit' => count($products_ids)));
 
         foreach ($purchases as &$purchase) {
             if (!empty($products[$purchase->product_id])) {
+
                 $purchase->product = $products[$purchase->product_id];
-            }
-            if (!empty($variants[$purchase->variant_id])) {
-                $purchase->variant = $variants[$purchase->variant_id];
+
+                if (!empty($products[$purchase->product_id]->variants[$purchase->variant_id])) {
+                    $purchase->variant = $products[$purchase->product_id]->variants[$purchase->variant_id];
+                }
             }
         }
 
@@ -151,7 +135,7 @@ class OrderView extends View
         exit();
     }
 
-    public function checkout_form($params, &$smarty)
+    public function checkout_form($params, $smarty)
     {
         $module_name = preg_replace("/[^A-Za-z0-9]+/", "", $params['module']);
 

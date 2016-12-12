@@ -134,31 +134,17 @@ class View extends Simpla
         if (!empty($_COOKIE['browsed_products'])) {
             $browsed_products_ids = explode(',', $_COOKIE['browsed_products']);
             $browsed_products_ids = array_reverse($browsed_products_ids);
+
             if (isset($params['limit'])) {
-                $browsed_products_ids = array_slice($browsed_products_ids, 0, $params['limit']);
+                $params['id'] = array_slice($browsed_products_ids, 0, $params['limit']);
+            }
+            if (!isset($params['visible'])) {
+                $params['visible'] = 1;
             }
 
-            $products = array();
-            foreach ($this->products->get_products(array('id'=>$browsed_products_ids, 'visible'=>1)) as $p) {
-                $products[$p->id] = $p;
-            }
+            $products = $this->products->get_products_compile($params);
 
-            $browsed_products_images = $this->products->get_images(array('product_id'=>$browsed_products_ids));
-            foreach ($browsed_products_images as $browsed_product_image) {
-                if (isset($products[$browsed_product_image->product_id])) {
-                    $products[$browsed_product_image->product_id]->images[] = $browsed_product_image;
-                }
-            }
-
-            foreach ($browsed_products_ids as $id) {
-                if (isset($products[$id])) {
-                    if (isset($products[$id]->images[0])) {
-                        $products[$id]->image = $products[$id]->images[0];
-                    }
-                    $result[] = $products[$id];
-                }
-            }
-            $smarty->assign($params['var'], $result);
+            $smarty->assign($params['var'], $products);
         }
     }
 
@@ -170,38 +156,7 @@ class View extends Simpla
         }
         $params['featured'] = 1;
         if (!empty($params['var'])) {
-            foreach ($this->products->get_products($params) as $p) {
-                $products[$p->id] = $p;
-            }
-
-            if (!empty($products)) {
-                // id выбраных товаров
-                $products_ids = array_keys($products);
-
-                // Выбираем варианты товаров
-                $variants = $this->variants->get_variants(array('product_id'=>$products_ids, 'in_stock'=>true));
-
-                // Для каждого варианта
-                foreach ($variants as &$variant) {
-                    // добавляем вариант в соответствующий товар
-                    $products[$variant->product_id]->variants[] = $variant;
-                }
-
-                // Выбираем изображения товаров
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach ($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
-                }
-
-                foreach ($products as &$product) {
-                    if (isset($product->variants[0])) {
-                        $product->variant = $product->variants[0];
-                    }
-                    if (isset($product->images[0])) {
-                        $product->image = $product->images[0];
-                    }
-                }
-            }
+            $products = $this->products->get_products_compile($params);
 
             $smarty->assign($params['var'], $products);
         }
@@ -217,38 +172,7 @@ class View extends Simpla
             $params['sort'] = 'created';
         }
         if (!empty($params['var'])) {
-            foreach ($this->products->get_products($params) as $p) {
-                $products[$p->id] = $p;
-            }
-
-            if (!empty($products)) {
-                // id выбраных товаров
-                $products_ids = array_keys($products);
-
-                // Выбираем варианты товаров
-                $variants = $this->variants->get_variants(array('product_id'=>$products_ids, 'in_stock'=>true));
-
-                // Для каждого варианта
-                foreach ($variants as &$variant) {
-                    // добавляем вариант в соответствующий товар
-                    $products[$variant->product_id]->variants[] = $variant;
-                }
-
-                // Выбираем изображения товаров
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach ($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
-                }
-
-                foreach ($products as &$product) {
-                    if (isset($product->variants[0])) {
-                        $product->variant = $product->variants[0];
-                    }
-                    if (isset($product->images[0])) {
-                        $product->image = $product->images[0];
-                    }
-                }
-            }
+            $products = $this->products->get_products_compile($params);
 
             $smarty->assign($params['var'], $products);
         }
@@ -262,38 +186,7 @@ class View extends Simpla
         }
         $params['discounted'] = 1;
         if (!empty($params['var'])) {
-            foreach ($this->products->get_products($params) as $p) {
-                $products[$p->id] = $p;
-            }
-
-            if (!empty($products)) {
-                // id выбраных товаров
-                $products_ids = array_keys($products);
-
-                // Выбираем варианты товаров
-                $variants = $this->variants->get_variants(array('product_id'=>$products_ids, 'in_stock'=>true));
-
-                // Для каждого варианта
-                foreach ($variants as &$variant) {
-                    // добавляем вариант в соответствующий товар
-                    $products[$variant->product_id]->variants[] = $variant;
-                }
-
-                // Выбираем изображения товаров
-                $images = $this->products->get_images(array('product_id'=>$products_ids));
-                foreach ($images as $image) {
-                    $products[$image->product_id]->images[] = $image;
-                }
-
-                foreach ($products as &$product) {
-                    if (isset($product->variants[0])) {
-                        $product->variant = $product->variants[0];
-                    }
-                    if (isset($product->images[0])) {
-                        $product->image = $product->images[0];
-                    }
-                }
-            }
+            $products = $this->products->get_products_compile($params);
 
             $smarty->assign($params['var'], $products);
         }

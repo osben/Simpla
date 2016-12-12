@@ -30,7 +30,7 @@
 		</td>
 		<td style="padding:6px; width:330; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;">
 			{if $order->paid == 1}
-			<font color="green">оплачен</font>
+			<span style="color:green;">оплачен</span>
 			{else}
 			не оплачен
 			{/if}
@@ -103,15 +103,20 @@
 	{foreach $purchases as $purchase}
 	<tr>
 		<td align="center" style="padding:6px; width:100; padding:6px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;">
-			{$image = $purchase->product->images[0]}
-			<a href="{$config->root_url}/products/{$purchase->product->url}"><img border="0" src="{$image->filename|resize:50:50}"></a>
+			{if $purchase->product->image}
+			<a href="{$config->root_url}/products/{$purchase->product->url}">
+				<img border="0" src="{$purchase->product->image->filename|resize:50:50}">
+			</a>
+			{/if}
 		</td>
 		<td style="padding:6px; width:250; padding:6px; background-color:#f0f0f0; border:1px solid #e0e0e0;font-family:arial;">
 			<a href="{$config->root_url}/products/{$purchase->product->url}">{$purchase->product_name}</a>
 			{$purchase->variant_name}
 			{if $order->paid && $purchase->variant->attachment}
 			<br>
-			<a href="{$config->root_url}/order/{$order->url}/{$purchase->variant->attachment}"><font color="green">Скачать {$purchase->variant->attachment}</font></a>
+			<a href="{$config->root_url}/order/{$order->url}/{$purchase->variant->attachment}">
+				<span style="color:green;">Скачать {$purchase->variant->attachment}</span>
+			</a>
 			{/if}
 		</td>
 		<td align=right style="padding:6px; text-align:right; width:150; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;">

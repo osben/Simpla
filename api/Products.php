@@ -276,8 +276,50 @@ class Products extends Simpla
 				GROUP BY p.id
 				LIMIT 1";
         $this->db->query($query);
-        $product = $this->db->result();
-        return $product;
+        return $this->db->result();
+    }
+
+    /**
+     * @param array $filter
+     * @return array
+     */
+    public function get_products_compile($filter = array()) {
+        $products = array();
+
+        foreach ($this->get_products($filter) as $p) {
+            $products[$p->id] = $p;
+        }
+        if (!empty($products)) {
+
+            $products_ids = array_keys($products);
+            foreach ($products as &$product) {
+                $product->variants = array();
+                $product->images = array();
+                $product->properties = array();
+            }
+
+            $variants = $this->variants->get_variants(array('product_id'=>$products_ids, 'in_stock'=>true));
+            foreach ($variants as $variant) {
+                $products[$variant->product_id]->variants[$variant->id] = $variant;
+            }
+
+            $images = $this->get_images(array('product_id'=>$products_ids));
+            foreach ($images as $image) {
+                $products[$image->product_id]->images[] = $image;
+            }
+
+            foreach ($products as &$product) {
+                if (isset($product->variants[0])) {
+                    $product->variant = $product->variants[0];
+                }
+                if (isset($product->images[0])) {
+                    $product->image = $product->images[0];
+                }
+            }
+        }
+
+
+        return $products;
     }
 
     /**
