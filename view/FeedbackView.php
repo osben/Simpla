@@ -15,7 +15,7 @@ class FeedbackView extends View
 {
     public function fetch()
     {
-        $feedback = new stdClass;
+        $feedback = new \stdClass();
         if ($this->request->method('post') && $this->request->post('feedback')) {
             $feedback->name            = $this->request->post('name');
             $feedback->email        = $this->request->post('email');

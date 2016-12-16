@@ -44,7 +44,7 @@ class ExportAdmin extends Simpla
         $exports = array();
         if (is_array($export_files)) {
             foreach ($export_files as $export_file) {
-                $export = new stdClass;
+                $export = new \stdClass();
                 $export->name = basename($export_file);
                 $export->size = filesize($export_file);
                 $exports[] = $export;

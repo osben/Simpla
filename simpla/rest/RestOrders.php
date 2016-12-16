@@ -8,13 +8,13 @@
  * @author		Denis Pikusov
  *
  */
- 
+
 require_once('Rest.php');
 
 class RestOrders extends Rest
 {
 	public function __construct()
-	{		
+	{
 		parent::__construct();
 		if(!$this->managers->access('orders'))
 		{
@@ -22,7 +22,7 @@ class RestOrders extends Rest
 			exit();
 		}
 	}
-	
+
 	public function get()
 	{
 		$items = array();
@@ -38,15 +38,15 @@ class RestOrders extends Rest
 		$filter['page'] = $this->request->get('page');
 		// Количество элементов на странице
 		$filter['limit'] = $this->request->get('limit');
-		
+
 		// Какие поля отдавать
 		if($fields = $this->request->get('fields'))
 			$fields = explode(',', $fields);
-			
+
 		// Выбираем
 		foreach($this->orders->get_orders($filter) as $item)
 		{
-			$items[$item->id] = new stdClass();
+			$items[$item->id] = new \stdClass();
 			if($fields)
 			{
 				foreach($fields as $field)
@@ -58,7 +58,7 @@ class RestOrders extends Rest
 		}
 		if(empty($items))
 			return false;
-		
+
 		// Выбранные id
 		$items_ids = array_keys($items);
 
@@ -72,7 +72,7 @@ class RestOrders extends Rest
 				foreach($this->orders->get_purchases(array('order_id'=>$items_ids)) as $i)
 					if(isset($items[$i->order_id]))
 						$items[$i->order_id]->purchases[] = $i;
-			}				
+			}
 		}
 		return array_values($items);
 	}

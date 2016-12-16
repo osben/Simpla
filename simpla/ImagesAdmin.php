@@ -67,7 +67,7 @@ class ImagesAdmin extends Simpla
         if ($handle = opendir($images_dir)) {
             while (false !== ($file = readdir($handle))) {
                 if (is_file($images_dir.$file) && $file[0] != '.' && in_array(pathinfo($file, PATHINFO_EXTENSION), $allowed_extentions)) {
-                    $image = new stdClass;
+                    $image = new \stdClass();
                     $image->name = $file;
                     $image->size = filesize($images_dir.$file);
                     list($image->width, $image->height) = @getimagesize($images_dir.$file);

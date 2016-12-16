@@ -8,13 +8,13 @@
  * @author		Denis Pikusov
  *
  */
- 
+
 require_once('Rest.php');
 
 class RestProducts extends Rest
-{	
+{
 	public function __construct()
-	{		
+	{
 		parent::__construct();
 		if(!$this->managers->access('prodcuts'))
 		{
@@ -22,7 +22,7 @@ class RestProducts extends Rest
 			exit();
 		}
 	}
-	
+
 	public function get()
 	{
 		$items = array();
@@ -46,14 +46,14 @@ class RestProducts extends Rest
 		$filter['page'] = $this->request->get('page');
 		// Количество элементов на странице
 		$filter['limit'] = $this->request->get('limit');
-		
+
 		// Какие поля отдавать
 		if($fields = $this->request->get('fields'))
 			$fields = explode(',', $fields);
 		// Выбираем
 		foreach($this->products->get_products($filter) as $item)
 		{
-			$items[$item->id] = new stdClass();
+			$items[$item->id] = new \stdClass();
 			if($fields)
 			{
 				foreach($fields as $field)
@@ -65,7 +65,7 @@ class RestProducts extends Rest
 		}
 		if(empty($items))
 			return false;
-		
+
 		// Выбранные id
 		$items_ids = array_keys($items);
 
@@ -79,7 +79,7 @@ class RestProducts extends Rest
 				foreach($this->products->get_images(array('product_id'=>$items_ids)) as $i)
 					if(isset($items[$i->product_id]))
 						$items[$i->product_id]->images[] = $i;
-			}				
+			}
 			// Варианты
 			if(in_array('variants', $join))
 			{
@@ -88,7 +88,7 @@ class RestProducts extends Rest
 						$items[$v->product_id]->variants[] = $v;
 			}
 			// Категории
-			$categories_ids = array();	
+			$categories_ids = array();
 			if(in_array('categories', $join))
 			{
 				foreach($this->categories->get_products_categories(array('product_id'=>$items_ids, 'limit' => count($items_ids))) as $pc)
@@ -104,8 +104,8 @@ class RestProducts extends Rest
 						$categories_ids[] = $pc->category_id;
 					}
 				}
-			}			
-			// Свойства		
+			}
+			// Свойства
 			if(in_array('features', $join))
 			{
 				$features_ids = array();
@@ -125,11 +125,11 @@ class RestProducts extends Rest
 						$items[$o->product_id]->features[] = $f;
 					}
 				}
-			}				
+			}
 		}
 		return array_values($items);
 	}
-	
+
 	public function post()
 	{
 		$product = json_decode($this->request->post());
@@ -148,11 +148,11 @@ class RestProducts extends Rest
 			}
 		}
 		if(!$id)
-			return false;	
+			return false;
 		else
 			return $id;
 
-		header("Content-type: application/json");		
+		header("Content-type: application/json");
 		header("Location: ".$this->config->root_url."/simpla/rest/products/".$id, true, 201);
 	}
 
@@ -195,14 +195,14 @@ class RestProducts extends Rest
 				foreach($current_variants as $current_variant)
 					if(!in_array($current_variant->id, $variants_ids))
 						$this->variants->delete_variant($current_variant->id);
-			}			
+			}
 		}
 		if(!$id)
-			return false;	
+			return false;
 		else
 			return $id;
 
-		header("Content-type: application/json");		
+		header("Content-type: application/json");
 		header("Location: ".$this->config->root_url."/simpla/rest/products/".$id, true, 201);
 	}
 }

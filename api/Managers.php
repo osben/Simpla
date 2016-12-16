@@ -42,7 +42,7 @@ class Managers extends Simpla
             if (!empty($line)) {
                 $manager = null;
                 $fields = explode(":", $line);
-                $manager = new stdClass();
+                $manager = new \stdClass();
                 $manager->login = trim($fields[0]);
                 $manager->permissions = array();
                 if (isset($fields[2])) {
@@ -81,7 +81,7 @@ class Managers extends Simpla
                 $login = $_SERVER['PHP_AUTH_USER'];
             } else {
                 // Тестовый менеджер, если отключена авторизация
-                $m = new stdClass();
+                $m = new \stdClass();
                 $m->login = 'manager';
                 $m->permissions = $this->permissions_list;
                 return $m;

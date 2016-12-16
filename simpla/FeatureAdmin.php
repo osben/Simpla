@@ -16,7 +16,7 @@ class FeatureAdmin extends Simpla
 
     public function fetch()
     {
-        $feature = new stdClass;
+        $feature = new \stdClass();
         if ($this->request->method('post')) {
             $feature->id = $this->request->post('id', 'integer');
             $feature->name = $this->request->post('name');

@@ -15,7 +15,7 @@ class PageAdmin extends Simpla
 {
     public function fetch()
     {
-        $page = new stdClass;
+        $page = new \stdClass();
         if ($this->request->method('POST')) {
             $page->id = $this->request->post('id', 'integer');
             $page->name = $this->request->post('name');

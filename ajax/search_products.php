@@ -6,7 +6,7 @@
         private $limit = 30;
         public function fetch()
         {
-            $result = new stdClass;
+            $result = new \stdClass();
             $result->suggestions = array();
             $result->query = $this->request->get('query', 'string');
 
@@ -23,7 +23,7 @@
                 $products = $this->db->results();
 
                 foreach ($products as $product) {
-                    $suggestion = new stdClass();
+                    $suggestion = new \stdClass();
 
                     if (!empty($product->image)) {
                         $product->image = $this->design->resize_modifier($product->image, 35, 35);

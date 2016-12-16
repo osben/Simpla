@@ -16,7 +16,7 @@ class DeliveryAdmin extends Simpla
 
     public function fetch()
     {
-        $delivery = new stdClass;
+        $delivery = new \stdClass();
         if ($this->request->method('post')) {
             $delivery->id                = $this->request->post('id', 'intgeger');
             $delivery->enabled            = $this->request->post('enabled', 'boolean');

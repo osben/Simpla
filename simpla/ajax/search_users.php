@@ -10,13 +10,13 @@
 
     $suggestions = array();
     foreach ($users as $user) {
-        $suggestion = new stdClass();
+        $suggestion = new \stdClass();
         $suggestion->value = $user->name." ($user->email)";
         $suggestion->data = $user;
         $suggestions[] = $suggestion;
     }
 
-    $res = new stdClass;
+    $res = new \stdClass();
     $res->query = $keyword;
     $res->suggestions = $suggestions;
 

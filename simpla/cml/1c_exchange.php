@@ -48,7 +48,7 @@ if ($simpla->request->get('type') == 'sale' && $simpla->request->get('mode') == 
     $xml = simplexml_load_file($dir.$filename);
 
     foreach ($xml->Документ as $xml_order) {
-        $order = new stdClass;
+        $order = new \stdClass();
 
         $order->id = $xml_order->Номер;
         $existed_order = $simpla->orders->get_order(intval($order->id));
@@ -103,7 +103,7 @@ if ($simpla->request->get('type') == 'sale' && $simpla->request->get('mode') == 
             $simpla->db->query('SELECT id FROM __variants WHERE external_id=? AND product_id=?', $variant_1c_id, $product_id);
             $variant_id = $simpla->db->result('id');
 
-            $purchase = new stdClass;
+            $purchase = new \stdClass();
             $purchase->order_id = $order->id;
             $purchase->product_id = $product_id;
             $purchase->variant_id = $variant_id;
@@ -537,7 +537,7 @@ function import_product($xml_product)
 
     // Подгатавливаем вариант
     $variant_id = null;
-    $variant = new stdClass;
+    $variant = new \stdClass();
     $values = array();
     if (isset($xml_product->ХарактеристикиТовара->ХарактеристикаТовара)) {
         foreach ($xml_product->ХарактеристикиТовара->ХарактеристикаТовара as $xml_property) {
@@ -611,7 +611,7 @@ function import_product($xml_product)
 
         // Обновляем товар
         if ($full_update) {
-            $p = new stdClass();
+            $p = new \stdClass();
             if (!empty($xml_product->Описание)) {
                 $description = strval($xml_product->Описание);
                 $p->meta_description = $description;
@@ -709,7 +709,7 @@ function import_variant($xml_variant)
 {
     global $simpla;
     global $dir;
-    $variant = new stdClass;
+    $variant = new \stdClass();
     //  Id товара и варианта (если есть) по 1С
     @list($product_1c_id, $variant_1c_id) = explode('#', $xml_variant->Ид);
     if (empty($variant_1c_id)) {

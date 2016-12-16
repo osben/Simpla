@@ -15,7 +15,7 @@ class CouponAdmin extends Simpla
 {
     public function fetch()
     {
-        $coupon = new stdClass;
+        $coupon = new \stdClass();
         if ($this->request->method('post')) {
             $coupon->id = $this->request->post('id', 'integer');
             $coupon->code = $this->request->post('code', 'string');

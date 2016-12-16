@@ -17,7 +17,7 @@ class CategoryAdmin extends Simpla
 
     public function fetch()
     {
-        $category = new stdClass;
+        $category = new \stdClass();
         if ($this->request->method('post')) {
             $category->id = $this->request->post('id', 'integer');
             $category->parent_id = $this->request->post('parent_id', 'integer');

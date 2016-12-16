@@ -26,10 +26,10 @@ class BackupAdmin extends Simpla
                 case 'create':
                 {
                     $filename = $dir.'simpla_'.date("Y_m_d_G_i_s").'.zip';
-                    ##Дамп базы	
+                    ##Дамп базы
                     $this->db->dump($dir.'simpla.sql');
                     chmod($dir.'simpla.sql', 0777);
-                    
+
                     ### Архивируем
                     $zip = new PclZip($filename);
                     $v_list = $zip->create(array('files', $dir.'simpla.sql'), PCLZIP_OPT_REMOVE_PATH, $dir, PCLZIP_CB_PRE_ADD, "myCallBack");
@@ -77,24 +77,24 @@ class BackupAdmin extends Simpla
         $backups = array();
         if (is_array($backup_files)) {
             foreach ($backup_files as $backup_file) {
-                $backup = new stdClass;
+                $backup = new \stdClass();
                 $backup->name = basename($backup_file);
                 $backup->size = filesize($backup_file);
                 $backups[] = $backup;
             }
         }
         $backups = array_reverse($backups);
-        
+
         $this->design->assign('backup_files_dir', $dir);
         if (!is_writable($dir)) {
             $this->design->assign('message_error', 'no_permission');
         }
-        
+
         $this->design->assign('backups', $backups);
 
         return $this->design->fetch('backup.tpl');
     }
-    
+
     private function clean_dir($path)
     {
         $path= rtrim($path, '/').'/';

@@ -22,7 +22,7 @@ class ProductAdmin extends Simpla
         $related_products = array();
 
         if ($this->request->method('post') && !empty($_POST)) {
-            $product = new stdClass;
+            $product = new \stdClass();
             $product->id = $this->request->post('id', 'integer');
             $product->name = $this->request->post('name');
             $product->visible = $this->request->post('visible', 'boolean');
@@ -42,7 +42,7 @@ class ProductAdmin extends Simpla
                 foreach ($this->request->post('variants') as $n=>$va) {
                     foreach ($va as $i=>$v) {
                         if (empty($variants[$i])) {
-                            $variants[$i] = new stdClass;
+                            $variants[$i] = new \stdClass();
                         }
                         $variants[$i]->$n = $v;
                     }
@@ -54,7 +54,7 @@ class ProductAdmin extends Simpla
             if (is_array($product_categories)) {
                 $pc = array();
                 foreach ($product_categories as $c) {
-                    $x = new stdClass;
+                    $x = new \stdClass();
                     $x->id = $c;
                     $pc[] = $x;
                 }
@@ -66,7 +66,7 @@ class ProductAdmin extends Simpla
             if (is_array($options)) {
                 $po = array();
                 foreach ($options as $f_id=>$val) {
-                    $po[$f_id] = new stdClass;
+                    $po[$f_id] = new \stdClass();
                     $po[$f_id]->feature_id = $f_id;
                     $po[$f_id]->value = $val;
                 }
@@ -77,7 +77,7 @@ class ProductAdmin extends Simpla
             if (is_array($this->request->post('related_products'))) {
                 $rp = array();
                 foreach ($this->request->post('related_products') as $p) {
-                    $rp[$p] = new stdClass;
+                    $rp[$p] = new \stdClass();
                     $rp[$p]->product_id = $product->id;
                     $rp[$p]->related_id = $p;
                 }
@@ -291,7 +291,7 @@ class ProductAdmin extends Simpla
                 $related_products = $this->products->get_related_products(array('product_id'=>$product->id));
             } else {
                 // Сразу активен
-                $product = new stdClass;
+                $product = new \stdClass();
                 $product->visible = 1;
             }
         }

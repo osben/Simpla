@@ -8,10 +8,10 @@
  * @author		Denis Pikusov
  *
  */
- 
+
 
 // Для использования прокси используйте строки:
-define("USE_PROXY",        0);        // 1 = использовать прокси 
+define("USE_PROXY",        0);        // 1 = использовать прокси
 define("PROXY",            'xxx.xxx.xxx.xxx:80');
 define("PROXY_USER",    'login:password');
 
@@ -52,18 +52,18 @@ $page = get_page($url);
 
 if (preg_match('/src="(http:.*captchaimg[^"]*)" alt=""\/>/ui', $page, $match)) {
     $captcha_image = $match[1];
-    
+
     if (preg_match('/<input class="form__key" type="hidden" name="key" value="(.*)"\/><input class="form__retpath"/ui', $page, $match)) {
         $_SESSION['captcha_key'] = $match[1];
     }
-    
+
     if (preg_match('/<input class="form__retpath" type="hidden" name="retpath" value="(.*)"\/><div class="form__trigger"/ui', $page, $match)) {
         $_SESSION['captcha_retpath'] = $match[1];
     }
 }
 
 
-$result = new stdClass();
+$result = new \stdClass();
 if (!empty($captcha_image)) {
     $result->captcha = base64_encode(get_page($captcha_image));
     //print "<form><img src='data:image/jpeg;base64," . base64_encode(get_page($captcha_image)) . "' /><input type=text name=captcha><input type=text name=keyword value='$keyword'><input type=text name=captcha_key value='$captcha_key'><input type=text name=captcha_retpath value='$captcha_retpath'><input type=submit></form>";
@@ -83,7 +83,7 @@ function get_page($url, $level=0)
 {
     // Имя временного файла, в котором хранятся куки для CURL
     global $cookies_filename;
-    
+
     // Максимальный уровень рекурсии
     $max_level = 20;
     if ($level >= $max_level) {
@@ -119,7 +119,7 @@ function get_page($url, $level=0)
         $new_cookies_content .= "\n.yandex.ua\tTRUE\t/\tFALSE\t1\tyandex_gid\t".REGION."\n.yandex.ru\tTRUE\t/\tFALSE\t0\tyandex_gid\t".REGION;
     }
     file_put_contents($cookies_filename, $new_cookies_content);
-    
+
     // Яндекс любит рефереров и реже банит, если реферер правдоподобный
     // Указываем реферером адрес, запрошенный в прошлый раз
     if (!empty($_SESSION['yandex_market_last_visited_url'])) {
@@ -146,21 +146,21 @@ function get_page($url, $level=0)
 
     // Проверяем код ответа для проверки, нет ли редиректа
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    
+
     // Больше нам curl не нужен
     curl_close($ch);
-    
+
     // Записываем в сессию куки, которые отложил curl во временный файл
     $_SESSION['yandex_market_cookies'] = file_get_contents($cookies_filename);
-    
+
     // Отделяем тело страницы от заголовка
     $dataArray = explode("\r\n\r\n", $data, 2);
-    
+
     // Делим ответ на заголовок и тело
     if (count($dataArray)!=2) {
         return false;
     }
-            
+
     list($header, $body) = $dataArray;
 
     // В случае редиректа рекурсивно следуем за яндексом
@@ -176,10 +176,10 @@ function get_page($url, $level=0)
     if ($httpCode == 404) {
         $body = get_page($url, $level+1);
     }
-    
+
     // Сохраняем последний посещенный URL для реферера
     $_SESSION['yandex_market_last_visited_url'] = $url;
-    
+
     // Отдаем тело страницы
     return $body;
 }
@@ -191,18 +191,18 @@ function parse_product($page)
     if (preg_match_all('/<ul class="product-card__spec-list">(.*)<\/ul>/uis', $page, $matches)) {
         // Описание товара
         $description = '<ul>'.reset($matches[1]).'</ul>';
-        $result = new stdClass;
+        $result = new \stdClass();
         $result->description = $description;
-        
+
         // Страница характеристик
         if (preg_match_all('/<li class="product-tabs__item" data-name="spec"><a href="(.*?)">/ui', $page, $matches)) {
             $options_url = 'http://'.DOMAIN.reset($matches[1]);
-            
+
             $options_page = get_page($options_url);
             preg_match_all('/<dl class="product-spec-item"><dt class="product-spec-item__name"><span class="product-spec-item__name-inner">(.*?)<.*?<span class="product-spec-item__value-inner">(.*?)\p{Z}?<\/span><\/dd><\/dl>/uis', $options_page, $matches, PREG_SET_ORDER);
             $options = array();
             foreach ($matches as $m) {
-                $option = new stdClass;
+                $option = new \stdClass();
                 $option->name = str_replace("\n", "", $m[1]);
                 $option->value = str_replace("\n", "", $m[2]);
                 $options[] = $option;

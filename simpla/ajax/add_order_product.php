@@ -42,7 +42,7 @@
     $suggestions = array();
     foreach ($products as $product) {
         if (!empty($product->variants)) {
-            $suggestion = new stdClass;
+            $suggestion = new \stdClass();
             if (!empty($product->image)) {
                 $product->image = $simpla->design->resize_modifier($product->image, 35, 35);
             }
@@ -52,7 +52,7 @@
         }
     }
 
-    $res = new stdClass;
+    $res = new \stdClass();
     $res->query = $keyword;
     $res->suggestions = $suggestions;
     header("Content-type: application/json; charset=UTF-8");

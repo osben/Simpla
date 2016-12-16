@@ -24,13 +24,13 @@
             $product->image = $simpla->design->resize_modifier($product->image, 35, 35);
         }
 
-        $suggestion = new stdClass();
+        $suggestion = new \stdClass();
         $suggestion->value = $product->name;
         $suggestion->data = $product;
         $suggestions[] = $suggestion;
     }
 
-    $res = new stdClass;
+    $res = new \stdClass();
     $res->query = $keyword;
     $res->suggestions = $suggestions;
     header("Content-type: application/json; charset=UTF-8");

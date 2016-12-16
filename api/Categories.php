@@ -238,7 +238,7 @@ class Categories extends Simpla
     private function init_categories()
     {
         // Дерево категорий
-        $tree = new stdClass();
+        $tree = new \stdClass();
         $tree->subcategories = array();
 
         // Указатели на узлы дерева

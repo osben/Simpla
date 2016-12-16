@@ -45,7 +45,7 @@ class ImportAjax extends Simpla
         // Для корректной работы установим локаль UTF-8
         setlocale(LC_ALL, 'ru_RU.UTF-8');
 
-        $result = new stdClass;
+        $result = new \stdClass();
 
         // Определяем колонки из первой строки файла
         $f = fopen($this->import_files_dir.$this->import_file, 'r');
@@ -116,7 +116,7 @@ class ImportAjax extends Simpla
     // Импорт одного товара $item[column_name] = value;
     private function import_item($item)
     {
-        $imported_item = new stdClass;
+        $imported_item = new \stdClass();
 
         // Проверим не пустое ли название и артинкул (должно быть хоть что-то из них)
         if (empty($item['name']) && empty($item['sku'])) {
