@@ -39,8 +39,8 @@ class Request extends Simpla
      * Если задан аргумент функции (название метода, в любом регистре), возвращает true или false
      * Если аргумент не задан, возвращает имя метода
      *
-     * @param  null|string $method
-     * @return bool|string
+     * @param  string $method
+     * @return null|string
      */
     public function method($method = null)
     {
@@ -51,13 +51,45 @@ class Request extends Simpla
     }
 
     /**
+     * Возвращает переменную `$val`, отфильтрованную по заданному типу, если во втором параметре указан тип фильтра
+     * Второй параметр $type может иметь такие значения: integer, string, boolean
+     * Если $type не задан, возвращает переменную в чистом виде
+     *
+     * @param  string $val
+     * @param  string $type
+     * @return mixed
+     */
+    private function _input_filter($val, $type = null) {
+        if ($type == 'string') {
+            return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
+        }
+
+        if ($type == 'integer') {
+            return intval($val);
+        }
+
+        if ($type == 'float') {
+            return floatval($val);
+        }
+
+        if ($type == 'boolean') {
+            return !empty($val);
+        }
+
+        if(is_callable($type)) {
+            return $type($val);
+        }
+
+        return $val;
+    }
+
+    /**
      * Возвращает переменную _GET, отфильтрованную по заданному типу, если во втором параметре указан тип фильтра
      * Второй параметр $type может иметь такие значения: integer, string, boolean
      * Если $type не задан, возвращает переменную в чистом виде
-     * TODO обьединить с $this->post();
      *
-     * @param  $name
-     * @param  null $type
+     * @param  string $name
+     * @param  string $type
      * @return mixed
      */
     public function get($name, $type = null)
@@ -71,19 +103,7 @@ class Request extends Simpla
             $val = reset($val);
         }
 
-        if ($type == 'string') {
-            return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
-        }
-
-        if ($type == 'integer') {
-            return intval($val);
-        }
-
-        if ($type == 'boolean') {
-            return !empty($val);
-        }
-
-        return $val;
+        return $this->_input_filter($val, $type);
     }
 
     /**
@@ -91,8 +111,8 @@ class Request extends Simpla
      * Второй параметр $type может иметь такие значения: integer, string, boolean
      * Если $type не задан, возвращает переменную в чистом виде
      *
-     * @param  null|string $name
-     * @param  null|string $type
+     * @param  string $name
+     * @param  string $type
      * @return mixed
      */
     public function post($name = null, $type = null)
@@ -104,19 +124,7 @@ class Request extends Simpla
             $val = file_get_contents('php://input');
         }
 
-        if ($type == 'string') {
-            return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
-        }
-
-        if ($type == 'integer') {
-            return intval($val);
-        }
-
-        if ($type == 'boolean') {
-            return !empty($val);
-        }
-
-        return $val;
+        return $this->_input_filter($val, $type);
     }
 
     /**
@@ -124,8 +132,8 @@ class Request extends Simpla
      * Обычно переменные _FILES являются двухмерными массивами, поэтому можно указать второй параметр,
      * например, чтобы получить имя загруженного файла: $filename = $simpla->request->files('myfile', 'name');
      *
-     * @param  $name
-     * @param  null $name2
+     * @param  string $name
+     * @param  string $name2
      * @return string|null
      */
     public function files($name, $name2 = null)
