@@ -1,6 +1,6 @@
 {capture name=tabs}
 {/capture}
-{$meta_title='Экспорт покупателей' scope=parent}
+{$meta_title='Экспорт покупателей' scope=root}
 
 <script src="{$config->root_url}/simpla/design/js/piecon/piecon.js"></script>
 <script>

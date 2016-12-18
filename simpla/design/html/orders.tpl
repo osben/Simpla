@@ -15,7 +15,7 @@
 {/capture}
 
 {* Title *}
-{$meta_title='Заказы' scope=parent}
+{$meta_title='Заказы' scope=root}
 
 {* Поиск *}
 <form method="get">

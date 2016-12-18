@@ -1,7 +1,7 @@
 {if $comment->approved}
-{$subject="Новый комментарий от `$comment->name|escape`" scope=parent}
+{$subject="Новый комментарий от `$comment->name|escape`" scope=root}
 {else}
-{$subject="Комментарий от `$comment->name|escape` ожидает одобрения" scope=parent}
+{$subject="Комментарий от `$comment->name|escape` ожидает одобрения" scope=root}
 {/if}
 {if $comment->approved}
 <h1 style="font-weight:normal;font-family:arial;"><a href="{$config->root_url}/simpla/index.php?module=CommentsAdmin">Новый комментарий</a> от {$comment->name|escape}</h1>
@@ -40,7 +40,7 @@
     </td>
     <td style="padding:6px; width:330; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;">
       {if $comment->approved}
-        Одобрен    
+        Одобрен
       {else}
         Ожидает одобрения
       {/if}

@@ -1,12 +1,12 @@
 {capture name=tabs}
 	<li><a href="index.php?module=ThemeAdmin">Тема</a></li>
-	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>		
-	<li class="active"><a href="index.php?module=StylesAdmin">Стили</a></li>		
-	<li><a href="index.php?module=ImagesAdmin">Изображения</a></li>		
+	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>
+	<li class="active"><a href="index.php?module=StylesAdmin">Стили</a></li>
+	<li><a href="index.php?module=ImagesAdmin">Изображения</a></li>
 {/capture}
 
 {if $style_file}
-{$meta_title = "Стиль $style_file" scope=parent}
+{$meta_title = "Стиль $style_file" scope=root}
 {/if}
 
 {* Подключаем редактор кода *}
@@ -15,7 +15,7 @@
 
 <script src="design/js/codemirror/mode/css/css.js"></script>
 <script src="design/js/codemirror/addon/selection/active-line.js"></script>
- 
+
 {literal}
 <style type="text/css">
 
@@ -36,19 +36,19 @@
 </style>
 
 <script>
-$(function() {	
+$(function() {
 	// Сохранение кода аяксом
 	function save()
 	{
 		$('.CodeMirror').css('background-color','#e0ffe0');
 		content = editor.getValue();
-		
+
 		$.ajax({
 			type: 'POST',
 			url: 'ajax/save_style.php',
 			data: {'content': content, 'theme':'{/literal}{$theme}{literal}', 'style': '{/literal}{$style_file}{literal}', 'session_id': '{/literal}{$smarty.session.id}{literal}'},
 			success: function(data){
-			
+
 				$('.CodeMirror').animate({'background-color': '#ffffff'});
 			},
 			dataType: 'json'
@@ -59,7 +59,7 @@ $(function() {
 	$('input[name="save"]').click(function() {
 		save();
 	});
-	
+
 	// Обработка ctrl+s
 	var isCtrl = false;
 	var isCmd = false;
@@ -116,7 +116,7 @@ $(function() {
 <script>
 
 var editor = CodeMirror.fromTextArea(document.getElementById("content"), {
-		mode: "css",		
+		mode: "css",
 		lineNumbers: true,
 		styleActiveLine: true,
 		matchBrackets: false,

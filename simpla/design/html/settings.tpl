@@ -5,8 +5,8 @@
 	{if in_array('payment', $manager->permissions)}<li><a href="index.php?module=PaymentMethodsAdmin">Оплата</a></li>{/if}
 	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
 {/capture}
- 
-{$meta_title = "Настройки" scope=parent}
+
+{$meta_title = "Настройки" scope=root}
 
 {if $message_success}
 <!-- Системное сообщение -->
@@ -27,12 +27,12 @@
 </div>
 <!-- Системное сообщение (The End)-->
 {/if}
-			
+
 
 <!-- Основная форма -->
 <form method=post id=product enctype="multipart/form-data">
 <input type=hidden name="session_id" value="{$smarty.session.id}">
-			
+
 		<!-- Параметры -->
 		<div class="block">
 			<h2>Настройки сайта</h2>
@@ -69,13 +69,13 @@
 						<option value=' ' {if $settings->thousands_separator == ' '}selected{/if}>пробел: 1 245 678 {$currency->sign|escape}</option>
 						<option value=',' {if $settings->thousands_separator == ','}selected{/if}>запятая: 1,245,678 {$currency->sign|escape}</option>
 					</select>
-				
-				
+
+
 				</li>
 			</ul>
 		</div>
 		<!-- Параметры (The End)-->
-		
+
 		<!-- Параметры -->
 		<div class="block layer">
 			<h2>Настройки каталога</h2>
@@ -87,11 +87,11 @@
 			</ul>
 		</div>
 		<!-- Параметры (The End)-->
-		
+
 		<!-- Параметры -->
 		<div class="block layer">
 			<h2>Изображения товаров</h2>
-			
+
 			<ul>
 				<li><label class=property>Водяной знак</label>
 				<input name="watermark_file" class="simpla_inp" type="file" />
@@ -106,7 +106,7 @@
 		</div>
 		<!-- Параметры (The End)-->
 
-		
+
 		<!-- Параметры -->
 		<div class="block layer">
 			<h2>Интеграция с <a href="http://prostiezvonki.ru">простыми звонками</a></h2>
@@ -120,10 +120,10 @@
 			</ul>
 		</div>
 		<!-- Параметры (The End)-->
-		
+
 		<input class="button_green button_save" type="submit" name="save" value="Сохранить" />
-			
-	<!-- Левая колонка свойств товара (The End)--> 
+
+	<!-- Левая колонка свойств товара (The End)-->
 
 </form>
 <!-- Основная форма (The End) -->

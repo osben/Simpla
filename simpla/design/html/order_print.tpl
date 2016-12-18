@@ -2,11 +2,11 @@
 {*
 	Печать заказа
 *}
-{$wrapper='' scope=parent}
+{$wrapper='' scope=root}
 <html>
 <head>
 	<base href="{$config->root_url}/"/>
-	<title>Заказ №{$order->id}</title>	
+	<title>Заказ №{$order->id}</title>
 	{* Метатеги *}
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="description" content="{$meta_description|escape}" />
@@ -19,12 +19,12 @@
         margin-right: auto;
         //border: 1px solid black;
 
-		font-family: Trebuchet MS, times, arial, sans-serif;		
+		font-family: Trebuchet MS, times, arial, sans-serif;
 		font-size: 10pt;
 		color: black;
-		background-color: white;         
+		background-color: white;
     }
-    
+
     div#header{
     	margin-left: 50px;
     	margin-top: 50px;
@@ -62,7 +62,7 @@
     	min-height: 600px;
     	width: 100%;
     	float: left;
-    	
+
     }
     div#purchases table{
     	width: 900px;
@@ -79,13 +79,13 @@
     	font-size: 18px;
     	padding-top: 10px;
     	padding-bottom: 10px;
-    	margin: 0;    	
+    	margin: 0;
     }
     div#purchases td
     {
-    	border-top: 1px solid black; 	
+    	border-top: 1px solid black;
     }
- 
+
     div#total{
     	float: right;
     	margin-right: 50px;
@@ -103,16 +103,16 @@
     	font-weight: normal;
     	text-align: left;
     	font-size: 22px;
-    	border-top: 1px solid black; 	
+    	border-top: 1px solid black;
     }
     div#total td
     {
     	text-align: right;
-    	border-top: 1px solid black; 	
+    	border-top: 1px solid black;
     	font-size: 18px;
     	padding-top: 10px;
     	padding-bottom: 10px;
-    	margin: 0;    	
+    	margin: 0;
     }
     div#total .total
     {
@@ -137,7 +137,7 @@
     {
     	text-align: right;
     }
-    </style>	
+    </style>
 </head>
 
 <body _onload="window.print();">
@@ -158,24 +158,24 @@
 	<table>
 		<tr>
 			<td>{$order->name|escape}</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td>{$order->phone|escape}</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td>{$order->email|escape}</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td>{$order->address|escape}</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td><i>{$order->comment|escape|nl2br}</i></td>
 		</tr>
 	</table>
-	
+
 	{*
 	{if $order->note}
-	<table>		
+	<table>
 		<tr>
 			<td><h2><i>Примечание менеджера</i></h2><i>{$order->note|escape|nl2br}</i></td>
 		</tr>
@@ -200,13 +200,13 @@
 		<tr>
 			<td>
 				<span class=view_purchase>
-					{$purchase->product_name} {$purchase->variant_name} {if $purchase->sku} (артикул {$purchase->sku}){/if}			
+					{$purchase->product_name} {$purchase->variant_name} {if $purchase->sku} (артикул {$purchase->sku}){/if}
 				</span>
 			</td>
 			<td class="align_right">
 				<span class=view_purchase>{$purchase->price}</span> {$currency->sign}
 			</td>
-			<td class="align_right">			
+			<td class="align_right">
 				<span class=view_purchase>
 					{$purchase->amount} {$settings->units}
 				</span>
@@ -223,7 +223,7 @@
 			<td class="align_right">{$order->delivery_price|convert}&nbsp;{$currency->sign}</td>
 		</tr>
 		{/if}
-		
+
 	</table>
 </div>
 
@@ -241,7 +241,7 @@
 			<th>Купон{if $order->coupon_code} ({$order->coupon_code}){/if}</th>
 			<td>{$order->coupon_discount}&nbsp;{$currency->sign}</td>
 		</tr>
-		{/if}		
+		{/if}
 		<tr>
 			<th>Итого</th>
 			<td class="total">{$order->total_price}&nbsp;{$currency->sign}</td>

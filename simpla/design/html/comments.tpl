@@ -6,7 +6,7 @@
 
 
 {* Title *}
-{$meta_title='Комментарии' scope=parent}
+{$meta_title='Комментарии' scope=root}
 
 {* Поиск *}
 {if $comments || $keyword}
@@ -23,32 +23,32 @@
 {* Заголовок *}
 <div id="header">
 	{if $keyword && $comments_count}
-	<h1>{$comments_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1> 
+	<h1>{$comments_count|plural:'Нашелся':'Нашлось':'Нашлись'} {$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1>
 	{elseif !$type}
-	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1> 
+	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'}</h1>
 	{elseif $type=='product'}
-	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к товарам</h1> 
+	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к товарам</h1>
 	{elseif $type=='blog'}
-	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к записям в блоге</h1> 
+	<h1>{$comments_count} {$comments_count|plural:'комментарий':'комментариев':'комментария'} к записям в блоге</h1>
 	{/if}
-</div>	
+</div>
 
 
 {if $comments}
 <div id="main_list">
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-	
+
 	<form id="list_form" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	
+
 		<div id="list" class="sortable">
 			{foreach $comments as $comment}
 			<div class="{if !$comment->approved}unapproved{/if} row">
 		 		<div class="checkbox cell">
-					<input type="checkbox" name="check[]" value="{$comment->id}"/>				
+					<input type="checkbox" name="check[]" value="{$comment->id}"/>
 				</div>
 				<div class="name cell">
 					<div class="comment_name">
@@ -74,26 +74,26 @@
 			</div>
 			{/foreach}
 		</div>
-	
+
 		<div id="action">
 		Выбрать <label id="check_all" class="dash_link">все</label> или <label id="check_unapproved" class="dash_link">ожидающие</label>
-	
+
 		<span id="select">
 		<select name="action">
 			<option value="approve">Одобрить</option>
 			<option value="delete">Удалить</option>
 		</select>
 		</span>
-	
+
 		<input id="apply_action" class="button_green" type="submit" value="Применить">
 
 	</div>
 	</form>
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-		
+
 </div>
 {else}
 Нет комментариев
@@ -101,7 +101,7 @@
 
 <!-- Меню -->
 <div id="right_menu">
-	
+
 	<!-- Категории товаров -->
 	<ul>
 	<li {if !$type}class="selected"{/if}><a href="{url type=null}">Все комментарии</a></li>
@@ -111,7 +111,7 @@
 		<li {if $type == 'blog'}class="selected"{/if}><a href='{url keyword=null type=blog}'>К блогу</a></li>
 	</ul>
 	<!-- Категории товаров (The End)-->
-	
+
 </div>
 <!-- Меню  (The End) -->
 
@@ -127,26 +127,26 @@ $(function() {
 	}
 	// Раскрасить строки сразу
 	colorize();
-	
+
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
 	// Выделить ожидающие
 	$("#check_unapproved").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$('#list .unapproved input[type="checkbox"][name*="check"]').attr('checked', true);
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
 		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Одобрить
 	$("a.approve").click(function() {
 		var line        = $(this).closest(".row");
@@ -159,15 +159,15 @@ $(function() {
 				line.removeClass('unapproved');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
-	
+
 	$("form#list_form").submit(function() {
 		if($('#list_form select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
-	});	
- 	
+			return false;
+	});
+
 });
 
 </script>

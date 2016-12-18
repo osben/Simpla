@@ -1,7 +1,7 @@
 {capture name=tabs}
 		<li class="active"><a href="{url module=StatsAdmin}">Статистика</a></li>
 {/capture}
-{$meta_title='Статистика' scope=parent}
+{$meta_title='Статистика' scope=root}
 
 {* On document load *}
 {literal}
@@ -39,7 +39,7 @@ var options = {
 		}
 	},
 
- 
+
 	plotOptions: {
 		line: {
 			dataLabels: {
@@ -51,7 +51,7 @@ var options = {
 		area: {
 			marker: {
                         enabled: false
-            },		
+            },
 		}
 	},
 	series: []
@@ -62,9 +62,9 @@ $.get('ajax/stat/stat.php', function(data){
 	var series = {
 		data: []
 	};
-	
+
 	console.log(data);
-	
+
 var minDate = Date.UTC(data[0].year, data[0].month-1, data[0].day),
     maxDate = Date.UTC(data[data.length-1].year, data[data.length-1].month-1, data[data.length-1].day);
 
@@ -76,8 +76,8 @@ while (currentDate <= maxDate) {
     currentDate += (24 * 60 * 60 * 1000); // add one day
 }
 
-console.log(newDates);	
-	
+console.log(newDates);
+
 	series.name = 'Сумма заказов, {/literal}{$currency->sign}{literal}';
 
 	// Iterate over the lines and add categories or series
@@ -86,19 +86,19 @@ console.log(newDates);
 	});
 	//
 	options.series.push(series);
-	
+
 	// Create the chart
 	var chart = new Highcharts.Chart(options);
 	});
-	
- 
+
+
 
 });
- 
 
- 
+
+
 Highcharts.theme = {
-   colors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee", 
+   colors: ["#DDDF0D", "#7798BF", "#55BF3B", "#DF5353", "#aaeeee", "#ff0066", "#eeaaee",
       "#55BF3B", "#DF5353", "#7798BF", "#aaeeee"],
    chart: {
       backgroundColor: {
@@ -115,13 +115,13 @@ Highcharts.theme = {
       plotBorderWidth: 0
    },
    title: {
-      style: { 
+      style: {
          color: '#FFF',
          font: '16px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
       }
    },
    subtitle: {
-      style: { 
+      style: {
          color: '#DDD',
          font: '12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
       }
@@ -140,7 +140,7 @@ Highcharts.theme = {
          style: {
             color: '#AAA',
             font: 'bold 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
-         }            
+         }
       }
    },
    yAxis: {
@@ -159,7 +159,7 @@ Highcharts.theme = {
          style: {
             color: '#AAA',
             font: 'bold 12px Lucida Grande, Lucida Sans Unicode, Verdana, Arial, Helvetica, sans-serif'
-         }            
+         }
       }
    },
    legend: {
@@ -191,8 +191,8 @@ Highcharts.theme = {
          color: '#FFF'
       }
    },
-   
-   
+
+
    plotOptions: {
       line: {
          dataLabels: {
@@ -213,13 +213,13 @@ Highcharts.theme = {
          }
       }
    },
-   
+
    toolbar: {
       itemStyle: {
          color: '#CCC'
       }
    },
-   
+
    navigation: {
       buttonOptions: {
          backgroundColor: {
@@ -234,7 +234,7 @@ Highcharts.theme = {
          hoverSymbolStroke: '#FFFFFF'
       }
    },
-   
+
    exporting: {
       buttons: {
          exportButton: {
@@ -244,8 +244,8 @@ Highcharts.theme = {
             symbolFill: '#7797BE'
          }
       }
-   },   
-   
+   },
+
    // special colors for some of the demo examples
    legendBackgroundColor: 'rgba(48, 48, 48, 0.8)',
    legendBackgroundColorSolid: 'rgb(70, 70, 70)',
@@ -255,14 +255,14 @@ Highcharts.theme = {
 };
 
 // Apply the theme
-var highchartsOptions = Highcharts.setOptions(Highcharts.theme); 
- 
+var highchartsOptions = Highcharts.setOptions(Highcharts.theme);
+
 </script>
 {/literal}
- 
- 
+
+
 <div>
 <div id='container'>
 </div>
- 
+
 </div>

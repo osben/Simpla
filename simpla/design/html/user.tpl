@@ -6,7 +6,7 @@
 {/capture}
 
 {if $user->id}
-{$meta_title = $user->name|escape scope=parent}
+{$meta_title = $user->name|escape scope=root}
 {/if}
 
 {if $message_success}
@@ -40,13 +40,13 @@
 <form method=post id=product>
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
-		<input class="name" name=name type="text" value="{$user->name|escape}"/> 
-		<input name=id type="hidden" value="{$user->id|escape}"/> 
+		<input class="name" name=name type="text" value="{$user->name|escape}"/>
+		<input name=id type="hidden" value="{$user->id|escape}"/>
 		<div class="checkbox">
 			<input name="enabled" value='1' type="checkbox" id="active_checkbox" {if $user->enabled}checked{/if}/> <label for="active_checkbox">Активен</label>
 		</div>
-	</div> 
-	
+	</div>
+
 
 <div id=column_left>
 	<!-- Левая колонка свойств товара -->
@@ -72,19 +72,19 @@
 		</div>
 
 
-		
-		<!-- Параметры страницы (The End)-->			
-		
+
+		<!-- Параметры страницы (The End)-->
+
 	<input class="button_green button_save" type="submit" name="user_info" value="Сохранить" />
 </div>
-		
-	 
-	<!-- Левая колонка свойств товара (The End)--> 
-	
-		
+
+
+	<!-- Левая колонка свойств товара (The End)-->
+
+
 </form>
 <!-- Основная форма (The End) -->
- 
+
 
 {if $orders}
 <div class="block" id=column_left>
@@ -92,11 +92,11 @@
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 	<h2>Заказы пользователя</h2>
 
-	<div>		
+	<div>
 		{foreach $orders as $order}
 		<div class="{if $order->paid}green{/if} row">
 	 		<div class="checkbox cell">
-				<input type="checkbox" name="check[]" value="{$order->id}" />				
+				<input type="checkbox" name="check[]" value="{$order->id}" />
 			</div>
 			<div class="order_date cell">
 				{$order->date|date} {$order->date|time}
@@ -111,11 +111,11 @@
 				{if $order->paid}
 					<img src='design/images/cash_stack.png' alt='Оплачен' title='Оплачен'>
 				{else}
-					<img src='design/images/cash_stack_gray.png' alt='Не оплачен' title='Не оплачен'>				
-				{/if}	
+					<img src='design/images/cash_stack_gray.png' alt='Не оплачен' title='Не оплачен'>
+				{/if}
 			</div>
 			<div class="icons cell">
-				<a href='#' class=delete></a>		 	
+				<a href='#' class=delete></a>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -155,9 +155,9 @@ $(function() {
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', 1-$('#list input[type="checkbox"][name*="check"]').attr('checked'));
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
@@ -168,7 +168,7 @@ $(function() {
 	// Подтверждение удаления
 	$("#list").submit(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 });
 

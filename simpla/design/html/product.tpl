@@ -6,9 +6,9 @@
 {/capture}
 
 {if $product->id}
-{$meta_title = $product->name scope=parent}
+{$meta_title = $product->name scope=root}
 {else}
-{$meta_title = 'Новый товар' scope=parent}
+{$meta_title = 'Новый товар' scope=root}
 {/if}
 
 {* Подключаем Tiny MCE *}

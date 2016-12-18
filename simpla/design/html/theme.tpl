@@ -1,17 +1,17 @@
 {capture name=tabs}
 	<li class="active"><a href="index.php?module=ThemeAdmin">Тема</a></li>
-	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>		
-	<li><a href="index.php?module=StylesAdmin">Стили</a></li>		
-	<li><a href="index.php?module=ImagesAdmin">Изображения</a></li>		
+	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>
+	<li><a href="index.php?module=StylesAdmin">Стили</a></li>
+	<li><a href="index.php?module=ImagesAdmin">Изображения</a></li>
 {/capture}
 
 {if $theme->name}
-{$meta_title = "Тема {$theme->name}" scope=parent}
+{$meta_title = "Тема {$theme->name}" scope=root}
 {/if}
 
 <script>
 {literal}
-	
+
 $(function() {
 
 	// Выбрать тему
@@ -19,14 +19,14 @@ $(function() {
      	$("form input[name=action]").val('set_main_theme');
     	$("form input[name=theme]").val($(this).closest('li').attr('theme'));
     	$("form").submit();
-	});	
-	
+	});
+
 	// Клонировать текущую тему
 	$('#header .add').click(function() {
      	$("form input[name=action]").val('clone_theme');
     	$("form").submit();
-	});	
-	
+	});
+
 	// Редактировать название
 	$("a.edit").click(function() {
 		name = $(this).closest('li').attr('theme');
@@ -36,19 +36,19 @@ $(function() {
 		inp2.focus().select();
 		return false;
 	});
-	
+
 	// Удалить тему
 	$('.delete').click(function() {
      	$("form input[name=action]").val('delete_theme');
      	$("form input[name=theme]").val($(this).closest('li').attr('theme'));
    		$("form").submit();
-	});	
+	});
 
 	$("form").submit(function() {
 		if($("form input[name=action]").val()=='delete_theme' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
-	
+
 });
 {/literal}
 </script>

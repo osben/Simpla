@@ -5,7 +5,7 @@
 {/capture}
 
 {* Title *}
-{$meta_title='Обратная связь' scope=parent}
+{$meta_title='Обратная связь' scope=root}
 
 
 {* Поиск *}
@@ -22,28 +22,28 @@
 {* Заголовок *}
 <div id="header">
 	{if $feedbacks_count}
-	<h1>{$feedbacks_count} {$feedbacks_count|plural:'сообщение':'сообщений':'сообщения'}</h1> 
+	<h1>{$feedbacks_count} {$feedbacks_count|plural:'сообщение':'сообщений':'сообщения'}</h1>
 	{else}
-	<h1>Нет сообщений</h1> 
+	<h1>Нет сообщений</h1>
 	{/if}
-</div>	
+</div>
 
 <div id="main_list">
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-		
+
 	{if $feedbacks}
 		<form id="list_form" method="post">
 		<input type="hidden" name="session_id" value="{$smarty.session.id}">
-		
+
 			<div id="list" style="width:100%;">
-				
+
 				{foreach $feedbacks as $feedback}
 				<div class="row">
 			 		<div class="checkbox cell">
-						<input type="checkbox" name="check[]" value="{$feedback->id}" />				
+						<input type="checkbox" name="check[]" value="{$feedback->id}" />
 					</div>
 					<div class="name cell">
 						<div class='comment_name'>
@@ -63,35 +63,35 @@
 				</div>
 				{/foreach}
 			</div>
-		
+
 			<div id="action">
 			<label id='check_all' class='dash_link'>Выбрать все</label>
-		
+
 			<span id=select>
 			<select name="action">
 				<option value="delete">Удалить</option>
 			</select>
 			</span>
-		
+
 			<input id='apply_action' class="button_green" type=submit value="Применить">
-		
-			
+
+
 		</div>
 		</form>
-		
+
 	{else}
 	Нет сообщений
 	{/if}
-		
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-			
+
 </div>
 
 <!-- Меню -->
 <div id="right_menu">
-	
+
 </div>
 <!-- Меню  (The End) -->
 
@@ -107,20 +107,20 @@ $(function() {
 	}
 	// Раскрасить строки сразу
 	colorize();
-	
+
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
 		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Скрыт/Видим
 	$("a.enable").click(function() {
 		var icon        = $(this);
@@ -137,17 +137,17 @@ $(function() {
 				if(state)
 					line.removeClass('invisible');
 				else
-					line.addClass('invisible');				
+					line.addClass('invisible');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
-	
+
 	// Подтверждение удаления
 	$("form#list_form").submit(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 
 });

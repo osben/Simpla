@@ -8,9 +8,9 @@
 
 {* Title *}
 {if $category}
-	{$meta_title=$category->name scope=parent}
+	{$meta_title=$category->name scope=root}
 {else}
-	{$meta_title='Товары' scope=parent}
+	{$meta_title='Товары' scope=root}
 {/if}
 
 {* Поиск *}
@@ -21,9 +21,9 @@
 	<input class="search_button" type="submit" value=""/>
 </div>
 </form>
-	
+
 {* Заголовок *}
-<div id="header">	
+<div id="header">
 	{if $products_count}
 		{if $category->name || $brand->name}
 			<h1>{$category->name} {$brand->name} ({$products_count} {$products_count|plural:'товар':'товаров':'товара'})</h1>
@@ -31,19 +31,19 @@
 			<h1>{$products_count|plural:'Найден':'Найдено':'Найдено'} {$products_count} {$products_count|plural:'товар':'товаров':'товара'}</h1>
 		{else}
 			<h1>{$products_count} {$products_count|plural:'товар':'товаров':'товара'}</h1>
-		{/if}		
+		{/if}
 	{else}
 		<h1>Нет товаров</h1>
 	{/if}
 	<a class="add" href="{url module=ProductAdmin return=$smarty.server.REQUEST_URI}">Добавить товар</a>
-</div>	
+</div>
 
 <div id="main_list">
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-		
+
 	{if $products}
 
 	<div id="expand">
@@ -56,14 +56,14 @@
 	{* Основная форма *}
 	<form id="list_form" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	
+
 		<div id="list">
 		{foreach $products as $product}
 		<div class="{if !$product->visible}invisible{/if} {if $product->featured}featured{/if} row">
 			<input type="hidden" name="positions[{$product->id}]" value="{$product->position}">
 			<div class="move cell"><div class="move_zone"></div></div>
 	 		<div class="checkbox cell">
-				<input type="checkbox" name="check[]" value="{$product->id}"/>				
+				<input type="checkbox" name="check[]" value="{$product->id}"/>
 			</div>
 			<div class="image cell">
 				{$image = $product->images|@first}
@@ -72,18 +72,18 @@
 				{/if}
 			</div>
 			<div class="name product_name cell">
-			 	
+
 			 	<div class="variants">
 			 	<ul>
 				{foreach $product->variants as $variant}
 				<li {if !$variant@first}class="variant" style="display:none;"{/if}>
 					<i title="{$variant->name|escape}">{$variant->name|escape|truncate:30:'…':true:true}</i>
-					<input class="price {if $variant->compare_price>0}compare_price{/if}" type="text" name="price[{$variant->id}]" value="{$variant->price}" {if $variant->compare_price>0}title="Старая цена &mdash; {$variant->compare_price} {$currency->sign}"{/if} />{$currency->sign}  
+					<input class="price {if $variant->compare_price>0}compare_price{/if}" type="text" name="price[{$variant->id}]" value="{$variant->price}" {if $variant->compare_price>0}title="Старая цена &mdash; {$variant->compare_price} {$currency->sign}"{/if} />{$currency->sign}
 					<input class="stock" type="text" name="stock[{$variant->id}]" value="{if $variant->infinity}∞{else}{$variant->stock}{/if}" />{$settings->units}
 				</li>
 				{/foreach}
 				</ul>
-	
+
 				{$variants_num = $product->variants|count}
 				{if $variants_num>1}
 				<div class="expand_variant">
@@ -92,18 +92,18 @@
 				</div>
 				{/if}
 				</div>
-				
+
 				<a href="{url module=ProductAdmin id=$product->id return=$smarty.server.REQUEST_URI}">{$product->name|escape}</a>
-	 			
+
 			</div>
 			<div class="icons cell">
-				<a class="preview"   title="Предпросмотр в новом окне" href="../products/{$product->url}" target="_blank"></a>			
+				<a class="preview"   title="Предпросмотр в новом окне" href="../products/{$product->url}" target="_blank"></a>
 				<a class="enable"    title="Активен"                 href="#"></a>
 				<a class="featured"  title="Рекомендуемый"           href="#"></a>
 				<a class="duplicate" title="Дублировать"             href="#"></a>
 				<a class="delete"    title="Удалить"                 href="#"></a>
 			</div>
-			
+
 			<div class="clear"></div>
 		</div>
 		{/foreach}
@@ -111,7 +111,7 @@
 
 		<div id="action">
 			<label id="check_all" class="dash_link">Выбрать все</label>
-		
+
 			<span id="select">
 			<select name="action">
 				<option value="enable">Сделать видимыми</option>
@@ -131,15 +131,15 @@
 				<option value="delete">Удалить</option>
 			</select>
 			</span>
-		
+
 			<span id="move_to_page">
 			<select name="target_page">
 				{section target_page $pages_count}
 				<option value="{$smarty.section.target_page.index+1}">{$smarty.section.target_page.index+1}</option>
 				{/section}
-			</select> 
+			</select>
 			</span>
-		
+
 			<span id="move_to_category">
 			<select name="target_category">
 				{function name=category_select level=0}
@@ -149,32 +149,32 @@
 				{/foreach}
 				{/function}
 				{category_select categories=$categories}
-			</select> 
+			</select>
 			</span>
-			
+
 			<span id="move_to_brand">
 			<select name="target_brand">
 				<option value="0">Не указан</option>
 				{foreach $all_brands as $b}
 				<option value="{$b->id}">{$b->name}</option>
 				{/foreach}
-			</select> 
+			</select>
 			</span>
-		
-			<input id="apply_action" class="button_green" type="submit" value="Применить">		
+
+			<input id="apply_action" class="button_green" type="submit" value="Применить">
 		</div>
 		{/if}
 	</form>
 
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
-	<!-- Листалка страниц (The End) -->		
+	{include file='pagination.tpl'}
+	<!-- Листалка страниц (The End) -->
 </div>
 
 
 <!-- Меню -->
 <div id="right_menu">
-	
+
 	<!-- Фильтры -->
 	<ul>
 		<li {if !$filter}class="selected"{/if}><a href="{url brand_id=null category_id=null keyword=null page=null filter=null}">Все товары</a></li>
@@ -192,7 +192,7 @@
 	{if $categories}
 	<ul>
 		{if $categories[0]->parent_id == 0}
-		<li {if !$category->id}class="selected"{/if}><a href="{url category_id=null brand_id=null}">Все категории</a></li>	
+		<li {if !$category->id}class="selected"{/if}><a href="{url category_id=null brand_id=null}">Все категории</a></li>
 		{/if}
 		{foreach $categories as $c}
 		<li category_id="{$c->id}" {if $category->id == $c->id}class="selected"{else}class="droppable category"{/if}><a href='{url keyword=null brand_id=null page=null category_id={$c->id}}'>{$c->name}</a></li>
@@ -203,7 +203,7 @@
 	{/function}
 	{categories_tree categories=$categories}
 	<!-- Категории товаров (The End)-->
-	
+
 	{if $brands}
 	<!-- Бренды -->
 	<ul>
@@ -214,7 +214,7 @@
 	</ul>
 	<!-- Бренды (The End) -->
 	{/if}
-	
+
 </div>
 <!-- Меню  (The End) -->
 
@@ -231,9 +231,9 @@ $(function() {
 		tolerance:         "pointer",
 		handle:            ".move_zone",
 		scrollSensitivity: 40,
-		opacity:           0.7, 
-		
-		helper: function(event, ui){		
+		opacity:           0.7,
+
+		helper: function(event, ui){
 			if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
 			var helper = $('<div/>');
 			$('input[type="checkbox"][name*="check"]:checked').each(function(){
@@ -248,8 +248,8 @@ $(function() {
 					item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
 				}
 			});
-			return helper;			
-		},	
+			return helper;
+		},
  		start: function(event, ui) {
   			if(ui.helper.children('.row').size()>0)
 				$('.ui-sortable-placeholder').height(ui.helper.height());
@@ -270,7 +270,7 @@ $(function() {
 			});
 		}
 	});
-	
+
 
 	// Перенос товара на другую страницу
 	$("#action select[name=action]").change(function() {
@@ -285,11 +285,11 @@ $(function() {
 		tolerance: "pointer",
 		drop: function(event, ui){
 			$(ui.helper).find('input[type="checkbox"][name*="check"]').attr('checked', true);
-			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_page]').attr("selected", "selected");		
+			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_page]').attr("selected", "selected");
 			$(ui.draggable).closest("form").find('select[name=target_page] option[value='+$(this).html()+']').attr("selected", "selected");
 			$(ui.draggable).closest("form").submit();
-			return false;	
-		}		
+			return false;
+		}
 	});
 
 
@@ -306,10 +306,10 @@ $(function() {
 		tolerance: "pointer",
 		drop: function(event, ui){
 			$(ui.helper).find('input[type="checkbox"][name*="check"]').attr('checked', true);
-			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_category]').attr("selected", "selected");	
+			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_category]').attr("selected", "selected");
 			$(ui.draggable).closest("form").find('select[name=target_category] option[value='+$(this).attr('category_id')+']').attr("selected", "selected");
 			$(ui.draggable).closest("form").submit();
-			return false;			
+			return false;
 		}
 	});
 
@@ -327,10 +327,10 @@ $(function() {
 		tolerance: "pointer",
 		drop: function(event, ui){
 			$(ui.helper).find('input[type="checkbox"][name*="check"]').attr('checked', true);
-			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_brand]').attr("selected", "selected");			
+			$(ui.draggable).closest("form").find('select[name="action"] option[value=move_to_brand]').attr("selected", "selected");
 			$(ui.draggable).closest("form").find('select[name=target_brand] option[value='+$(this).attr('brand_id')+']').attr("selected", "selected");
 			$(ui.draggable).closest("form").submit();
-			return false;			
+			return false;
 		}
 	});
 
@@ -371,7 +371,7 @@ $(function() {
 		return false;
 	});
 
- 
+
 	// Показать вариант
 	$("a.expand_variant").click(function() {
 		$(this).closest("div.cell").find("li.variant").fadeIn('fast');
@@ -391,7 +391,7 @@ $(function() {
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
 	// Удалить товар
 	$("a.delete").click(function() {
@@ -400,7 +400,7 @@ $(function() {
 		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Дублировать товар
 	$("a.duplicate").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
@@ -408,7 +408,7 @@ $(function() {
 		$(this).closest("form").find('select[name="action"] option[value=duplicate]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Показать товар
 	$("a.enable").click(function() {
 		var icon        = $(this);
@@ -425,11 +425,11 @@ $(function() {
 				if(state)
 					line.removeClass('invisible');
 				else
-					line.addClass('invisible');				
+					line.addClass('invisible');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
 
 	// Сделать хитом
@@ -446,23 +446,23 @@ $(function() {
 			success: function(data){
 				icon.removeClass('loading_icon');
 				if(state)
-					line.addClass('featured');				
+					line.addClass('featured');
 				else
 					line.removeClass('featured');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
 
 
 	// Подтверждение удаления
 	$("form").submit(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
-	
-	
+
+
 	// Бесконечность на складе
 	$("input[name*=stock]").focus(function() {
 		if($(this).val() == '∞')

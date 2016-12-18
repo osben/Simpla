@@ -3,13 +3,13 @@
 	{if in_array('export', $manager->permissions)}<li><a href="index.php?module=ExportAdmin">Экспорт</a></li>{/if}
 	{if in_array('backup', $manager->permissions)}<li><a href="index.php?module=BackupAdmin">Бекап</a></li>{/if}
 {/capture}
-{$meta_title='Импорт товаров' scope=parent}
+{$meta_title='Импорт товаров' scope=root}
 
 <script src="{$config->root_url}/simpla/design/js/piecon/piecon.js"></script>
 <script>
 {if $filename}
 {literal}
-	
+
 	var in_process=false;
 	var count=1;
 
@@ -19,9 +19,9 @@
  		Piecon.setProgress(0);
     	$("#progressbar").progressbar({ value: 1 });
 		in_process=true;
-		do_import();	    
+		do_import();
 	});
-  
+
 	function do_import(from)
 	{
 		from = typeof(from) != 'undefined' ? from : 0;
@@ -38,7 +38,7 @@
 
     				Piecon.setProgress(Math.round(100*data.from/data.totalsize));
    					$("#progressbar").progressbar({ value: 100*data.from/data.totalsize });
-  				
+
     				if(data != false && !data.end)
     				{
     					do_import(data.from);
@@ -52,10 +52,10 @@
   				},
 				error: function(xhr, status, errorThrown) {
 					alert(errorThrown+'\n'+xhr.responseText);
-        		}  				
+        		}
 		});
-	
-	} 
+
+	}
 {/literal}
 {/if}
 </script>
@@ -80,7 +80,7 @@
 {/if}
 
 	{if $message_error != 'no_permission'}
-	
+
 	{if $filename}
 	<div>
 		<h1>Импорт {$filename|escape}</h1>
@@ -88,10 +88,10 @@
 	<div id='progressbar'></div>
 	<ul id='import_result'></ul>
 	{else}
-	
+
 		<h1>Импорт товаров</h1>
 
-		<div class="block">	
+		<div class="block">
 		<form method=post id=product enctype="multipart/form-data">
 			<input type=hidden name="session_id" value="{$smarty.session.id}">
 			<input name="file" class="import_file" type="file" value="" />
@@ -100,20 +100,20 @@
 				(максимальный размер файла &mdash; {if $config->max_upload_filesize>1024*1024}{$config->max_upload_filesize/1024/1024|round:'2'} МБ{else}{$config->max_upload_filesize/1024|round:'2'} КБ{/if})
 			</p>
 
-			
+
 		</form>
-		</div>		
-	
+		</div>
+
 		<div class="block block_help">
 		<p>
-			Создайте бекап на случай неудачного импорта. 
+			Создайте бекап на случай неудачного импорта.
 		</p>
 		<p>
 			Сохраните таблицу в формате CSV
 		</p>
 		<p>
 			В первой строке таблицы должны быть указаны названия колонок в таком формате:
-	
+
 			<ul>
 				<li><label>Товар</label> название товара</li>
 				<li><label>Категория</label> категория товара</li>
@@ -140,8 +140,8 @@
 		<p>
 			<a href='files/import/example.csv'>Скачать пример файла</a>
 		</p>
-		</div>		
-	
+		</div>
+
 	{/if}
 
 

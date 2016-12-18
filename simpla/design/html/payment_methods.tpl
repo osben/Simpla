@@ -8,26 +8,26 @@
 {/capture}
 
 {* Title *}
-{$meta_title='Способы оплаты' scope=parent}
+{$meta_title='Способы оплаты' scope=root}
 
 {* Заголовок *}
 <div id="header">
 	<h1>Способы оплаты</h1>
 	<a class="add" href="{url module=PaymentMethodAdmin}">Добавить способ оплаты</a>
-</div>	
+</div>
 
 <div id="main_list">
 
 	<form id="list_form" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	
-		<div id="list">			
+
+		<div id="list">
 			{foreach $payment_methods as $payment_method}
 			<div class="{if !$payment_method->enabled}invisible{/if} row">
 				<input type="hidden" name="positions[{$payment_method->id}]" value="{$payment_method->position}">
 				<div class="move cell"><div class="move_zone"></div></div>
 		 		<div class="checkbox cell">
-					<input type="checkbox" name="check[]" value="{$payment_method->id}" />				
+					<input type="checkbox" name="check[]" value="{$payment_method->id}" />
 				</div>
 				<div class="name cell">
 					<a href="{url module=PaymentMethodAdmin id=$payment_method->id return=$smarty.server.REQUEST_URI}">{$payment_method->name}</a>
@@ -40,10 +40,10 @@
 			</div>
 			{/foreach}
 		</div>
-	
+
 		<div id="action">
 		<label id="check_all" class="dash_link">Выбрать все</label>
-	
+
 		<span id="select">
 		<select name="action">
 			<option value="enable">Включить</option>
@@ -51,9 +51,9 @@
 			<option value="delete">Удалить</option>
 		</select>
 		</span>
-	
+
 		<input id="apply_action" class="button_green" type="submit" value="Применить">
-	
+
 		</div>
 	</form>
 </div>
@@ -69,11 +69,11 @@ $(function() {
 		tolerance:         "pointer",
 		handle:            ".move_zone",
 		scrollSensitivity: 40,
-		opacity:           0.7, 
+		opacity:           0.7,
 		forcePlaceholderSize: true,
 		axis: 'y',
-		
-		helper: function(event, ui){		
+
+		helper: function(event, ui){
 			if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
 			var helper = $('<div/>');
 			$('input[type="checkbox"][name*="check"]:checked').each(function(){
@@ -88,8 +88,8 @@ $(function() {
 					item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
 				}
 			});
-			return helper;			
-		},	
+			return helper;
+		},
  		start: function(event, ui) {
   			if(ui.helper.children('.row').size()>0)
 				$('.ui-sortable-placeholder').height(ui.helper.height());
@@ -109,7 +109,7 @@ $(function() {
 				colorize();
 			});
 		}
-	}); 
+	});
 
 	// Раскраска строк
 	function colorize()
@@ -124,9 +124,9 @@ $(function() {
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
@@ -150,17 +150,17 @@ $(function() {
 				if(state)
 					line.removeClass('invisible');
 				else
-					line.addClass('invisible');				
+					line.addClass('invisible');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
 
-	
+
 	$("form").submit(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 });
 </script>

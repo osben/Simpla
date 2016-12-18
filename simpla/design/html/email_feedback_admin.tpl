@@ -1,4 +1,4 @@
-{$subject="Вопрос от пользователя `$feedback->name|escape`" scope=parent}
+{$subject="Вопрос от пользователя `$feedback->name|escape`" scope=root}
 <h1 style='font-weight:normal;font-family:arial;'>Вопрос от пользователя {$feedback->name|escape}</h1>
 <table cellpadding=6 cellspacing=0 style='border-collapse: collapse;'>
   <tr>

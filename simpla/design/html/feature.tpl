@@ -7,9 +7,9 @@
 {/capture}
 
 {if $feature->id}
-{$meta_title = $feature->name scope=parent}
+{$meta_title = $feature->name scope=root}
 {else}
-{$meta_title = 'Новое свойство' scope=parent}
+{$meta_title = 'Новое свойство' scope=root}
 {/if}
 
 {* On document load *}
@@ -17,7 +17,7 @@
 <script>
 $(function() {
 
- 
+
 });
 </script>
 {/literal}
@@ -46,14 +46,14 @@ $(function() {
 <form method=post id=product>
 
 	<div id="name">
-		<input class="name" name=name type="text" value="{$feature->name|escape}"/> 
-		<input name=id type="hidden" value="{$feature->id|escape}"/> 
-	</div> 
+		<input class="name" name=name type="text" value="{$feature->name|escape}"/>
+		<input name=id type="hidden" value="{$feature->id|escape}"/>
+	</div>
 
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-			
-		<!-- Категории -->	
+
+		<!-- Категории -->
 		<div class="block">
 			<h2>Использовать в категориях</h2>
 					<select class=multiple_categories multiple name="feature_categories[]">
@@ -66,13 +66,13 @@ $(function() {
 						{category_select categories=$categories}
 					</select>
 		</div>
- 
+
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
-	<!-- Правая колонка свойств товара -->	
+	<!-- Левая колонка свойств товара (The End)-->
+
+	<!-- Правая колонка свойств товара -->
 	<div id="column_right">
-		
+
 		<!-- Параметры страницы -->
 		<div class="block">
 			<h2>Настройки свойства</h2>
@@ -83,10 +83,10 @@ $(function() {
 		<!-- Параметры страницы (The End)-->
 		<input type=hidden name='session_id' value='{$smarty.session.id}'>
 		<input class="button_green" type="submit" name="" value="Сохранить" />
-		
+
 	</div>
-	<!-- Правая колонка свойств товара (The End)--> 
-	
+	<!-- Правая колонка свойств товара (The End)-->
+
 
 </form>
 <!-- Основная форма (The End) -->

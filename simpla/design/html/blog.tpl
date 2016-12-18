@@ -4,7 +4,7 @@
 {/capture}
 
 {* Title *}
-{$meta_title='Блог' scope=parent}
+{$meta_title='Блог' scope=root}
 
 {* Поиск *}
 {if $posts || $keyword}
@@ -16,7 +16,7 @@
 </div>
 </form>
 {/if}
-		
+
 {* Заголовок *}
 <div id="header">
 	{if $keyword && $posts_count}
@@ -27,26 +27,26 @@
 	<h1>Нет записей</h1>
 	{/if}
 	<a class="add" href="{url module=PostAdmin return=$smarty.server.REQUEST_URI}">Добавить запись</a>
-</div>	
+</div>
 
 {if $posts}
 <div id="main_list">
-	
+
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
 
 	<form id="form_list" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	
+
 		<div id="list">
 			{foreach $posts as $post}
 			<div class="{if !$post->visible}invisible{/if} row">
 				<input type="hidden" name="positions[{$post->id}]" value="{$post->position}">
 		 		<div class="checkbox cell">
-					<input type="checkbox" name="check[]" value="{$post->id}" />				
+					<input type="checkbox" name="check[]" value="{$post->id}" />
 				</div>
-				<div class="name cell">		
+				<div class="name cell">
 					<a href="{url module=PostAdmin id=$post->id return=$smarty.server.REQUEST_URI}">{$post->name|escape}</a>
 					<br>
 					{$post->date|date}
@@ -60,11 +60,11 @@
 			</div>
 			{/foreach}
 		</div>
-		
-	
+
+
 		<div id="action">
 		<label id="check_all" class="dash_link">Выбрать все</label>
-	
+
 		<span id="select">
 		<select name="action">
 			<option value="enable">Сделать видимыми</option>
@@ -72,17 +72,17 @@
 			<option value="delete">Удалить</option>
 		</select>
 		</span>
-	
+
 		<input id="apply_action" class="button_green" type="submit" value="Применить">
-		
+
 		</div>
-				
-	</form>	
+
+	</form>
 
 	<!-- Листалка страниц -->
-	{include file='pagination.tpl'}	
+	{include file='pagination.tpl'}
 	<!-- Листалка страниц (The End) -->
-	
+
 </div>
 {/if}
 
@@ -104,16 +104,16 @@ $(function() {
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
 		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Скрыт/Видим
 	$("a.enable").click(function() {
 		var icon        = $(this);
@@ -130,17 +130,17 @@ $(function() {
 				if(state)
 					line.removeClass('invisible');
 				else
-					line.addClass('invisible');				
+					line.addClass('invisible');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
-	
+
 	// Подтверждение удаления
 	$("form").submit(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 });
 

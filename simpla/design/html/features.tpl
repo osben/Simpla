@@ -7,17 +7,17 @@
 {/capture}
 
 {* Title *}
-{$meta_title='Свойства' scope=parent}
+{$meta_title='Свойства' scope=root}
 
 {* Заголовок *}
 <div id="header">
-	<h1>Свойства</h1> 
+	<h1>Свойства</h1>
 	<a class="add" href="{url module=FeatureAdmin return=$smarty.server.REQUEST_URI}">Добавить свойство</a>
-</div>	
+</div>
 
 {if $features}
 <div id="main_list" class="features">
-	
+
 	<form id="list_form" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
@@ -27,7 +27,7 @@
 				<input type="hidden" name="positions[{$feature->id}]" value="{$feature->position}">
 				<div class="move cell"><div class="move_zone"></div></div>
 		 		<div class="checkbox cell">
-					<input type="checkbox" name="check[]" value="{$feature->id}" />				
+					<input type="checkbox" name="check[]" value="{$feature->id}" />
 				</div>
 				<div class="cell">
 					<a href="{url module=FeatureAdmin id=$feature->id return=$smarty.server.REQUEST_URI}">{$feature->name|escape}</a>
@@ -40,10 +40,10 @@
 			</div>
 			{/foreach}
 		</div>
-		
+
 		<div id="action">
 		<label id="check_all" class="dash_link">Выбрать все</label>
-	
+
 		<span id="select">
 		<select name="action">
 			<option value="set_in_filter">Использовать в фильтре</option>
@@ -51,7 +51,7 @@
 			<option value="delete">Удалить</option>
 		</select>
 		</span>
-	
+
 		<input id="apply_action" class="button_green" type="submit" value="Применить">
 		</div>
 
@@ -61,16 +61,16 @@
 {else}
 	Нет свойств
 {/if}
- 
+
  <!-- Меню -->
 <div id="right_menu">
-	
+
 	<!-- Категории товаров -->
 	{function name=categories_tree}
 	{if $categories}
 	<ul>
 		{if $categories[0]->parent_id == 0}
-		<li {if !$category->id}class="selected"{/if}><a href="{url category_id=null}">Все категории</a></li>	
+		<li {if !$category->id}class="selected"{/if}><a href="{url category_id=null}">Все категории</a></li>
 		{/if}
 		{foreach $categories as $c}
 		<li {if $category->id == $c->id}class="selected"{/if}><a href="index.php?module=FeaturesAdmin&category_id={$c->id}">{$c->name}</a></li>
@@ -81,7 +81,7 @@
 	{/function}
 	{categories_tree categories=$categories}
 	<!-- Категории товаров (The End)-->
-		
+
 </div>
 <!-- Левое меню  (The End) -->
 
@@ -98,7 +98,7 @@ $(function() {
 	}
 	// Раскрасить строки сразу
 	colorize();
-	
+
 	// Сортировка списка
 	$("#list").sortable({
 		items:             ".row",
@@ -106,10 +106,10 @@ $(function() {
 		handle:            ".move_zone",
 		axis: 'y',
 		scrollSensitivity: 40,
-		opacity:           0.7, 
+		opacity:           0.7,
 		forcePlaceholderSize: true,
-		
-		helper: function(event, ui){		
+
+		helper: function(event, ui){
 			if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
 			var helper = $('<div/>');
 			$('input[type="checkbox"][name*="check"]:checked').each(function(){
@@ -124,8 +124,8 @@ $(function() {
 					item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
 				}
 			});
-			return helper;			
-		},	
+			return helper;
+		},
  		start: function(event, ui) {
   			if(ui.helper.children('.row').size()>0)
 				$('.ui-sortable-placeholder').height(ui.helper.height());
@@ -146,12 +146,12 @@ $(function() {
 			});
 		}
 	});
-	
+
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
-	
+	});
+
 	// Указать "в фильтре"/"не в фильтре"
 	$("a.in_filter").click(function() {
 		var icon        = $(this);
@@ -168,11 +168,11 @@ $(function() {
 				if(!state)
 					line.removeClass('in_filter');
 				else
-					line.addClass('in_filter');				
+					line.addClass('in_filter');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
 
 	// Удалить
@@ -182,14 +182,14 @@ $(function() {
 		$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Подтверждение удаления
 	$("form").submit(function() {
 		if($('#list input[type="checkbox"][name*="check"]:checked').length>0)
 			if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-				return false;	
+				return false;
 	});
-	
+
 });
 </script>
 {/literal}

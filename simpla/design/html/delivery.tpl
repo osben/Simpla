@@ -8,9 +8,9 @@
 {/capture}
 
 {if $delivery->id}
-{$meta_title = $delivery->name scope=parent}
+{$meta_title = $delivery->name scope=root}
 {else}
-{$meta_title = 'Новый способ доставки' scope=parent}
+{$meta_title = 'Новый способ доставки' scope=root}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -42,12 +42,12 @@
 <form method=post id=product enctype="multipart/form-data">
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
-		<input class="name" name=name type="text" value="{$delivery->name|escape}"/> 
-		<input name=id type="hidden" value="{$delivery->id}"/> 
+		<input class="name" name=name type="text" value="{$delivery->name|escape}"/>
+		<input name=id type="hidden" value="{$delivery->id}"/>
 		<div class="checkbox">
 			<input name=enabled value='1' type="checkbox" id="active_checkbox" {if $delivery->enabled}checked{/if}/> <label for="active_checkbox">Активен</label>
 		</div>
-	</div> 
+	</div>
 
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
@@ -63,8 +63,8 @@
 		<!-- Параметры страницы (The End)-->
 
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
+	<!-- Левая колонка свойств товара (The End)-->
+
 	<!-- Левая колонка свойств товара -->
 	<div id="column_right">
 		<div class="block layer">
@@ -75,11 +75,11 @@
 			<input type=checkbox name="delivery_payments[]" id="payment_{$payment_method->id}" value='{$payment_method->id}' {if in_array($payment_method->id, $delivery_payments)}checked{/if}> <label for="payment_{$payment_method->id}">{$payment_method->name}</label><br>
 			</li>
 		{/foreach}
-		</ul>		
+		</ul>
 		</div>
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
+	<!-- Левая колонка свойств товара (The End)-->
+
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Описание</h2>
@@ -87,7 +87,7 @@
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	
+
 </form>
 <!-- Основная форма (The End) -->
 

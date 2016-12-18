@@ -3,9 +3,9 @@
 {/capture}
 
 {if $post->id}
-{$meta_title = $post->name scope=parent}
+{$meta_title = $post->name scope=root}
 {else}
-{$meta_title = 'Новая запись в блоге' scope=parent}
+{$meta_title = 'Новая запись в блоге' scope=root}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -21,13 +21,13 @@ $(function() {
 	$('input[name="date"]').datepicker({
 		regional:'ru'
 	});
-	
+
 	// Автозаполнение мета-тегов
 	meta_title_touched = true;
 	meta_keywords_touched = true;
 	meta_description_touched = true;
 	url_touched = true;
-	
+
 	if($('input[name="meta_title"]').val() == generate_meta_title() || $('input[name="meta_title"]').val() == '')
 		meta_title_touched = false;
 	if($('input[name="meta_keywords"]').val() == generate_meta_keywords() || $('input[name="meta_keywords"]').val() == '')
@@ -36,16 +36,16 @@ $(function() {
 		meta_description_touched = false;
 	if($('input[name="url"]').val() == generate_url() || $('input[name="url"]').val() == '')
 		url_touched = false;
-		
+
 	$('input[name="meta_title"]').change(function() { meta_title_touched = true; });
 	$('input[name="meta_keywords"]').change(function() { meta_keywords_touched = true; });
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
 	$('input[name="url"]').change(function() { url_touched = true; });
-	
+
 	$('input[name="name"]').keyup(function() { set_meta(); });
 	$('select[name="brand_id"]').change(function() { set_meta(); });
 	$('select[name="categories[]"]').change(function() { set_meta(); });
-	
+
 });
 
 function set_meta()
@@ -92,22 +92,22 @@ function generate_url()
 	url = $('input[name="name"]').val();
 	url = url.replace(/[\s]+/gi, '-');
 	url = translit(url);
-	url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();	
+	url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();
 	return url;
 }
 
 function translit(str)
 {
-	var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")   
-	var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")   
+	var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")
+	var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")
  	var res = '';
 	for(var i=0, l=str.length; i<l; i++)
-	{ 
-		var s = str.charAt(i), n = ru.indexOf(s); 
-		if(n >= 0) { res += en[n]; } 
-		else { res += s; } 
-    } 
-    return res;  
+	{
+		var s = str.charAt(i), n = ru.indexOf(s);
+		if(n >= 0) { res += en[n]; }
+		else { res += s; }
+    }
+    return res;
 }
 
 </script>
@@ -122,7 +122,7 @@ function translit(str)
 	<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
 
-	<span class="share">		
+	<span class="share">
 		<a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/blog/{$post->url|urlencode}&title={$post->name|urlencode}&description={$post->annotation|urlencode}&noparse=false","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
   		<img src="{$config->root_url}/simpla/design/images/vk_icon.png" /></a>
 		<a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/blog/{$post->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
@@ -130,8 +130,8 @@ function translit(str)
 		<a href="#" onClick='window.open("http://twitter.com/share?text={$post->name|urlencode}&url={$config->root_url|urlencode}/blog/{$post->url|urlencode}&hashtags={$post->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
   		<img src="{$config->root_url}/simpla/design/images/twitter_icon.png" /></a>
 	</span>
-	
-	
+
+
 </div>
 <!-- Системное сообщение (The End)-->
 {/if}
@@ -152,17 +152,17 @@ function translit(str)
 <form method=post id=product enctype="multipart/form-data">
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
-		<input class="name" name=name type="text" value="{$post->name|escape}"/> 
-		<input name=id type="hidden" value="{$post->id|escape}"/> 
+		<input class="name" name=name type="text" value="{$post->name|escape}"/>
+		<input name=id type="hidden" value="{$post->id|escape}"/>
 		<div class="checkbox">
 			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $post->visible}checked{/if}/> <label for="active_checkbox">Активна</label>
 		</div>
 
-	</div> 
+	</div>
 
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-			
+
 		<!-- Параметры страницы -->
 		<div class="block">
 			<ul>
@@ -183,28 +183,28 @@ function translit(str)
 		<!-- Параметры страницы (The End)-->
 
 
-			
+
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
-	<!-- Правая колонка свойств товара -->	
+	<!-- Левая колонка свойств товара (The End)-->
+
+	<!-- Правая колонка свойств товара -->
 	<div id="column_right">
-		
+
 	</div>
-	<!-- Правая колонка свойств товара (The End)--> 
-	
+	<!-- Правая колонка свойств товара (The End)-->
+
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Краткое описание</h2>
 		<textarea name="annotation" class='editor_small'>{$post->annotation|escape}</textarea>
 	</div>
-		
+
 	<div class="block">
 		<h2>Полное  описание</h2>
 		<textarea name="body"  class='editor_large'>{$post->text|escape}</textarea>
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	
+
 </form>
 <!-- Основная форма (The End) -->

@@ -7,9 +7,9 @@
 {/capture}
 
 {if $page->id}
-{$meta_title = $page->name scope=parent}
+{$meta_title = $page->name scope=root}
 {else}
-{$meta_title = 'Новая страница' scope=parent}
+{$meta_title = 'Новая страница' scope=root}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -30,7 +30,7 @@ $(function() {
 	meta_keywords_touched = true;
 	meta_description_touched = true;
 	url_touched = true;
-	
+
 	if($('input[name="menu_item_name"]').val() == generate_menu_item_name() || $('input[name="name"]').val() == '')
 		menu_item_name_touched = false;
 	if($('input[name="meta_title"]').val() == generate_meta_title() || $('input[name="meta_title"]').val() == '')
@@ -41,13 +41,13 @@ $(function() {
 		meta_description_touched = false;
 	if($('input[name="url"]').val() == generate_url())
 		url_touched = false;
-		
+
 	$('input[name="name"]').change(function() { menu_item_name_touched = true; });
 	$('input[name="meta_title"]').change(function() { meta_title_touched = true; });
 	$('input[name="meta_keywords"]').change(function() { meta_keywords_touched = true; });
 	$('textarea[name="meta_description"]').change(function() { meta_description_touched = true; });
 	$('input[name="url"]').change(function() { url_touched = true; });
-	
+
 	$('input[name="header"]').keyup(function() { set_meta(); });
 });
 
@@ -103,22 +103,22 @@ function generate_url()
 	url = $('input[name="header"]').val();
 	url = url.replace(/[\s]+/gi, '-');
 	url = translit(url);
-	url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();	
+	url = url.replace(/[^0-9a-z_\-]+/gi, '').toLowerCase();
 	return url;
 }
 
 function translit(str)
 {
-	var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")   
-	var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")   
+	var ru=("А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я").split("-")
+	var en=("A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-'-'-Y-y-'-'-E-e-YU-yu-YA-ya").split("-")
  	var res = '';
 	for(var i=0, l=str.length; i<l; i++)
-	{ 
-		var s = str.charAt(i), n = ru.indexOf(s); 
-		if(n >= 0) { res += en[n]; } 
-		else { res += s; } 
-    } 
-    return res;  
+	{
+		var s = str.charAt(i), n = ru.indexOf(s);
+		if(n >= 0) { res += en[n]; }
+		else { res += s; }
+    }
+    return res;
 }
 
 
@@ -136,8 +136,8 @@ function translit(str)
 	{if $smarty.get.return}
 	<a class="button" href="{$smarty.get.return}">Вернуться</a>
 	{/if}
-	
-	<span class="share">		
+
+	<span class="share">
 		<a href="#" onClick='window.open("http://vkontakte.ru/share.php?url={$config->root_url|urlencode}/{$page->url|urlencode}&title={$page->name|urlencode}&description={$page->body|urlencode}&noparse=false","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
   		<img src="{$config->root_url}/simpla/design/images/vk_icon.png" /></a>
 		<a href="#" onClick='window.open("http://www.facebook.com/sharer.php?u={$config->root_url|urlencode}/{$page->url|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
@@ -145,7 +145,7 @@ function translit(str)
 		<a href="#" onClick='window.open("http://twitter.com/share?text={$page->name|urlencode}&url={$config->root_url|urlencode}/{$page->url|urlencode}&hashtags={$page->meta_keywords|replace:' ':''|urlencode}","displayWindow","width=700,height=400,left=250,top=170,status=no,toolbar=no,menubar=no");return false;'>
   		<img src="{$config->root_url}/simpla/design/images/twitter_icon.png" /></a>
 	</span>
-	
+
 </div>
 <!-- Системное сообщение (The End)-->
 {/if}
@@ -165,23 +165,23 @@ function translit(str)
 <form method=post id=product enctype="multipart/form-data">
 	<input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
-		<input class="name" name=header type="text" value="{$page->header|escape}"/> 
-		<input name=id type="hidden" value="{$page->id|escape}"/> 
+		<input class="name" name=header type="text" value="{$page->header|escape}"/>
+		<input name=id type="hidden" value="{$page->id|escape}"/>
 		<div class="checkbox">
 			<input name=visible value='1' type="checkbox" id="active_checkbox" {if $page->visible}checked{/if}/> <label for="active_checkbox">Активна</label>
 		</div>
-	</div> 
+	</div>
 
 		<!-- Параметры страницы -->
 		<div class="block">
 			<ul>
 				<li><label class=property>Название пункта в меню</label><input name="name" class="simpla_inp" type="text" value="{$page->name|escape}" /></li>
-				<li><label class=property>Меню</label>	
+				<li><label class=property>Меню</label>
 					<select name="menu_id">
 				   		{foreach $menus as $m}
 				        	<option value='{$m->id}' {if $page->menu_id == $m->id}selected{/if}>{$m->name|escape}</option>
 				    	{/foreach}
-					</select>		
+					</select>
 				</li>
 			</ul>
 		</div>
@@ -189,7 +189,7 @@ function translit(str)
 
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-			
+
 		<!-- Параметры страницы -->
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
@@ -200,12 +200,12 @@ function translit(str)
 				<li><label class=property>Описание</label><textarea name="meta_description" class="simpla_inp"/>{$page->meta_description|escape}</textarea></li>
 			</ul>
 		</div>
-		<!-- Параметры страницы (The End)-->		
+		<!-- Параметры страницы (The End)-->
 
-			
+
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-		
+	<!-- Левая колонка свойств товара (The End)-->
+
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Текст страницы</h2>
@@ -213,7 +213,7 @@ function translit(str)
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	
+
 </form>
 <!-- Основная форма (The End) -->
 

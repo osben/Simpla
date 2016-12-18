@@ -8,9 +8,9 @@
 {/capture}
 
 {if $payment_method->id}
-{$meta_title = $payment_method->name scope=parent}
+{$meta_title = $payment_method->name scope=root}
 {else}
-{$meta_title = 'Новый способ оплаты' scope=parent}
+{$meta_title = 'Новый способ оплаты' scope=root}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -61,12 +61,12 @@ $(function() {
 <form method=post id=product enctype="multipart/form-data">
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
-		<input class="name" name=name type="text" value="{$payment_method->name|escape}"/> 
-		<input name=id type="hidden" value="{$payment_method->id}"/> 
+		<input class="name" name=name type="text" value="{$payment_method->name|escape}"/>
+		<input name=id type="hidden" value="{$payment_method->id}"/>
 		<div class="checkbox">
 			<input name=enabled value='1' type="checkbox" id="active_checkbox" {if $payment_method->enabled}checked{/if}/> <label for="active_checkbox">Активен</label>
 		</div>
-	</div> 
+	</div>
 
 	<div id="product_categories">
 		<select name="module">
@@ -76,7 +76,7 @@ $(function() {
         	{/foreach}
 		</select>
 	</div>
-	
+
 	<div id="product_brand">
 		<label>Валюта</label>
 		<div>
@@ -87,10 +87,10 @@ $(function() {
 		</select>
 		</div>
 	</div>
-	
+
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-	
+
    		{foreach $payment_modules as $payment_module}
         	<div class="block layer" {if $payment_module@key!=$payment_method->module}style='display:none;'{/if} id=module_settings module='{$payment_module@key}'>
 			<h2>{$payment_module->name}</h2>
@@ -115,14 +115,14 @@ $(function() {
 			{/foreach}
 			</ul>
 			{* END Параметры модуля оплаты *}
-        	
+
         	</div>
     	{/foreach}
     	<div class="block layer" {if $payment_method->module != ''}style='display:none;'{/if} id=module_settings module='null'></div>
 
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
+	<!-- Левая колонка свойств товара (The End)-->
+
 	<!-- Правая колонка -->
 	<div id="column_right">
 		<div class="block layer">
@@ -133,11 +133,11 @@ $(function() {
 			<input type=checkbox name="payment_deliveries[]" id="delivery_{$delivery->id}" value='{$delivery->id}' {if in_array($delivery->id, $payment_deliveries)}checked{/if}> <label for="delivery_{$delivery->id}">{$delivery->name}</label><br>
 			</li>
 		{/foreach}
-		</ul>		
+		</ul>
 		</div>
 	</div>
-	<!-- Правая колонка (The End)--> 
-	
+	<!-- Правая колонка (The End)-->
+
 	<!-- Описагние товара -->
 	<div class="block layer">
 		<h2>Описание</h2>
@@ -145,7 +145,7 @@ $(function() {
 	</div>
 	<!-- Описание товара (The End)-->
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	
+
 </form>
 <!-- Основная форма (The End) -->
 

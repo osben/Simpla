@@ -6,7 +6,7 @@
 	{if in_array('managers', $manager->permissions)}<li><a href="index.php?module=ManagersAdmin">Менеджеры</a></li>{/if}
 {/capture}
 
-{$meta_title = 'Валюты' scope=parent}
+{$meta_title = 'Валюты' scope=root}
 
 {* On document load *}
 {literal}
@@ -22,9 +22,9 @@ $(function() {
 	$('#new_currency').remove().removeAttr('id');
 	$('a#add_currency').click(function() {
 		$(curr).clone(true).appendTo('#currencies').fadeIn('slow').find("input[name*=currency][name*=name]").focus();
-		return false;		
-	});	
- 
+		return false;
+	});
+
 
 	// Скрыт/Видим
 	$("a.enable").click(function() {
@@ -42,13 +42,13 @@ $(function() {
 				if(state)
 					line.removeClass('invisible');
 				else
-					line.addClass('invisible');				
+					line.addClass('invisible');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
-	
+
 	// Центы
 	$("a.cents").click(function() {
 		var icon        = $(this);
@@ -66,30 +66,30 @@ $(function() {
 				if(!state)
 					line.removeClass('cents');
 				else
-					line.addClass('cents');				
+					line.addClass('cents');
 			},
 			error: function (xhr, ajaxOptions, thrownError){
                     alert(xhr.status);
                     alert(thrownError);
             },
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
-	
+
 	// Показать центы
 	$("a.delete").click(function() {
 		$('input[type="hidden"][name="action"]').val('delete');
 		$('input[type="hidden"][name="action_id"]').val($(this).closest("ul").find('input[type="hidden"][name*="currency[id]"]').val());
 		$(this).closest("form").submit();
 	});
-	
+
 	// Запоминаем id первой валюты, чтобы определить изменение базовой валюты
 	var base_currency_id = $('input[name*="currency[id]"]').val();
-	
+
 	$("form").submit(function() {
 		if($('input[type="hidden"][name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 		if(base_currency_id != $('input[name*="currency[id]"]:first').val() && confirm('Пересчитать все цены в '+$('input[name*="name"]:first').val()+' по текущему курсу?', 'msgBox Title'))
 			$('input[name="recalculate"]').val(1);
 	});
@@ -100,29 +100,29 @@ $(function() {
 </script>
 {/literal}
 
-		
+
 	<!-- Заголовок -->
 	<div id="header">
 		<h1>Валюты</h1>
 		<a class="add" id="add_currency" href="#">Добавить</a>
-	<!-- Заголовок (The End) -->	
-	</div>	
+	<!-- Заголовок (The End) -->
+	</div>
 
 
-	
- 
+
+
 	<form method=post>
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
-	
-	
+
+
 	<!-- Валюты -->
 	<div id="currencies_block">
 		<ul id="header">
 			<li class="move"></li>
-			<li class="name">Название валюты</li>	
-			<li class="icons"></li>	
-			<li class="sign">Знак</li>	
-			<li class="iso">Код ISO</li>	
+			<li class="name">Название валюты</li>
+			<li class="icons"></li>
+			<li class="sign">Знак</li>
+			<li class="iso">Код ISO</li>
 		</ul>
 		<div id="currencies">
 		{foreach $currencies as $c}
@@ -148,11 +148,11 @@ $(function() {
 			</li>
 			<li class="icons">
 			{if !$c@first}
-				<a class="delete" href="#" title="Удалить"></a>				
+				<a class="delete" href="#" title="Удалить"></a>
 			{/if}
 			</li>
 		</ul>
-		{/foreach}		
+		{/foreach}
 		<ul id="new_currency" style='display:none;'>
 			<li class="move"><div class="move_zone"></div></li>
 			<li class="name"><input name="currency[id][]" type="hidden" value="" /><input name="currency[name][]" type="" value="" /></li>
@@ -165,13 +165,13 @@ $(function() {
 				<div class=rate_to>= <input name="currency[rate_to][]" type="text" value="1" /> {$currency->sign|escape}</div>
 			</li>
 			<li class="icons">
-			
+
 			</li>
 		</ul>
 		</div>
 
 	</div>
-	<!-- Валюты (The End)--> 
+	<!-- Валюты (The End)-->
 
 
 	<div id="action">
@@ -181,8 +181,8 @@ $(function() {
 	<input type=hidden name=action_id value=''>
 	<input id='apply_action' class="button_green" type=submit value="Применить">
 
-	
+
 	</div>
 	</form>
-	
- 
+
+

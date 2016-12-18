@@ -6,9 +6,9 @@
 {/capture}
 
 {if $coupon->code}
-{$meta_title = $coupon->code scope=parent}
+{$meta_title = $coupon->code scope=root}
 {else}
-{$meta_title = 'Новый купон' scope=parent}
+{$meta_title = 'Новый купон' scope=root}
 {/if}
 
 {* Подключаем Tiny MCE *}
@@ -26,7 +26,7 @@ $(function() {
 
 	// On change date
 	$('input[name="expire"]').focus(function() {
- 
+
     	$('input[name="expires"]').attr('checked', true);
 
 	});
@@ -64,12 +64,12 @@ $(function() {
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
 		<input class="name" name="code" type="text" value="{$coupon->code|escape}"/>
-		<input name="id" class="name" type="hidden" value="{$coupon->id|escape}"/>		
-	</div> 
+		<input name="id" class="name" type="hidden" value="{$coupon->id|escape}"/>
+	</div>
 
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
-			
+
 		<div class="block layer">
 			<ul>
 				<li>
@@ -81,19 +81,19 @@ $(function() {
 				</li>
 				<li>
 					<label class=property>Для заказов от</label>
-					<input class="coupon_value" type="text" name="min_order_price" value="{$coupon->min_order_price|escape}"> {$currency->sign}		
+					<input class="coupon_value" type="text" name="min_order_price" value="{$coupon->min_order_price|escape}"> {$currency->sign}
 				</li>
 				<li>
 					<label class=property for="single"></label>
-					<input type="checkbox" name="single" id="single" value="1" {if $coupon->single==1}checked{/if}> <label for="single">одноразовый</label>					
+					<input type="checkbox" name="single" id="single" value="1" {if $coupon->single==1}checked{/if}> <label for="single">одноразовый</label>
 				</li>
 			</ul>
 		</div>
-			
+
 	</div>
-	<!-- Левая колонка свойств товара (The End)--> 
-	
-	<!-- Правая колонка свойств товара -->	
+	<!-- Левая колонка свойств товара (The End)-->
+
+	<!-- Правая колонка свойств товара -->
 	<div id="column_right">
 
 		<div class="block layer">
@@ -101,11 +101,11 @@ $(function() {
 				<li><label class=property><input type=checkbox name="expires" value="1" {if $coupon->expire}checked{/if}>Истекает</label><input type=text name=expire value='{$coupon->expire|date}'></li>
 			</ul>
 		</div>
-		
+
 	</div>
-	<!-- Правая колонка свойств товара (The End)--> 
-	
+	<!-- Правая колонка свойств товара (The End)-->
+
 	<input class="button_green button_save" type="submit" name="" value="Сохранить" />
-	
+
 </form>
 <!-- Основная форма (The End) -->

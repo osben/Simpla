@@ -8,9 +8,9 @@
 {/capture}
 
 {if $m->login}
-{$meta_title = $m->login scope=parent}
+{$meta_title = $m->login scope=root}
 {else}
-{$meta_title = 'Новый менеджер' scope=parent}
+{$meta_title = 'Новый менеджер' scope=root}
 {/if}
 
 {* On document load *}
@@ -26,7 +26,7 @@ $(function() {
 	$('#change_password').click(function() {
 		$('#password_input').show();
 	});
-		
+
 });
 {/literal}
 </script>
@@ -63,23 +63,23 @@ $(function() {
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
 		Логин:
-		<input class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32"/> 
+		<input class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32"/>
 		<input name="old_login" type="hidden" value="{$m->login|escape}"/>
 		Пароль:
 		{if $m->login}<a class="dash_link"id="change_password">изменить</a>{/if}
-		<input id="password_input" class="name" name="password" type="password" value=""/> 
-	</div> 
+		<input id="password_input" class="name" name="password" type="password" value=""/>
+	</div>
 
 	<!-- Левая колонка -->
 	<div id="column_left">
-		
+
 		<h2>Права доступа: </h2>
 		<div class="block"><label id="check_all" class="dash_link">Выбрать все</label></div>
 
 		<!-- Параметры  -->
 		<div class="block">
 			<ul>
-			
+
 				{$perms = [
 					'products'   =>'Товары',
 					'categories' =>'Категории',
@@ -106,7 +106,7 @@ $(function() {
 					'managers'   =>'Менеджеры',
 					'license'    =>'Управление лицензией'
 				]}
-				
+
 				{foreach $perms as $p=>$name}
 				<li><label class=property for="{$p}">{$name}</label>
 				<input id="{$p}" name="permissions[]" class="simpla_inp" type="checkbox" value="{$p}"

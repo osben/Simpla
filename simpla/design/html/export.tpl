@@ -4,7 +4,7 @@
 	{if in_array('backup', $manager->permissions)}<li><a href="index.php?module=BackupAdmin">Бекап</a></li>{/if}
 {/capture}
 
-{$meta_title='Экспорт товаров' scope=parent}
+{$meta_title='Экспорт товаров' scope=root}
 
 {if $message_error}
 	<!-- Системное сообщение -->

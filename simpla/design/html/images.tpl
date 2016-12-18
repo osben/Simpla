@@ -1,11 +1,11 @@
 {capture name=tabs}
 	<li><a href="index.php?module=ThemeAdmin">Тема</a></li>
-	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>		
-	<li><a href="index.php?module=StylesAdmin">Стили</a></li>		
-	<li class="active"><a href="index.php?module=ImagesAdmin">Изображения</a></li>		
+	<li><a href="index.php?module=TemplatesAdmin">Шаблоны</a></li>
+	<li><a href="index.php?module=StylesAdmin">Стили</a></li>
+	<li class="active"><a href="index.php?module=ImagesAdmin">Изображения</a></li>
 {/capture}
 
-{$meta_title = "Изображения" scope=parent}
+{$meta_title = "Изображения" scope=root}
 
 {* On document load *}
 {literal}
@@ -21,23 +21,23 @@ $(function() {
 		inp2.focus().select();
 		return false;
 	});
- 
 
-	// Удалить 
+
+	// Удалить
 	$("a.delete").click(function() {
 		name = $(this).closest('li').attr('name');
 		$('input[name=delete_image]').val(name);
 		$(this).closest("form").submit();
 	});
-	
+
 	// Загрузить
 	$("#upload_image").click(function() {
 		$(this).closest('div').append($('<input type=file name=upload_images[]>'));
 	});
-	
+
 	$("form").submit(function() {
 		if($('input[name="delete_image"]').val()!='' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 
 });

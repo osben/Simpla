@@ -16,9 +16,9 @@
 
 
 {if $order->id}
-{$meta_title = "Заказ №`$order->id`" scope=parent}
+{$meta_title = "Заказ №`$order->id`" scope=root}
 {else}
-{$meta_title = 'Новый заказ' scope=parent}
+{$meta_title = 'Новый заказ' scope=root}
 {/if}
 
 <!-- Основная форма -->
@@ -26,7 +26,7 @@
 <input type=hidden name="session_id" value="{$smarty.session.id}">
 
 <div id="name">
-	<input name=id type="hidden" value="{$order->id|escape}"/> 
+	<input name=id type="hidden" value="{$order->id|escape}"/>
 	<h1>{if $order->id}Заказ №{$order->id|escape}{else}Новый заказ{/if}
 	<select class=status name="status">
 		<option value='0' {if $order->status == 0}selected{/if}>Новый</option>
@@ -46,8 +46,8 @@
 		<a class=next_order href="{url id=$next_order->id}">→</a>
 		{/if}
 	</div>
-		
-</div> 
+
+</div>
 
 
 {if $message_error}
@@ -74,7 +74,7 @@
 
 <div id="order_details">
 	<h2>Детали заказа <a href='#' class="edit_order_details"><img src='design/images/pencil.png' alt='Редактировать' title='Редактировать'></a></h2>
-	
+
 	<div id="user">
 	<ul class="order_details">
 		<li>
@@ -84,7 +84,7 @@
 			</div>
 		</li>
 		<li>
-			<label class=property>Имя</label> 
+			<label class=property>Имя</label>
 			<div class="edit_order_detail" style='display:none;'>
 				<input name="name" class="simpla_inp" type="text" value="{$order->name|escape}" />
 			</div>
@@ -132,7 +132,7 @@
 	</ul>
 	</div>
 
-	
+
 	{if $labels}
 	<div class='layer'>
 	<h2>Метка</h2>
@@ -152,7 +152,7 @@
 	</div>
 	{/if}
 
-	
+
 	<div class='layer'>
 	<h2>Покупатель <a href='#' class="edit_user"><img src='design/images/pencil.png' alt='Редактировать' title='Редактировать'></a> {if $user}<a href="#" class='delete_user'><img src='design/images/delete.png' alt='Удалить' title='Удалить'></a>{/if}</h2>
 		<div class='view_user'>
@@ -167,9 +167,9 @@
 		<input type=text id='user' class="input_autocomplete" placeholder="Выберите пользователя">
 		</div>
 	</div>
-	
 
-	
+
+
 	<div class='layer'>
 	<h2>Примечание <a href='#' class="edit_note"><img src='design/images/pencil.png' alt='Редактировать' title='Редактировать'></a></h2>
 	<ul class="order_details">
@@ -185,12 +185,12 @@
 		</li>
 	</ul>
 	</div>
-		
+
 </div>
 
 
 <div id="purchases">
- 
+
 	<div id="list" class="purchases">
 		{foreach $purchases as $purchase}
 		<div class="row">
@@ -202,10 +202,10 @@
 				{/if}
 			</div>
 			<div class="purchase_name cell">
-			
-				<div class='purchase_variant'>				
+
+				<div class='purchase_variant'>
 				<span class=edit_purchase style='display:none;'>
-				<select name=purchases[variant_id][{$purchase->id}] {if $purchase->product->variants|count==1 && $purchase->variant_name == '' && $purchase->variant->sku == ''}style='display:none;'{/if}>					
+				<select name=purchases[variant_id][{$purchase->id}] {if $purchase->product->variants|count==1 && $purchase->variant_name == '' && $purchase->variant->sku == ''}style='display:none;'{/if}>
 		    	{if !$purchase->variant}<option price='{$purchase->price}' amount='{$purchase->amount}' value=''>{$purchase->variant_name|escape} {if $purchase->sku}(арт. {$purchase->sku}){/if}</option>{/if}
 				{foreach $purchase->product->variants as $v}
 					{if $v->stock>0 || $v->id == $purchase->variant->id}
@@ -218,14 +218,14 @@
 				</select>
 				</span>
 				<span class=view_purchase>
-					{$purchase->variant_name} {if $purchase->sku}(арт. {$purchase->sku}){/if}			
+					{$purchase->variant_name} {if $purchase->sku}(арт. {$purchase->sku}){/if}
 				</span>
 				</div>
-		
+
 				{if $purchase->product}
 				<a class="related_product_name" href="index.php?module=ProductAdmin&id={$purchase->product->id}&return={$smarty.server.REQUEST_URI|urlencode}">{$purchase->product_name}</a>
 				{else}
-				{$purchase->product_name}				
+				{$purchase->product_name}
 				{/if}
 			</div>
 			<div class="price cell">
@@ -235,7 +235,7 @@
 				</span>
 				{$currency->sign}
 			</div>
-			<div class="amount cell">			
+			<div class="amount cell">
 				<span class=view_purchase>
 					{$purchase->amount} {$settings->units}
 				</span>
@@ -250,9 +250,9 @@
 							<option value="{$smarty.section.amounts.index}" {if $purchase->amount==$smarty.section.amounts.index}selected{/if}>{$smarty.section.amounts.index} {$settings->units}</option>
 						{/section}
 			        </select>
-				</span>			
+				</span>
 			</div>
-			<div class="icons cell">		
+			<div class="icons cell">
 				{if !$order->closed}
 					{if !$purchase->product}
 					<img src='design/images/error.png' alt='Товар был удалён' title='Товар был удалён' >
@@ -262,7 +262,7 @@
 					<img src='design/images/error.png' alt='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}' title='На складе остал{$purchase->variant->stock|plural:'ся':'ось'} {$purchase->variant->stock} товар{$purchase->variant->stock|plural:'':'ов':'а'}'  >
 					{/if}
 				{/if}
-				<a href='#' class="delete" title="Удалить"></a>		
+				<a href='#' class="delete" title="Удалить"></a>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -273,7 +273,7 @@
 				<img class=product_icon src=''>
 			</div>
 			<div class="purchase_name cell">
-				<div class='purchase_variant'>				
+				<div class='purchase_variant'>
 					<select name=purchases[variant_id][] style='display:none;'></select>
 				</div>
 				<a class="purchase_name" href=""></a>
@@ -285,7 +285,7 @@
 	        	<select name=purchases[amount][]></select>
 			</div>
 			<div class="icons cell">
-				<a href='#' class="delete" title="Удалить"></a>	
+				<a href='#' class="delete" title="Удалить"></a>
 			</div>
 			<div class="clear"></div>
 		</div>
@@ -307,22 +307,22 @@
 
 	<div class="block discount layer">
 		<h2>Скидка</h2>
-		<input type=text name=discount value='{$order->discount}'> <span class=currency>%</span>		
+		<input type=text name=discount value='{$order->discount}'> <span class=currency>%</span>
 	</div>
 
 	<div class="subtotal layer">
 	С учетом скидки<b> {($subtotal-$subtotal*$order->discount/100)|round:2} {$currency->sign}</b>
-	</div> 
-	
+	</div>
+
 	<div class="block discount layer">
 		<h2>Купон{if $order->coupon_code} ({$order->coupon_code}){/if}</h2>
-		<input type=text name=coupon_discount value='{$order->coupon_discount}'> <span class=currency>{$currency->sign}</span>		
+		<input type=text name=coupon_discount value='{$order->coupon_discount}'> <span class=currency>{$currency->sign}</span>
 	</div>
 
 	<div class="subtotal layer">
 	С учетом купона<b> {($subtotal-$subtotal*$order->discount/100-$order->coupon_discount)|round:2} {$currency->sign}</b>
-	</div> 
-	
+	</div>
+
 	<div class="block delivery">
 		<h2>Доставка</h2>
 				<select name="delivery_id">
@@ -330,7 +330,7 @@
 				{foreach $deliveries as $d}
 				<option value="{$d->id}" {if $d->id==$delivery->id}selected{/if}>{$d->name}</option>
 				{/foreach}
-				</select>	
+				</select>
 				<input type=text name=delivery_price value='{$order->delivery_price}'> <span class=currency>{$currency->sign}</span>
 				<div class="separate_delivery">
 					<input type=checkbox id="separate_delivery" name=separate_delivery value='1' {if $order->separate_delivery}checked{/if}> <label  for="separate_delivery">оплачивается отдельно</label>
@@ -340,8 +340,8 @@
 	<div class="total layer">
 	Итого<b> {$order->total_price} {$currency->sign}</b>
 	</div>
-		
-		
+
+
 	<div class="block payment">
 		<h2>Оплата</h2>
 				<select name="payment_method_id">
@@ -350,11 +350,11 @@
 				<option value="{$pm->id}" {if $pm->id==$payment_method->id}selected{/if}>{$pm->name}</option>
 				{/foreach}
 				</select>
-		
-		<input type=checkbox name="paid" id="paid" value="1" {if $order->paid}checked{/if}> <label for="paid" {if $order->paid}class="green"{/if}>Заказ оплачен</label>		
+
+		<input type=checkbox name="paid" id="paid" value="1" {if $order->paid}checked{/if}> <label for="paid" {if $order->paid}class="green"{/if}>Заказ оплачен</label>
 	</div>
 
- 
+
 	{if $payment_method}
 	<div class="subtotal layer">
 	К оплате<b> {$order->total_price|convert:$payment_currency->id} {$payment_currency->sign}</b>
@@ -392,29 +392,29 @@ $(function() {
 	}
 	// Раскрасить строки сразу
 	colorize();
-	
+
 	// Удаление товара
 	$(".purchases a.delete").live('click', function() {
 		 $(this).closest(".row").fadeOut(200, function() { $(this).remove(); });
 		 return false;
 	});
- 
 
-	// Добавление товара 
+
+	// Добавление товара
 	var new_purchase = $('.purchases #new_purchase').clone(true);
 	$('.purchases #new_purchase').remove().removeAttr('id');
 
 	$("input#add_purchase").autocomplete({
   	serviceUrl:'ajax/add_order_product.php',
   	minChars:0,
-  	noCache: false, 
+  	noCache: false,
   	onSelect:
   		function(suggestion){
   			new_item = new_purchase.clone().appendTo('.purchases');
   			new_item.removeAttr('id');
   			new_item.find('a.purchase_name').html(suggestion.data.name);
   			new_item.find('a.purchase_name').attr('href', 'index.php?module=ProductAdmin&id='+suggestion.data.id);
-  			
+
   			// Добавляем варианты нового товара
   			var variants_select = new_item.find('select[name*=purchases][name*=variant_id]');
 			for(var i in suggestion.data.variants)
@@ -422,19 +422,19 @@ $(function() {
 				sku = suggestion.data.variants[i].sku == ''?'':' (арт. '+suggestion.data.variants[i].sku+')';
   				variants_select.append("<option value='"+suggestion.data.variants[i].id+"' price='"+suggestion.data.variants[i].price+"' amount='"+suggestion.data.variants[i].stock+"'>"+suggestion.data.variants[i].name+sku+"</option>");
   			}
-  			
+
   			if(suggestion.data.variants.length>1 || suggestion.data.variants[0].name != '')
   				variants_select.show();
-  				  				
+
 			variants_select.bind('change', function(){change_variant(variants_select);});
 				change_variant(variants_select);
-  			
+
   			if(suggestion.data.image)
   				new_item.find('img.product_icon').attr("src", suggestion.data.image);
   			else
   				new_item.find('img.product_icon').remove();
 
-			$("input#add_purchase").val('').focus().blur(); 
+			$("input#add_purchase").val('').focus().blur();
   			new_item.show();
   		},
 		formatResult:
@@ -443,17 +443,17 @@ $(function() {
 				var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
   				return (suggestion.data.image?"<img align=absmiddle src='"+suggestion.data.image+"'> ":'') + suggestion.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
 			}
-  		
+
   });
-  
+
   // Изменение цены и макс количества при изменении варианта
   function change_variant(element)
   {
 		price = element.find('option:selected').attr('price');
 		amount = element.find('option:selected').attr('amount');
 		element.closest('.row').find('input[name*=purchases][name*=price]').val(price);
-		
-		// 
+
+		//
 		amount_select = element.closest('.row').find('select[name*=purchases][name*=amount]');
 		selected_amount = amount_select.val();
 		amount_select.html('');
@@ -464,8 +464,8 @@ $(function() {
 
 		return false;
   }
-  
-  
+
+
 	// Редактировать покупки
 	$("a.edit_purchases").click( function() {
 		 $(".purchases span.view_purchase").hide();
@@ -474,21 +474,21 @@ $(function() {
 		 $("div#add_purchase").show();
 		 return false;
 	});
-  
+
 	// Редактировать получателя
 	$("div#order_details a.edit_order_details").click(function() {
 		 $("ul.order_details .view_order_detail").hide();
 		 $("ul.order_details .edit_order_detail").show();
 		 return false;
 	});
-  
+
 	// Редактировать примечание
 	$("div#order_details a.edit_note").click(function() {
 		 $("div.view_note").hide();
 		 $("div.edit_note").show();
 		 return false;
 	});
-  
+
 	// Редактировать пользователя
 	$("div#order_details a.edit_user").click(function() {
 		 $("div.view_user").hide();
@@ -498,13 +498,13 @@ $(function() {
 	$("input#user").autocomplete({
 		serviceUrl:'ajax/search_users.php',
 		minChars:0,
-		noCache: false, 
+		noCache: false,
 		onSelect:
 			function(suggestion){
 				$('input[name="user_id"]').val(suggestion.data.id);
 			}
 	});
-  
+
 	// Удалить пользователя
 	$("div#order_details a.delete_user").click(function() {
 		$('input[name="user_id"]').val(0);
@@ -515,12 +515,12 @@ $(function() {
 
 	// Посмотреть адрес на карте
 	$("a#address_link").attr('href', 'http://maps.yandex.ru/?text='+$('#order_details textarea[name="address"]').val());
-  
+
 	// Подтверждение удаления
 	$('select[name*=purchases][name*=variant_id]').bind('change', function(){change_variant($(this));});
 	$("input[name='status_deleted']").click(function() {
 		if(!confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 
 });

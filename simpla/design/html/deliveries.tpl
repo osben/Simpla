@@ -8,27 +8,27 @@
 {/capture}
 
 {* Title *}
-{$meta_title='Доставка' scope=parent}
+{$meta_title='Доставка' scope=root}
 
 {* Заголовок *}
 <div id="header">
 	<h1>Доставка</h1>
 	<a class="add" href="{url module=DeliveryAdmin}">Добавить способ доставки</a>
-</div>	
+</div>
 
 <div id="main_list">
-	
+
 	<form id="list_form" method="post">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
 	<div id="list">
-		
+
 		{foreach $deliveries as $delivery}
 		<div class="{if !$delivery->enabled}invisible{/if} row">
 			<input type="hidden" name="positions[{$delivery->id}]" value="{$delivery->position}">
 			<div class="move cell"><div class="move_zone"></div></div>
 	 		<div class="checkbox cell">
-				<input type="checkbox" name="check[]" value="{$delivery->id}" />				
+				<input type="checkbox" name="check[]" value="{$delivery->id}" />
 			</div>
 			<div class="name cell">
 				<a href="{url module=DeliveryAdmin id=$delivery->id return=$smarty.server.REQUEST_URI}">{$delivery->name|escape}</a>
@@ -54,7 +54,7 @@
 	</span>
 
 	<input id="apply_action" class="button_green" type="submit" value="Применить">
-	
+
 	</div>
 	</form>
 
@@ -70,11 +70,11 @@ $(function() {
 		tolerance:         "pointer",
 		handle:            ".move_zone",
 		scrollSensitivity: 40,
-		opacity:           0.7, 
+		opacity:           0.7,
 		forcePlaceholderSize: true,
 		axis: 'y',
-		
-		helper: function(event, ui){		
+
+		helper: function(event, ui){
 			if($('input[type="checkbox"][name*="check"]:checked').size()<1) return ui;
 			var helper = $('<div/>');
 			$('input[type="checkbox"][name*="check"]:checked').each(function(){
@@ -89,8 +89,8 @@ $(function() {
 					item.find('input[type="checkbox"][name*="check"]').attr('checked', false);
 				}
 			});
-			return helper;			
-		},	
+			return helper;
+		},
  		start: function(event, ui) {
   			if(ui.helper.children('.row').size()>0)
 				$('.ui-sortable-placeholder').height(ui.helper.height());
@@ -111,8 +111,8 @@ $(function() {
 			});
 		}
 	});
-	
- 
+
+
 	// Раскраска строк
 	function colorize()
 	{
@@ -125,9 +125,9 @@ $(function() {
 	// Выделить все
 	$("#check_all").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:checked)').length>0);
-	});	
+	});
 
-	// Удалить 
+	// Удалить
 	$("a.delete").click(function() {
 		$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
 		$(this).closest(".row").find('input[type="checkbox"][name*="check"]').attr('checked', true);
@@ -151,16 +151,16 @@ $(function() {
 				if(state)
 					line.removeClass('invisible');
 				else
-					line.addClass('invisible');				
+					line.addClass('invisible');
 			},
 			dataType: 'json'
-		});	
-		return false;	
+		});
+		return false;
 	});
-	
+
 	$("form").submit(function() {
 		if($('select[name="action"]').val()=='delete' && !confirm('Подтвердите удаление'))
-			return false;	
+			return false;
 	});
 
 
