@@ -283,14 +283,14 @@ class Products extends Simpla
      * @param array $filter
      * @return array
      */
-    public function get_products_compile($filter = array()) {
+    public function get_products_compile($filter = array())
+    {
         $products = array();
 
         foreach ($this->get_products($filter) as $p) {
             $products[$p->id] = $p;
         }
         if (!empty($products)) {
-
             $products_ids = array_keys($products);
             foreach ($products as &$product) {
                 $product->variants = array();
@@ -309,15 +309,13 @@ class Products extends Simpla
             }
 
             foreach ($products as &$product) {
-                if (isset($product->variants[0])) {
-                    $product->variant = $product->variants[0];
-                }
+                $product->variant = reset($product->variants);
+
                 if (isset($product->images[0])) {
                     $product->image = $product->images[0];
                 }
             }
         }
-
 
         return $products;
     }
