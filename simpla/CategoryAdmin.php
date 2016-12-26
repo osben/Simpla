@@ -54,8 +54,14 @@ class CategoryAdmin extends Simpla
                 $image = $this->request->files('image');
                 if (!empty($image['name']) && in_array(strtolower(pathinfo($image['name'], PATHINFO_EXTENSION)), $this->allowed_image_extentions)) {
                     $this->categories->delete_image($category->id);
-                    move_uploaded_file($image['tmp_name'], $this->config->root_dir.$this->config->categories_images_dir.$image['name']);
-                    $this->categories->update_category($category->id, array('image'=>$image['name']));
+
+                    $basename = basename($image['name']);
+                    $base = $this->image->correct_filename(pathinfo($basename, PATHINFO_FILENAME));
+                    $ext = pathinfo($basename, PATHINFO_EXTENSION);
+                    $image_name = $base .'.'.$ext;
+
+                    move_uploaded_file($image['tmp_name'], $this->config->root_dir.$this->config->categories_images_dir.$image_name);
+                    $this->categories->update_category($category->id, array('image'=>$image_name));
                 }
                 $category = $this->categories->get_category(intval($category->id));
             }
