@@ -19,7 +19,7 @@ class Blog extends Simpla
      * (в зависимости от типа аргумента, int - id, string - url)
      *
      * @param  int $id
-     * @return object|bool
+     * @return object|false
      */
     public function get_post($id)
     {
@@ -28,8 +28,16 @@ class Blog extends Simpla
         } else {
             $where = $this->db->placehold(' WHERE b.url=? ', $id);
         }
-
-        $query = $this->db->placehold("SELECT b.id, b.url, b.name, b.annotation, b.text, b.meta_title, b.meta_keywords, b.meta_description, b.visible, b.date
+        $query = $this->db->placehold("SELECT b.id, 
+                                              b.url, 
+                                              b.name, 
+                                              b.annotation, 
+                                              b.text, 
+                                              b.meta_title, 
+                                              b.meta_keywords, 
+                                              b.meta_description, 
+                                              b.visible, 
+                                              b.date
 										FROM __blog b
 											$where
 										LIMIT 1");
@@ -64,7 +72,7 @@ class Blog extends Simpla
         }
 
         if (!empty($filter['id'])) {
-            $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
+            $post_id_filter = $this->db->placehold('AND b.id IN( ?@ )', (array)$filter['id']);
         }
 
         if (isset($filter['visible'])) {
@@ -80,7 +88,16 @@ class Blog extends Simpla
 
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
 
-        $query = $this->db->placehold("SELECT b.id, b.url, b.name, b.annotation, b.text, b.meta_title, b.meta_keywords, b.meta_description, b.visible, b.date
+        $query = $this->db->placehold("SELECT b.id, 
+                                              b.url, 
+                                              b.name, 
+                                              b.annotation, 
+                                              b.text, 
+                                              b.meta_title, 
+                                              b.meta_keywords, 
+                                              b.meta_description, 
+                                              b.visible, 
+                                              b.date
 										FROM __blog b
 										WHERE 1
 											$post_id_filter
@@ -106,7 +123,7 @@ class Blog extends Simpla
         $keyword_filter = '';
 
         if (!empty($filter['id'])) {
-            $post_id_filter = $this->db->placehold('AND b.id in(?@)', (array)$filter['id']);
+            $post_id_filter = $this->db->placehold('AND b.id IN( ?@ )', (array)$filter['id']);
         }
 
         if (isset($filter['visible'])) {
@@ -120,7 +137,7 @@ class Blog extends Simpla
             }
         }
 
-        $query = $this->db->placehold("SELECT COUNT(distinct b.id) as count
+        $query = $this->db->placehold("SELECT COUNT(DISTINCT b.id) AS count
 										FROM __blog b
 										WHERE 1
 											$post_id_filter
@@ -164,7 +181,7 @@ class Blog extends Simpla
      */
     public function update_post($id, $post)
     {
-        $query = $this->db->placehold("UPDATE __blog SET ?% WHERE id in(?@) LIMIT ?", $post, (array)$id, count((array)$id));
+        $query = $this->db->placehold("UPDATE __blog SET ?% WHERE id IN( ?@ ) LIMIT ?", $post, (array)$id, count((array)$id));
         $this->db->query($query);
         return $id;
     }
@@ -200,9 +217,9 @@ class Blog extends Simpla
         $this->db->query("SELECT date FROM __blog WHERE id=? LIMIT 1", $id);
         $date = $this->db->result('date');
 
-        $this->db->query("(SELECT id FROM __blog WHERE date=? AND id>? AND visible  ORDER BY id limit 1)
+        $this->db->query("(SELECT id FROM __blog WHERE date=? AND id>? AND visible ORDER BY id LIMIT 1)
 								UNION
-							(SELECT id FROM __blog WHERE date>? AND visible ORDER BY date, id limit 1)",
+							(SELECT id FROM __blog WHERE date>? AND visible ORDER BY date, id LIMIT 1)",
                             $date, $id, $date);
         $next_id = $this->db->result('id');
         if ($next_id) {
@@ -223,9 +240,9 @@ class Blog extends Simpla
         $this->db->query("SELECT date FROM __blog WHERE id=? LIMIT 1", $id);
         $date = $this->db->result('date');
 
-        $this->db->query("(SELECT id FROM __blog WHERE date=? AND id<? AND visible ORDER BY id DESC limit 1)
+        $this->db->query("(SELECT id FROM __blog WHERE date=? AND id<? AND visible ORDER BY id DESC LIMIT 1)
 								UNION
-							(SELECT id FROM __blog WHERE date<? AND visible ORDER BY date DESC, id DESC limit 1)",
+							(SELECT id FROM __blog WHERE date<? AND visible ORDER BY date DESC, id DESC LIMIT 1)",
                             $date, $id, $date);
         $prev_id = $this->db->result('id');
         if ($prev_id) {

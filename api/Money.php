@@ -20,14 +20,6 @@ class Money extends Simpla
     {
         parent::__construct();
 
-        if (isset($this->settings->price_decimals_point)) {
-            $this->decimals_point = $this->settings->price_decimals_point;
-        }
-
-        if (isset($this->settings->price_thousands_separator)) {
-            $this->thousands_separator = $this->settings->price_thousands_separator;
-        }
-
         $this->design->smarty->registerPlugin('modifier', 'convert', array($this, 'convert'));
 
         $this->init_currencies();
@@ -38,7 +30,17 @@ class Money extends Simpla
     {
         $this->currencies = array();
         // Выбираем из базы валюты
-        $query = "SELECT id, name, sign, code, rate_from, rate_to, cents, position, enabled FROM __currencies ORDER BY position";
+        $query = "SELECT id, 
+                         name, 
+                         sign, 
+                         code, 
+                         rate_from, 
+                         rate_to, 
+                         cents, 
+                         position, 
+                         enabled 
+                    FROM __currencies 
+                    ORDER BY position";
         $this->db->query($query);
 
         $results = $this->db->results();
@@ -141,9 +143,10 @@ class Money extends Simpla
         if (!empty($currency)) {
             // Умножим на курс валюты
             $result = $result*$currency->rate_from/$currency->rate_to;
-
             // Точность отображения, знаков после запятой
             $precision = isset($currency->cents)?$currency->cents:2;
+        } else {
+            $precision = 2;
         }
 
         // Форматирование цены

@@ -61,17 +61,16 @@ class Managers extends Simpla
     }
 
     /**
-     * @param array $filter
      * @return int
      */
-    public function count_managers($filter = array())
+    public function count_managers()
     {
         return count($this->get_managers());
     }
 
     /**
      * @param  string $login
-     * @return bool|mixed
+     * @return object|false
      */
     public function get_manager($login = null)
     {
@@ -97,8 +96,8 @@ class Managers extends Simpla
     }
 
     /**
-     * @param $manager
-     * @return bool
+     * @param  array|object $manager
+     * @return string|false
      */
     public function add_manager($manager)
     {
@@ -129,22 +128,22 @@ class Managers extends Simpla
     }
 
     /**
-     * @param $login
-     * @param $manager
-     * @return bool
+     * @param  string $login
+     * @param  array|object $manager
+     * @return string|false
      */
     public function update_manager($login, $manager)
     {
         $manager = (object)$manager;
         // Не допускаем двоеточия в логине
         if (!empty($manager->login)) {
-            $manager->login = str_replace(":", "", $manager->login);
+            $manager->login = str_replace(':', '', $manager->login);
         }
 
         $lines = explode("\n", @file_get_contents($this->passwd_file));
         $updated_flag = false;
         foreach ($lines as &$line) {
-            $m = explode(":", $line);
+            $m = explode(':', $line);
             if ($m[0] == $login) {
                 if (!empty($manager->login)) {
                     $m[0] = $manager->login;
@@ -155,12 +154,12 @@ class Managers extends Simpla
                 }
                 if (isset($manager->permissions) && is_array($manager->permissions)) {
                     if (count(array_diff($this->permissions_list, $manager->permissions))>0) {
-                        $m[2] = implode(",", array_intersect($this->permissions_list, $manager->permissions));
+                        $m[2] = implode(',', array_intersect($this->permissions_list, $manager->permissions));
                     } else {
                         unset($m[2]);
                     }
                 }
-                $line = implode(":", $m);
+                $line = implode(':', $m);
                 $updated_flag = true;
             }
         }
@@ -174,8 +173,8 @@ class Managers extends Simpla
     }
 
     /**
-     * @param $login
-     * @return bool
+     * @param  string $login
+     * @return void
      */
     public function delete_manager($login)
     {
@@ -187,11 +186,10 @@ class Managers extends Simpla
             }
         }
         file_put_contents($this->passwd_file, implode("\n", $lines));
-        return true;
     }
 
     /**
-     * @param $plainpasswd
+     * @param  string $plainpasswd
      * @return string
      */
     private function crypt_apr1_md5($plainpasswd)
@@ -200,6 +198,7 @@ class Managers extends Simpla
         $len = strlen($plainpasswd);
         $text = $plainpasswd.'$apr1$'.$salt;
         $bin = pack("H32", md5($plainpasswd.$salt.$plainpasswd));
+
         for ($i = $len; $i > 0; $i -= 16) {
             $text .= substr($bin, 0, min(16, $i));
         }
@@ -231,11 +230,12 @@ class Managers extends Simpla
         $tmp = strtr(strrev(substr(base64_encode($tmp), 2)),
         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
         "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+
         return "$"."apr1"."$".$salt."$".$tmp;
     }
 
     /**
-     * @param $module
+     * @param  string $module
      * @return bool
      */
     public function access($module)
@@ -243,8 +243,8 @@ class Managers extends Simpla
         $manager = $this->get_manager();
         if (is_array($manager->permissions)) {
             return in_array($module, $manager->permissions);
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

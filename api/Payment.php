@@ -101,7 +101,7 @@ class Payment extends Simpla
 
     public function update_payment_method($id, $payment_method)
     {
-        $query = $this->db->placehold("UPDATE __payment_methods SET ?% WHERE id in(?@)", $payment_method, (array)$id);
+        $query = $this->db->placehold("UPDATE __payment_methods SET ?% WHERE id IN(?@)", $payment_method, (array)$id);
         $this->db->query($query);
 
         return $id;
@@ -112,7 +112,7 @@ class Payment extends Simpla
         if (!is_string($settings)) {
             $settings = serialize($settings);
         }
-        $query = $this->db->placehold("UPDATE __payment_methods SET settings=? WHERE id in(?@) LIMIT 1", $settings, (array)$method_id);
+        $query = $this->db->placehold("UPDATE __payment_methods SET settings=? WHERE id IN(?@) LIMIT 1", $settings, (array)$method_id);
         $this->db->query($query);
 
         return $method_id;

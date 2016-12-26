@@ -18,8 +18,8 @@ class Pages extends Simpla
     /**
      * Функция возвращает страницу по ее id или url (в зависимости от типа)
      *
-     * @param $id
-     * @return bool|object|string
+     * @param  int|string $id
+     * @return false|object
      */
     public function get_page($id)
     {
@@ -29,37 +29,61 @@ class Pages extends Simpla
             $where = $this->db->placehold(' WHERE id=? ', intval($id));
         }
 
-        $query = "SELECT id, url, header, name, meta_title, meta_description, meta_keywords, body, menu_id, position, visible
-				  FROM __pages $where LIMIT 1";
+        $this->db->query("SELECT id, 
+                                 url, 
+                                 header, 
+                                 name, 
+                                 meta_title, 
+                                 meta_description, 
+                                 meta_keywords, 
+                                 body, 
+                                 menu_id, 
+                                 position, 
+                                 visible
+                            FROM __pages 
+                                $where 
+                            LIMIT 1");
 
-        $this->db->query($query);
         return $this->db->result();
     }
 
     /**
      * Функция возвращает массив страниц, удовлетворяющих фильтру
      *
-     * @param array $filter
+     * @param  array $filter
      * @return array
      */
     public function get_pages($filter = array())
     {
         $menu_filter = '';
         $visible_filter = '';
+
         $pages = array();
 
         if (isset($filter['menu_id'])) {
-            $menu_filter = $this->db->placehold('AND menu_id in (?@)', (array)$filter['menu_id']);
+            $menu_filter = $this->db->placehold('AND menu_id IN ( ?@ )', (array)$filter['menu_id']);
         }
 
         if (isset($filter['visible'])) {
             $visible_filter = $this->db->placehold('AND visible = ?', intval($filter['visible']));
         }
 
-        $query = "SELECT id, url, header, name, meta_title, meta_description, meta_keywords, body, menu_id, position, visible
-				  FROM __pages WHERE 1 $menu_filter $visible_filter ORDER BY position";
-
-        $this->db->query($query);
+        $this->db->query("SELECT id, 
+                        url, 
+                        header, 
+                        name, 
+                        meta_title, 
+                        meta_description, 
+                        meta_keywords, 
+                        body, 
+                        menu_id, 
+                        position, 
+                        visible
+                      FROM __pages 
+                      WHERE 1 
+                        $menu_filter 
+                        $visible_filter 
+                        ORDER BY position");
 
         foreach ($this->db->results() as $page) {
             $pages[$page->id] = $page;
@@ -71,8 +95,8 @@ class Pages extends Simpla
     /**
      * Создание страницы
      *
-     * @param $page
-     * @return bool|mixed
+     * @param  array|object $page
+     * @return false|mixed
      */
     public function add_page($page)
     {
@@ -82,36 +106,38 @@ class Pages extends Simpla
         }
 
         $id = $this->db->insert_id();
-        $this->db->query("UPDATE __pages SET position=id WHERE id=?", $id);
+        $this->db->query('UPDATE __pages SET position=id WHERE id=?', $id);
+
         return $id;
     }
 
     /**
      * Обновить страницу
      *
-     * @param $id
-     * @param $page
-     * @return bool
+     * @param  int|array $id
+     * @param  array|object $page
+     * @return false|mixed
      */
     public function update_page($id, $page)
     {
-        $query = $this->db->placehold('UPDATE __pages SET ?% WHERE id in (?@)', $page, (array)$id);
+        $query = $this->db->placehold('UPDATE __pages SET ?% WHERE id IN( ?@ )', $page, (array)$id);
         if (!$this->db->query($query)) {
             return false;
         }
+
         return $id;
     }
 
     /**
      * Удалить страницу
      *
-     * @param $id
+     * @param  int $id
      * @return bool
      */
     public function delete_page($id)
     {
         if (!empty($id)) {
-            $query = $this->db->placehold("DELETE FROM __pages WHERE id=? LIMIT 1", intval($id));
+            $query = $this->db->placehold('DELETE FROM __pages WHERE id=? LIMIT 1', intval($id));
             if ($this->db->query($query)) {
                 return true;
             }
@@ -128,7 +154,7 @@ class Pages extends Simpla
     {
         $menus = array();
 
-        $this->db->query("SELECT * FROM __menu ORDER BY position");
+        $this->db->query('SELECT * FROM __menu ORDER BY position');
         foreach ($this->db->results() as $menu) {
             $menus[$menu->id] = $menu;
         }
@@ -138,12 +164,12 @@ class Pages extends Simpla
     /**
      * Функция возвращает меню по id
      *
-     * @param $menu_id
-     * @return bool|object|string
+     * @param  int $menu_id
+     * @return false|object
      */
     public function get_menu($menu_id)
     {
-        $query = $this->db->placehold("SELECT * FROM __menu WHERE id=? LIMIT 1", intval($menu_id));
+        $query = $this->db->placehold('SELECT * FROM __menu WHERE id=? LIMIT 1', intval($menu_id));
         $this->db->query($query);
         return $this->db->result();
     }

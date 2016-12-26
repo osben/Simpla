@@ -58,16 +58,16 @@ class Products extends Simpla
         $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
 
         if (!empty($filter['id'])) {
-            $product_id_filter = $this->db->placehold('AND p.id in(?@)', (array)$filter['id']);
+            $product_id_filter = $this->db->placehold('AND p.id IN(?@)', (array)$filter['id']);
         }
 
         if (!empty($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
+            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id IN(?@)', (array)$filter['category_id']);
             $group_by = "GROUP BY p.id";
         }
 
         if (!empty($filter['brand_id'])) {
-            $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
+            $brand_id_filter = $this->db->placehold('AND p.brand_id IN(?@)', (array)$filter['brand_id']);
         }
 
         if (isset($filter['featured'])) {
@@ -79,7 +79,7 @@ class Products extends Simpla
         }
 
         if (isset($filter['in_stock'])) {
-            $in_stock_filter = $this->db->placehold('AND (SELECT count(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND pv.price>0 AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
+            $in_stock_filter = $this->db->placehold('AND (SELECT COUNT(*)>0 FROM __variants pv WHERE pv.product_id=p.id AND pv.price>0 AND (pv.stock IS NULL OR pv.stock>0) LIMIT 1) = ?', intval($filter['in_stock']));
         }
 
         if (isset($filter['visible'])) {
@@ -116,7 +116,7 @@ class Products extends Simpla
 
         if (!empty($filter['features']) && !empty($filter['features'])) {
             foreach ($filter['features'] as $feature=>$value) {
-                $features_filter .= $this->db->placehold('AND p.id in (SELECT product_id FROM __options WHERE feature_id=? AND value=? ) ', $feature, $value);
+                $features_filter .= $this->db->placehold('AND p.id IN (SELECT product_id FROM __options WHERE feature_id=? AND value=? ) ', $feature, $value);
             }
         }
 
@@ -128,17 +128,17 @@ class Products extends Simpla
 					p.annotation,
 					p.body,
 					p.position,
-					p.created as created,
+					p.created AS created,
 					p.visible,
 					p.featured,
 					p.meta_title,
 					p.meta_keywords,
 					p.meta_description,
-					b.name as brand,
-					b.url as brand_url
+					b.name AS brand,
+					b.url AS brand_url
 				FROM __products p
-				$category_id_filter
 				LEFT JOIN __brands b ON p.brand_id = b.id
+				$category_id_filter
 				WHERE
 					1
 					$product_id_filter
@@ -226,28 +226,26 @@ class Products extends Simpla
             }
         }
 
-        $query = "SELECT count(distinct p.id) as count
-				FROM __products AS p
-				$category_id_filter
-				WHERE 1
-					$brand_id_filter
-					$product_id_filter
-					$keyword_filter
-					$is_featured_filter
-					$in_stock_filter
-					$discounted_filter
-					$visible_filter
-					$features_filter ";
-
-        $this->db->query($query);
+        $this->db->query("SELECT COUNT(DISTINCT p.id) as count
+                            FROM __products AS p
+                            $category_id_filter
+                            WHERE 1
+                                $brand_id_filter
+                                $product_id_filter
+                                $keyword_filter
+                                $is_featured_filter
+                                $in_stock_filter
+                                $discounted_filter
+                                $visible_filter
+                                $features_filter");
         return $this->db->result('count');
     }
 
     /**
      * Функция возвращает товар по id
      *
-     * @param $id
-     * @return bool|object|string
+     * @param  int|string $id
+     * @return bool|object
      */
     public function get_product($id)
     {
@@ -257,30 +255,27 @@ class Products extends Simpla
             $filter = $this->db->placehold('p.url = ?', $id);
         }
 
-        $query = "SELECT DISTINCT
-					p.id,
-					p.url,
-					p.brand_id,
-					p.name,
-					p.annotation,
-					p.body,
-					p.position,
-					p.created as created,
-					p.visible,
-					p.featured,
-					p.meta_title,
-					p.meta_keywords,
-					p.meta_description
-				FROM __products AS p
-				WHERE $filter
-				GROUP BY p.id
-				LIMIT 1";
-        $this->db->query($query);
+        $this->db->query("SELECT p.id,
+                                 p.url,
+                                 p.brand_id,
+                                 p.name,
+                                 p.annotation,
+                                 p.body,
+                                 p.position,
+                                 p.created as created,
+                                 p.visible,
+                                 p.featured,
+                                 p.meta_title,
+                                 p.meta_keywords,
+                                 p.meta_description
+                            FROM __products AS p
+                            WHERE $filter
+                            LIMIT 1");
         return $this->db->result();
     }
 
     /**
-     * @param array $filter
+     * @param  array $filter
      * @return array
      */
     public function get_products_compile($filter = array())
@@ -321,13 +316,13 @@ class Products extends Simpla
     }
 
     /**
-     * @param $id
-     * @param $product
-     * @return bool
+     * @param  int $id
+     * @param  array|object $product
+     * @return int|false
      */
     public function update_product($id, $product)
     {
-        $query = $this->db->placehold("UPDATE __products SET ?% WHERE id in (?@) LIMIT ?", $product, (array)$id, count((array)$id));
+        $query = $this->db->placehold("UPDATE __products SET ?% WHERE id IN ( ?@ ) LIMIT ?", $product, (array)$id, count((array)$id));
         if ($this->db->query($query)) {
             return $id;
         } else {
@@ -336,8 +331,8 @@ class Products extends Simpla
     }
 
     /**
-     * @param $product
-     * @return bool|mixed
+     * @param  array|object $product
+     * @return int|false
      */
     public function add_product($product)
     {
@@ -370,7 +365,7 @@ class Products extends Simpla
     /**
      * Удалить товар
      *
-     * @param $id
+     * @param  int $id
      * @return bool
      */
     public function delete_product($id)
@@ -429,7 +424,7 @@ class Products extends Simpla
     }
 
     /**
-     * @param $id
+     * @param  int $id
      * @return bool|mixed
      */
     public function duplicate_product($id)
@@ -445,7 +440,7 @@ class Products extends Simpla
         $this->db->query('UPDATE __products SET position=? WHERE id=?', $product->position+1, $new_id);
 
         // Очищаем url
-        $this->db->query('UPDATE __products SET url="" WHERE id=?', $new_id);
+        $this->db->query('UPDATE __products SET url=? WHERE id=?', '', $new_id);
 
         // Дублируем категории
         $categories = $this->categories->get_product_categories($id);
@@ -489,7 +484,7 @@ class Products extends Simpla
     }
 
     /**
-     * @param array $product_id
+     * @param  array $product_id
      * @return array|bool
      */
     public function get_related_products($product_id = array())
@@ -500,13 +495,13 @@ class Products extends Simpla
 
         $product_id_filter = $this->db->placehold('AND product_id in(?@)', (array)$product_id);
 
-        $query = $this->db->placehold("SELECT product_id, related_id, position
-					FROM __related_products
-					WHERE
-					1
-					$product_id_filter
-					ORDER BY position
-					");
+        $query = $this->db->placehold("SELECT product_id, 
+                                              related_id, 
+                                              position
+                                        FROM __related_products
+                                        WHERE 1
+                                            $product_id_filter
+                                        ORDER BY position");
 
         $this->db->query($query);
         return $this->db->results();
@@ -515,14 +510,17 @@ class Products extends Simpla
     /**
      * Функция возвращает связанные товары
      *
-     * @param $product_id
-     * @param $related_id
+     * @param int $product_id
+     * @param int $related_id
      * @param int $position
      * @return mixed
      */
     public function add_related_product($product_id, $related_id, $position=0)
     {
-        $query = $this->db->placehold("INSERT IGNORE INTO __related_products SET product_id=?, related_id=?, position=?", $product_id, $related_id, $position);
+        $query = $this->db->placehold("INSERT IGNORE INTO __related_products 
+                                            SET product_id=?, 
+                                            related_id=?, 
+                                            position=?", $product_id, $related_id, $position);
         $this->db->query($query);
         return $related_id;
     }
@@ -530,17 +528,20 @@ class Products extends Simpla
     /**
      * Удаление связанного товара
      *
-     * @param $product_id
-     * @param $related_id
+     * @param int $product_id
+     * @param int $related_id
      */
     public function delete_related_product($product_id, $related_id)
     {
-        $query = $this->db->placehold("DELETE FROM __related_products WHERE product_id=? AND related_id=? LIMIT 1", intval($product_id), intval($related_id));
+        $query = $this->db->placehold('DELETE FROM __related_products 
+                                        WHERE product_id=? 
+                                        AND related_id=? 
+                                        LIMIT 1', intval($product_id), intval($related_id));
         $this->db->query($query);
     }
 
     /**
-     * @param array $filter
+     * @param  array $filter
      * @return array|bool
      */
     public function get_images($filter = array())
@@ -553,28 +554,34 @@ class Products extends Simpla
         }
 
         // images
-        $query = $this->db->placehold("SELECT i.id, i.product_id, i.name, i.filename, i.position
-									FROM __images AS i WHERE 1 $product_id_filter $group_by ORDER BY i.product_id, i.position");
-        $this->db->query($query);
+       $this->db->query("SELECT i.id, 
+                                i.product_id, 
+                                i.name, 
+                                i.filename, 
+                                i.position
+                        FROM __images AS i
+                        WHERE 1 
+                            $product_id_filter 
+                        $group_by 
+                        ORDER BY i.product_id, i.position");
         return $this->db->results();
     }
 
     /**
      * @param  $product_id
      * @param  $filename
-     * @param  string $name
      * @return bool|mixed|object|string
      */
     public function add_image($product_id, $filename)
     {
-        $query = $this->db->placehold("SELECT id FROM __images WHERE product_id=? AND filename=?", $product_id, $filename);
+        $query = $this->db->placehold('SELECT id FROM __images WHERE product_id=? AND filename=?', $product_id, $filename);
         $this->db->query($query);
         $id = $this->db->result('id');
         if (empty($id)) {
-            $query = $this->db->placehold("INSERT INTO __images SET product_id=?, filename=?", $product_id, $filename);
+            $query = $this->db->placehold('INSERT INTO __images SET product_id=?, filename=?', $product_id, $filename);
             $this->db->query($query);
             $id = $this->db->insert_id();
-            $query = $this->db->placehold("UPDATE __images SET position=id WHERE id=?", $id);
+            $query = $this->db->placehold('UPDATE __images SET position=id WHERE id=?', $id);
             $this->db->query($query);
         }
         return($id);
@@ -587,10 +594,10 @@ class Products extends Simpla
      */
     public function update_image($id, $image)
     {
-        $query = $this->db->placehold("UPDATE __images SET ?% WHERE id=?", $image, $id);
+        $query = $this->db->placehold('UPDATE __images SET ?% WHERE id=?', $image, $id);
         $this->db->query($query);
 
-        return($id);
+        return $id;
     }
 
     /**
@@ -598,12 +605,13 @@ class Products extends Simpla
      */
     public function delete_image($id)
     {
-        $query = $this->db->placehold("SELECT filename FROM __images WHERE id=?", $id);
+        $query = $this->db->placehold('SELECT filename FROM __images WHERE id=?', $id);
         $this->db->query($query);
         $filename = $this->db->result('filename');
-        $query = $this->db->placehold("DELETE FROM __images WHERE id=? LIMIT 1", $id);
+
+        $query = $this->db->placehold('DELETE FROM __images WHERE id=? LIMIT 1', $id);
         $this->db->query($query);
-        $query = $this->db->placehold("SELECT count(*) as count FROM __images WHERE filename=? LIMIT 1", $filename);
+        $query = $this->db->placehold('SELECT COUNT(*) as count FROM __images WHERE filename=? LIMIT 1', $filename);
         $this->db->query($query);
         $count = $this->db->result('count');
         if ($count == 0) {
@@ -630,17 +638,30 @@ class Products extends Simpla
      */
     public function get_next_product($id)
     {
-        $this->db->query("SELECT position FROM __products WHERE id=? LIMIT 1", $id);
+        $this->db->query('SELECT position 
+                            FROM __products 
+                            WHERE id = ? 
+                            LIMIT 1', $id);
         $position = $this->db->result('position');
 
-        $this->db->query("SELECT pc.category_id FROM __products_categories pc WHERE product_id=? ORDER BY position LIMIT 1", $id);
+        $this->db->query('SELECT pc.category_id 
+                            FROM __products_categories pc 
+                            WHERE product_id = ? 
+                            ORDER BY position 
+                            LIMIT 1', $id);
         $category_id = $this->db->result('category_id');
 
-        $query = $this->db->placehold("SELECT id FROM __products p, __products_categories pc
-										WHERE pc.product_id=p.id AND p.position>?
-										AND pc.position=(SELECT MIN(pc2.position) FROM __products_categories pc2 WHERE pc.product_id=pc2.product_id)
-										AND pc.category_id=?
-										AND p.visible ORDER BY p.position limit 1", $position, $category_id);
+        $query = $this->db->placehold('SELECT id 
+                                        FROM __products p, __products_categories pc
+										WHERE pc.product_id = p.id 
+										AND p.position > ?
+										AND pc.position=( SELECT MIN(pc2.position) 
+										                    FROM __products_categories pc2 
+										                    WHERE pc.product_id = pc2.product_id )
+										AND pc.category_id = ?
+										AND p.visible 
+										ORDER BY p.position 
+										LIMIT 1', $position, $category_id);
         $this->db->query($query);
 
         return $this->get_product((integer)$this->db->result('id'));
@@ -654,19 +675,31 @@ class Products extends Simpla
      */
     public function get_prev_product($id)
     {
-        $this->db->query("SELECT position FROM __products WHERE id=? LIMIT 1", $id);
+        $this->db->query("SELECT position 
+                            FROM __products 
+                            WHERE id = ? 
+                            LIMIT 1", $id);
         $position = $this->db->result('position');
 
-        $this->db->query("SELECT pc.category_id FROM __products_categories pc WHERE product_id=? ORDER BY position LIMIT 1", $id);
+        $this->db->query('SELECT pc.category_id 
+                            FROM __products_categories pc 
+                            WHERE product_id = ? 
+                            ORDER BY position 
+                            LIMIT 1', $id);
         $category_id = $this->db->result('category_id');
 
-        $query = $this->db->placehold("SELECT id FROM __products p, __products_categories pc
-										WHERE pc.product_id=p.id AND p.position<?
-										AND pc.position=(SELECT MIN(pc2.position) FROM __products_categories pc2 WHERE pc.product_id=pc2.product_id)
-										AND pc.category_id=?
-										AND p.visible ORDER BY p.position DESC limit 1", $position, $category_id);
+        $query = $this->db->placehold('SELECT p.id 
+                                        FROM __products p, __products_categories pc
+										WHERE pc.product_id = p.id 
+										AND p.position < ?
+										AND pc.position = ( SELECT MIN(pc2.position) 
+                                                            FROM __products_categories pc2 
+                                                            WHERE pc.product_id = pc2.product_id )
+										AND pc.category_id = ?
+										AND p.visible 
+										ORDER BY p.position DESC 
+										LIMIT 1', $position, $category_id);
         $this->db->query($query);
-
-        return $this->get_product((integer)$this->db->result('id'));
+        return $this->get_product((int)$this->db->result('id'));
     }
 }

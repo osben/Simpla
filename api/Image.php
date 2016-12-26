@@ -24,10 +24,8 @@ class Image extends Simpla
 
     /**
      * Создание превью изображения
-     * @param $filename файл с изображением (без пути к файлу)
-     * @param max_w максимальная ширина
-     * @param max_h максимальная высота
-     * @return $string имя файла превью
+     * @param  $filename файл с изображением (без пути к файлу)
+     * @return string имя файла превью
      */
     public function resize($filename)
     {
@@ -72,6 +70,14 @@ class Image extends Simpla
         return $preview_dir.$resized_file;
     }
 
+    /**
+     * @param $filename
+     * @param string $type
+     * @param int $width
+     * @param int $height
+     * @param bool $set_watermark
+     * @return string
+     */
     public function add_resize_params($filename, $type='', $width=0, $height=0, $set_watermark=false)
     {
         if ('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
@@ -92,8 +98,8 @@ class Image extends Simpla
     }
 
     /**
-     * @param $filename
-     * @return array|bool
+     * @param  string $filename
+     * @return array|false
      */
     public function get_resize_params($filename)
     {
@@ -113,8 +119,8 @@ class Image extends Simpla
     }
 
     /**
-     * @param $filename
-     * @return bool|string
+     * @param  string $filename
+     * @return string|false
      */
     public function download_image($filename)
     {
@@ -152,9 +158,9 @@ class Image extends Simpla
     }
 
     /**
-     * @param $filename
-     * @param $name
-     * @return bool|mixed|string
+     * @param  string $filename
+     * @param  string $name
+     * @return string|false
      */
     public function upload_image($filename, $name)
     {
@@ -184,14 +190,14 @@ class Image extends Simpla
     /**
      * Создание превью средствами gd
      *
-     * @param $src_file исходный файл
-     * @param $dst_file файл с результатом
-     * @param $max_w максимальная ширина
-     * @param $max_h максимальная высота
-     * @param null $watermark
-     * @param int $watermark_offet_x
-     * @param int $watermark_offet_y
-     * @param int $watermark_opacity
+     * @param  string $src_file исходный файл
+     * @param  string $dst_file файл с результатом
+     * @param  $max_w максимальная ширина
+     * @param  $max_h максимальная высота
+     * @param  null $watermark
+     * @param  int $watermark_offet_x
+     * @param  int $watermark_offet_y
+     * @param  int $watermark_opacity
      * @return bool
      */
     private function image_constrain_gd($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1)
@@ -456,10 +462,10 @@ class Image extends Simpla
     /**
      * Вычисляет размеры изображения, до которых нужно его пропорционально уменьшить, чтобы вписать в квадрат $max_w x $max_h
      *
-     * @param $src_w ширина исходного изображения
-     * @param $src_h высота исходного изображения
-     * @param int $max_w максимальная ширина
-     * @param int $max_h максимальная высота
+     * @param  $src_w ширина исходного изображения
+     * @param  $src_h высота исходного изображения
+     * @param  int $max_w максимальная ширина
+     * @param  int $max_h максимальная высота
      * @return array|bool
      */
     private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0, $type = 'resize')
@@ -497,7 +503,7 @@ class Image extends Simpla
     }
 
     /**
-     * @param $filename
+     * @param  string $filename
      * @return mixed|string
      */
     public function correct_filename($filename)
