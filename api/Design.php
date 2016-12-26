@@ -12,9 +12,19 @@
 require_once(dirname(__FILE__).'/'.'Simpla.php');
 require_once(dirname(dirname(__FILE__)).'/Smarty/libs/Smarty.class.php');
 
+/**
+ * Class Design
+ * @property Smarty $smarty
+ */
+
 class Design extends Simpla
 {
+
     public $smarty;
+    public $compile_dir;
+    public $template_dir;
+    public $cache_dir = 'cache'; // TODO вынести в config
+    public $theme;
 
     /**
      * Design constructor.
@@ -24,30 +34,33 @@ class Design extends Simpla
         parent::__construct();
 
         // Создаем и настраиваем Смарти
-        $this->smarty = new Smarty();
+        $this->smarty = new \Smarty();
         $this->smarty->compile_check = $this->config->smarty_compile_check;
+        // TODO $this->smarty->force_compile = $this->config->force_compile;
         $this->smarty->caching = $this->config->smarty_caching;
         $this->smarty->cache_lifetime = $this->config->smarty_cache_lifetime;
         $this->smarty->debugging = $this->config->smarty_debugging;
         $this->smarty->error_reporting = E_ALL & ~E_NOTICE;
 
         // Берем тему из настроек
-        $theme = $this->settings->theme;
+        $this->theme = $this->settings->theme;
+        $this->compile_dir = $this->config->root_dir.'/compiled/'. $this->theme ;
+        $this->template_dir = $this->config->root_dir.'/design/'. $this->theme .'/html';
+        $this->cache_dir = $this->config->root_dir.'/cache';
 
-
-        $this->smarty->compile_dir = $this->config->root_dir.'/compiled/'.$theme;
-        $this->smarty->template_dir = $this->config->root_dir.'/design/'.$theme.'/html';
+        $this->set_compiled_dir($this->compile_dir);
+        $this->set_templates_dir($this->template_dir);
 
         if (!is_dir($this->config->root_dir.'/compiled')) {
             mkdir($this->config->root_dir.'/compiled', 0777);
         }
 
         // Создаем папку для скомпилированных шаблонов текущей темы
-        if (!is_dir($this->smarty->compile_dir)) {
-            mkdir($this->smarty->compile_dir, 0777);
+        if (!is_dir($this->compile_dir)) {
+            mkdir($this->compile_dir, 0777);
         }
 
-        $this->smarty->cache_dir = 'cache';
+        $this->smarty->setCacheDir($this->cache_dir);
 
         $this->smarty->registerPlugin('modifier', 'resize',        array($this, 'resize_modifier'));
         $this->smarty->registerPlugin('modifier', 'crop',        array($this, 'crop_modifier'));
@@ -66,46 +79,50 @@ class Design extends Simpla
     }
 
     /**
-     * @param $var
-     * @param $value
+     * @param  array|string $tpl_var
+     * @param  mixed $value
+     * @param  boolean $nocache
      * @return Smarty_Internal_Data
      */
-    public function assign($var, $value)
+    public function assign($tpl_var, $value = null, $nocache = false)
     {
-        return $this->smarty->assign($var, $value);
+        return $this->smarty->assign($tpl_var, $value, $nocache);
     }
 
     /**
-     * @param $template
+     * @param  string $template
      * @return string
      */
     public function fetch($template)
     {
         // Передаем в дизайн то, что может понадобиться в нем
-        $this->assign('config',        $this->config);
+        $this->assign('config',      $this->config);
         $this->assign('settings',    $this->settings);
         return $this->smarty->fetch($template);
     }
 
     /**
-     * @param $dir
+     * @param  string $compile_dir
+     * @return void
      */
-    public function set_templates_dir($dir)
+    public function set_compiled_dir($compile_dir)
     {
-        $this->smarty->template_dir = $dir;
+        $this->smarty->setCompileDir($compile_dir);
     }
 
     /**
-     * @param $dir
+     * @param  string $template_dir
+     * @return void
      */
-    public function set_compiled_dir($dir)
+    public function set_templates_dir($template_dir)
     {
-        $this->smarty->compile_dir = $dir;
+        $this->smarty->setTemplateDir($template_dir);
+
     }
 
     /**
-     * @param $name
-     * @return string
+     * @param  string $name
+     * @return mixed
      */
     public function get_var($name)
     {
@@ -122,10 +139,10 @@ class Design extends Simpla
 
 
     /**
-     * @param $filename
-     * @param int $width
-     * @param int $height
-     * @param bool $set_watermark
+     * @param  $filename
+     * @param  int $width
+     * @param  int $height
+     * @param  bool $set_watermark
      * @return string
      */
     public function resize_modifier($filename, $width=0, $height=0, $set_watermark=false)
@@ -143,10 +160,10 @@ class Design extends Simpla
     }
     /**
      * TODO объединить resize_modifier и crop_modifier
-     * @param $filename
-     * @param int $width
-     * @param int $height
-     * @param bool $set_watermark
+     * @param  $filename
+     * @param  int $width
+     * @param  int $height
+     * @param  bool $set_watermark
      * @return string
      */
     public function crop_modifier($filename, $width=0, $height=0, $set_watermark=false)
@@ -163,7 +180,7 @@ class Design extends Simpla
         return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
     }
     /**
-     * @param $text
+     * @param  string $text
      * @return string
      */
     public function token_modifier($text)
@@ -217,8 +234,8 @@ class Design extends Simpla
     }
 
     /**
-     * @param array $params
-     * @return bool|mixed
+     * @param  array $params
+     * @return false|mixed
      */
     public function first_modifier($params = array())
     {
@@ -229,8 +246,8 @@ class Design extends Simpla
     }
 
     /**
-     * @param $array
-     * @param int $num
+     * @param  array $array
+     * @param  int $num
      * @return array
      */
     public function cut_modifier($array, $num=1)
@@ -243,8 +260,8 @@ class Design extends Simpla
     }
 
     /**
-     * @param $date
-     * @param null $format
+     * @param  $date
+     * @param  string $format
      * @return false|string
      */
     public function date_modifier($date, $format = null)
@@ -256,8 +273,8 @@ class Design extends Simpla
     }
 
     /**
-     * @param $date
-     * @param null $format
+     * @param  $date
+     * @param  null $format
      * @return false|string
      */
     public function time_modifier($date, $format = null)
@@ -266,9 +283,9 @@ class Design extends Simpla
     }
 
     /**
-     * @param $params
-     * @param $smarty
-     * @return bool
+     * @param  array $params
+     * @param  $smarty
+     * @return false|mixed
      */
     public function api_plugin($params, &$smarty)
     {
