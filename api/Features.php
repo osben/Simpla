@@ -20,6 +20,9 @@ class Features extends Simpla
     public function get_features($filter = array())
     {
         $category_id_filter = '';
+        $in_filter_filter = '';
+        $id_filter = '';
+
         if (isset($filter['category_id'])) {
             $category_id_filter = $this->db->placehold('AND id IN ( SELECT feature_id 
                                                                     FROM __categories_features cf 
@@ -27,12 +30,10 @@ class Features extends Simpla
                                                                     )', (array)$filter['category_id']);
         }
 
-        $in_filter_filter = '';
         if (isset($filter['in_filter'])) {
             $in_filter_filter = $this->db->placehold('AND f.in_filter=?', intval($filter['in_filter']));
         }
 
-        $id_filter = '';
         if (!empty($filter['id'])) {
             $id_filter = $this->db->placehold('AND f.id IN(?@)', (array)$filter['id']);
         }
@@ -59,29 +60,32 @@ class Features extends Simpla
     public function get_feature($id)
     {
         // Выбираем свойство
-        $query = $this->db->placehold("SELECT f.id, f.name, f.position, f.in_filter
+        $query = $this->db->placehold('SELECT f.id, 
+                                              f.name, 
+                                              f.position, 
+                                              f.in_filter
 										FROM __features AS f
 										WHERE f.id=?
-										LIMIT 1", $id);
+										LIMIT 1', $id);
         $this->db->query($query);
         return $this->db->result();
     }
 
     /**
-     * @param $id
+     * @param  int $id
      * @return array|false
      */
     public function get_feature_categories($id)
     {
-        $query = $this->db->placehold("SELECT cf.category_id as category_id
+        $query = $this->db->placehold('SELECT cf.category_id
 										FROM __categories_features cf
-										WHERE cf.feature_id = ?", $id);
+										WHERE cf.feature_id = ?', $id);
         $this->db->query($query);
         return $this->db->results('category_id');
     }
 
     /**
-     * @param $feature
+     * @param  array|object $feature
      * @return mixed
      */
     public function add_feature($feature)
@@ -89,6 +93,7 @@ class Features extends Simpla
         $query = $this->db->placehold("INSERT INTO __features SET ?%", $feature);
         $this->db->query($query);
         $id = $this->db->insert_id();
+
         $query = $this->db->placehold("UPDATE __features SET position=id WHERE id=? LIMIT 1", $id);
         $this->db->query($query);
         return $id;
@@ -101,7 +106,7 @@ class Features extends Simpla
      */
     public function update_feature($id, $feature)
     {
-        $query = $this->db->placehold("UPDATE __features SET ?% WHERE id in(?@) LIMIT ?", (array)$feature, (array)$id, count((array)$id));
+        $query = $this->db->placehold("UPDATE __features SET ?% WHERE id IN(?@) LIMIT ?", (array)$feature, (array)$id, count((array)$id));
         $this->db->query($query);
         return $id;
     }

@@ -13,30 +13,32 @@
 class Notify extends Simpla
 {
     /**
-     * @param string $to
-     * @param string $subject
-     * @param string $message
-     * @param string $from
-     * @param string $reply_to
+     * Отправляет одно письмо на email
+     *
+     * @param  string $to
+     * @param  string $subject Тема
+     * @param  string $message Текст письма
+     * @param  string $from От кого - email
+     * @param  string $reply_to Кому отвечать - email
      * @return void
      */
     public function email($to, $subject, $message, $from = '', $reply_to = '')
     {
-        $headers = "MIME-Version: 1.0\n" ;
-        $headers .= "Content-type: text/html; charset=utf-8; \r\n";
-        $headers .= "From: $from\r\n";
+        $headers  = "MIME-Version: 1.0"."\r\n";
+        $headers .= "Content-type: text/html; charset=utf-8"."\r\n";
+        $headers .= "From: $from"."\r\n";
         if (!empty($reply_to)) {
-            $headers .= "reply-to: $reply_to\r\n";
+            $headers .= "Reply-To: $reply_to"."\r\n";
         }
 
-        $subject = "=?utf-8?B?".base64_encode($subject)."?=";
+        $subject = '=?utf-8?B?' . base64_encode($subject) . '?=';
 
         @mail($to, $subject, $message, $headers);
     }
 
     /**
      * @param  int $order_id
-     * @return bool|void
+     * @return void|false
      */
     public function email_order_user($order_id)
     {
@@ -56,7 +58,6 @@ class Notify extends Simpla
 
         foreach ($purchases as &$purchase) {
             if (!empty($products[$purchase->product_id])) {
-
                 $purchase->product = $products[$purchase->product_id];
 
                 if (!empty($products[$purchase->product_id]->variants[$purchase->variant_id])) {
@@ -85,7 +86,7 @@ class Notify extends Simpla
     }
 
     /**
-     * @param $order_id
+     * @param  int $order_id
      * @return bool
      */
     public function email_order_admin($order_id)
@@ -106,7 +107,6 @@ class Notify extends Simpla
 
         foreach ($purchases as &$purchase) {
             if (!empty($products[$purchase->product_id])) {
-
                 $purchase->product = $products[$purchase->product_id];
 
                 if (!empty($products[$purchase->product_id]->variants[$purchase->variant_id])) {
@@ -133,12 +133,11 @@ class Notify extends Simpla
         $email_template = $this->design->fetch($this->config->root_dir.'simpla/design/html/email_order_admin.tpl');
         $subject = $this->design->get_var('subject');
         $this->email($this->settings->order_email, $subject, $email_template, $this->settings->notify_from_email);
-
     }
 
 
     /**
-     * @param $comment_id
+     * @param  int $comment_id
      * @return bool
      */
     public function email_comment_admin($comment_id)
@@ -163,8 +162,8 @@ class Notify extends Simpla
     }
 
     /**
-     * @param $user_id
-     * @param $code
+     * @param  int $user_id
+     * @param  string $code
      * @return bool
      */
     public function email_password_remind($user_id, $code)
@@ -186,7 +185,7 @@ class Notify extends Simpla
     }
 
     /**
-     * @param $feedback_id
+     * @param  int $feedback_id
      * @return bool
      */
     public function email_feedback_admin($feedback_id)

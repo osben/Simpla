@@ -122,7 +122,7 @@ class Categories extends Simpla
     /**
      * Добавление категории
      *
-     * @param $category
+     * @param  $category
      * @return mixed
      */
     public function add_category($category)
@@ -169,8 +169,8 @@ class Categories extends Simpla
     /**
      * Удаление категории
      *
-     * @param $ids
-     * @return mixed
+     * @param  $ids
+     * @return void
      */
     public function delete_category($ids)
     {
@@ -188,7 +188,6 @@ class Categories extends Simpla
         }
         unset($this->categories_tree);
         unset($this->all_categories);
-        return $id;
     }
 
     /**
@@ -226,11 +225,11 @@ class Categories extends Simpla
         $categories_ids = (array) $categories_ids;
         $query = $this->db->placehold("SELECT image FROM __categories WHERE id in(?@)", $categories_ids);
         $this->db->query($query);
-        $filenames = $this->db->results('image');
-        if (!empty($filenames)) {
+        $files_name = $this->db->results('image');
+        if (!empty($files_name)) {
             $query = $this->db->placehold("UPDATE __categories SET image=NULL WHERE id in(?@)", $categories_ids);
             $this->db->query($query);
-            foreach ($filenames as $filename) {
+            foreach ($files_name as $filename) {
                 $query = $this->db->placehold("SELECT COUNT(*) AS count FROM __categories WHERE image=?", $filename);
                 $this->db->query($query);
                 $count = $this->db->result('count');

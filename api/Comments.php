@@ -185,16 +185,19 @@ class Comments extends Simpla
     /**
      * Изменение комментария
      *
-     * @param $id
-     * @param $comment
+     * @param  int $id
+     * @param  array|object $comment
      * @return mixed
      */
     public function update_comment($id, $comment)
     {
+        $comment = (array)$comment;
+
         $date_query = '';
-        if (isset($comment->date)) {
-            $date = $comment->date;
-            unset($comment->date);
+
+        if (isset($comment['date'])) {
+            $date = $comment['date'];
+            unset($comment['date']);
             $date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
         }
         $query = $this->db->placehold("UPDATE __comments SET ?% $date_query WHERE id IN( ?@ ) LIMIT 1", $comment, (array)$id);
@@ -205,7 +208,7 @@ class Comments extends Simpla
     /**
      * Удаление комментария
      *
-     * @param $id
+     * @param int $id
      */
     public function delete_comment($id)
     {

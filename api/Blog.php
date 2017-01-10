@@ -51,7 +51,7 @@ class Blog extends Simpla
     /**
      * Функция возвращает массив постов, удовлетворяющих фильтру
      *
-     * @param array $filter
+     * @param  array $filter
      * @return array|bool
      */
     public function get_posts($filter = array())
@@ -103,7 +103,7 @@ class Blog extends Simpla
 											$post_id_filter
 											$visible_filter
 											$keyword_filter
-										ORDER BY date DESC, id DESC
+										ORDER BY b.date DESC, b.id DESC
 										$sql_limit");
 
         $this->db->query($query);

@@ -59,7 +59,8 @@ class Request extends Simpla
      * @param  string $type
      * @return mixed
      */
-    private function _input_filter($val, $type = null) {
+    private function _input_filter($val, $type = null)
+    {
         if ($type == 'string') {
             return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
         }
@@ -76,7 +77,7 @@ class Request extends Simpla
             return !empty($val);
         }
 
-        if(is_callable($type)) {
+        if (is_callable($type)) {
             return $type($val);
         }
 
@@ -191,7 +192,7 @@ class Request extends Simpla
     {
         $query = array();
         $url = @parse_url($_SERVER["REQUEST_URI"]);
-        if(isset($url['query'])) {
+        if (isset($url['query'])) {
             parse_str($url['query'], $query);
         }
 

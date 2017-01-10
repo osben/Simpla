@@ -48,8 +48,8 @@ class Image extends Simpla
         $originals_dir = $this->config->root_dir.$this->config->original_images_dir;
         $preview_dir = $this->config->root_dir.$this->config->resized_images_dir;
 
-        $watermark_offet_x = $this->settings->watermark_offset_x;
-        $watermark_offet_y = $this->settings->watermark_offset_y;
+        $watermark_offset_x = $this->settings->watermark_offset_x;
+        $watermark_offset_y = $this->settings->watermark_offset_y;
 
         $sharpen = min(100, $this->settings->images_sharpen)/100;
         $watermark_transparency =  1-min(100, $this->settings->watermark_transparency)/100;
@@ -62,9 +62,9 @@ class Image extends Simpla
         }
 
         if (class_exists('Imagick') && $this->config->use_imagick) {
-            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency, $sharpen);
+            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offset_x, $watermark_offset_y, $watermark_transparency, $sharpen);
         } else {
-            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offet_x, $watermark_offet_y, $watermark_transparency);
+            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offset_x, $watermark_offset_y, $watermark_transparency);
         }
 
         return $preview_dir.$resized_file;
@@ -192,15 +192,16 @@ class Image extends Simpla
      *
      * @param  string $src_file исходный файл
      * @param  string $dst_file файл с результатом
-     * @param  $max_w максимальная ширина
-     * @param  $max_h максимальная высота
+     * @param  string $type
+     * @param  int $max_w максимальная ширина
+     * @param  int $max_h максимальная высота
      * @param  null $watermark
-     * @param  int $watermark_offet_x
-     * @param  int $watermark_offet_y
+     * @param  int $watermark_offset_x
+     * @param  int $watermark_offset_y
      * @param  int $watermark_opacity
      * @return bool
      */
-    private function image_constrain_gd($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1)
+    private function image_constrain_gd($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offset_x=0, $watermark_offset_y=0, $watermark_opacity=1)
     {
         // todo вынести в настройки
         $quality = 90;
@@ -287,7 +288,7 @@ class Image extends Simpla
             }
         }
 
-        // resample the image with new sizes
+        // re-sample the image with new sizes
         if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $dst_w, $dst_h, $src_w, $src_h)) {
             return false;
         }
@@ -318,8 +319,8 @@ class Image extends Simpla
             $owidth = imagesx($overlay);
             $oheight = imagesy($overlay);
 
-            $watermark_x = min(($dst_w-$owidth)*$watermark_offet_x/100, $dst_w);
-            $watermark_y = min(($dst_h-$oheight)*$watermark_offet_y/100, $dst_h);
+            $watermark_x = min(($dst_w-$owidth)*$watermark_offset_x/100, $dst_w);
+            $watermark_y = min(($dst_h-$oheight)*$watermark_offset_y/100, $dst_h);
 
             //imagecopy($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight);
             //imagecopymerge($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight, $watermark_opacity*100);
@@ -343,7 +344,7 @@ class Image extends Simpla
             case 'image/jpeg':
                 return imageJpeg($dst_img, $dst_file, $quality);
             case 'image/gif':
-                return imageGif($dst_img, $dst_file, $quality);
+                return imageGif($dst_img, $dst_file);
             case 'image/png':
                 imagesavealpha($dst_img, true);
                 return imagePng($dst_img, $dst_file, $quality);
@@ -355,18 +356,19 @@ class Image extends Simpla
     /**
      * Создание превью средствами imagick
      *
-     * @param $src_file исходный файл
-     * @param $dst_file файл с результатом
-     * @param $max_w максимальная ширина
-     * @param $max_h максимальная высота
-     * @param null $watermark
-     * @param int $watermark_offet_x
-     * @param int $watermark_offet_y
-     * @param int $watermark_opacity
-     * @param float $sharpen
+     * @param  resource $src_file исходный файл
+     * @param  resource $dst_file файл с результатом
+     * @param  string $type
+     * @param  int $max_w максимальная ширина
+     * @param  int $max_h максимальная высота
+     * @param  null $watermark
+     * @param  int $watermark_offset_x
+     * @param  int $watermark_offset_y
+     * @param  int $watermark_opacity
+     * @param  float $sharpen
      * @return bool
      */
-    private function image_constrain_imagick($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offet_x=0, $watermark_offet_y=0, $watermark_opacity=1, $sharpen=0.2)
+    private function image_constrain_imagick($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offset_x=0, $watermark_offset_y=0, $watermark_opacity=1, $sharpen=0.2)
     {
         $thumb = new Imagick();
 
@@ -402,7 +404,8 @@ class Image extends Simpla
         } else {
             $thumb->thumbnailImage($dst_w, $dst_h);
         }
-
+        $watermark_x = null;
+        $watermark_y = null;
         // Устанавливаем водяной знак
         if ($watermark && is_readable($watermark)) {
             $overlay = new Imagick($watermark);
@@ -414,8 +417,8 @@ class Image extends Simpla
             $owidth = $overlay->getImageWidth();
             $oheight = $overlay->getImageHeight();
 
-            $watermark_x = min(($dst_w-$owidth)*$watermark_offet_x/100, $dst_w);
-            $watermark_y = min(($dst_h-$oheight)*$watermark_offet_y/100, $dst_h);
+            $watermark_x = min(($dst_w-$owidth)*$watermark_offset_x/100, $dst_w);
+            $watermark_y = min(($dst_h-$oheight)*$watermark_offset_y/100, $dst_h);
         }
 
 
@@ -462,10 +465,11 @@ class Image extends Simpla
     /**
      * Вычисляет размеры изображения, до которых нужно его пропорционально уменьшить, чтобы вписать в квадрат $max_w x $max_h
      *
-     * @param  $src_w ширина исходного изображения
-     * @param  $src_h высота исходного изображения
+     * @param  int $src_w ширина исходного изображения
+     * @param  int $src_h высота исходного изображения
      * @param  int $max_w максимальная ширина
      * @param  int $max_h максимальная высота
+     * @param  string $type
      * @return array|bool
      */
     private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0, $type = 'resize')
@@ -525,16 +529,16 @@ class Image extends Simpla
      *                if in doubt, use as you would imagecopy_alpha (i.e. keep
      *                opacity at 100%)
      *
-     * @param  resource $dst  Destination image link resource
-     * @param  resource $src  Source image link resource
-     * @param  int      $dstX x-coordinate of destination point
-     * @param  int      $dstY y-coordinate of destination point
-     * @param  int      $srcX x-coordinate of source point
-     * @param  int      $srcY y-coordinate of source point
-     * @param  int      $w    Source width
-     * @param  int      $h    Source height
-     * @param  int      $pct  Opacity or source image
-     ******************************************************************************/
+     * @param resource $dst_im Destination image link resource
+     * @param resource $src_im Source image link resource
+     * @param int $dst_x x-coordinate of destination point
+     * @param int $dst_y y-coordinate of destination point
+     * @param int $src_x x-coordinate of source point
+     * @param int $src_y y-coordinate of source point
+     * @param int $src_w Source width
+     * @param int $src_h Source height
+     * @param int $pct Opacity or source image
+     */
     private function imagecopymerge_alpha($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h, $pct)
     {
         // creating a cut resource

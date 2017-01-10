@@ -18,7 +18,7 @@ class Coupons extends Simpla
      * Функция возвращает купон по его id или url
      * (в зависимости от типа аргумента, int - id, string - code)
      *
-     * @param $id
+     * @param  int $id
      * @return bool|object|string
      */
     public function get_coupon($id)
@@ -51,7 +51,7 @@ class Coupons extends Simpla
     /**
      * Функция возвращает массив купонов, удовлетворяющих фильтру
      *
-     * @param array $filter
+     * @param  array $filter
      * @return array|bool
      */
     public function get_coupons($filter = array())
@@ -110,7 +110,7 @@ class Coupons extends Simpla
     /**
      * Функция вычисляет количество постов, удовлетворяющих фильтру
      *
-     * @param array $filter
+     * @param  array $filter
      * @return bool|object|string
      */
     public function count_coupons($filter = array())
@@ -142,13 +142,14 @@ class Coupons extends Simpla
     /**
      * Создание купона
      *
-     * @param $coupon
-     * @return int|bool
+     * @param  array|object $coupon
+     * @return int|false
      */
     public function add_coupon($coupon)
     {
-        if (empty($coupon->single)) {
-            $coupon->single = 0;
+        $coupon = (array) $coupon;
+        if (empty($coupon['single'])) {
+            $coupon['single'] = 0;
         }
 
         $query = $this->db->placehold("INSERT INTO __coupons SET ?%", $coupon);
@@ -162,8 +163,8 @@ class Coupons extends Simpla
     /**
      * Удалить купон
      *
-     * @param $id
-     * @param $coupon
+     * @param  int $id
+     * @param  array|object $coupon
      * @return bool|int
      */
     public function update_coupon($id, $coupon)
@@ -179,7 +180,7 @@ class Coupons extends Simpla
     /**
      * Удалить купон
      *
-     * @param $id
+     * @param  int $id
      * @return bool
      */
     public function delete_coupon($id)

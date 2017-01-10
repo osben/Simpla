@@ -16,19 +16,19 @@ class Feedbacks extends Simpla
 {
     /**
      * @param  int $id
-     * @return bool|object
+     * @return object|false
      */
     public function get_feedback($id)
     {
-        $query = $this->db->placehold("SELECT f.id, 
-                                            f.name, 
-                                            f.email, 
-                                            f.ip, 
-                                            f.message, 
-                                            f.date 
+        $query = $this->db->placehold('SELECT f.id, 
+                                              f.name, 
+                                              f.email, 
+                                              f.ip, 
+                                              f.message, 
+                                              f.date 
                                         FROM __feedbacks f 
                                         WHERE id=? 
-                                        LIMIT 1", intval($id));
+                                        LIMIT 1', intval($id));
 
         if ($this->db->query($query)) {
             return $this->db->result();
@@ -76,11 +76,11 @@ class Feedbacks extends Simpla
         }
 
         $query = $this->db->placehold("SELECT f.id, 
-                                            f.name, 
-                                            f.email, 
-                                            f.ip, 
-                                            f.message, 
-                                            f.date
+                                              f.name, 
+                                              f.email, 
+                                              f.ip, 
+                                              f.message, 
+                                              f.date
 										FROM __feedbacks f 
 										WHERE 1 
 										    $keyword_filter 
@@ -124,8 +124,8 @@ class Feedbacks extends Simpla
     public function add_feedback($feedback)
     {
         $query = $this->db->placehold('INSERT INTO __feedbacks
-		SET ?%,
-		date = NOW()',
+		    SET ?%,
+		    date = NOW()',
         $feedback);
 
         if (!$this->db->query($query)) {
@@ -161,7 +161,7 @@ class Feedbacks extends Simpla
     public function delete_feedback($id)
     {
         if (!empty($id)) {
-            $query = $this->db->placehold("DELETE FROM __feedbacks WHERE id=? LIMIT 1", intval($id));
+            $query = $this->db->placehold('DELETE FROM __feedbacks WHERE id=? LIMIT 1', intval($id));
             $this->db->query($query);
         }
     }

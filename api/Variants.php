@@ -22,7 +22,7 @@ class Variants extends Simpla
     /**
      * Функция возвращает варианты товара
      *
-     * @param	$filter
+     * @param	array $filter
      * @return 	array
      */
     public function get_variants($filter = array())
@@ -94,8 +94,7 @@ class Variants extends Simpla
                                         LIMIT 1", $this->settings->max_order_amount, $id);
 
         $this->db->query($query);
-        $variant = $this->db->result();
-        return $variant;
+        return $this->db->result();
     }
 
     /**

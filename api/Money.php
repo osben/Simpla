@@ -30,18 +30,17 @@ class Money extends Simpla
     {
         $this->currencies = array();
         // Выбираем из базы валюты
-        $query = "SELECT id, 
-                         name, 
-                         sign, 
-                         code, 
-                         rate_from, 
-                         rate_to, 
-                         cents, 
-                         position, 
-                         enabled 
-                    FROM __currencies 
-                    ORDER BY position";
-        $this->db->query($query);
+        $this->db->query('SELECT id, 
+                                 name, 
+                                 sign, 
+                                 code, 
+                                 rate_from, 
+                                 rate_to, 
+                                 cents, 
+                                 position, 
+                                 enabled 
+                            FROM __currencies 
+                            ORDER BY position');
 
         $results = $this->db->results();
 
@@ -104,7 +103,7 @@ class Money extends Simpla
     {
         $query = $this->db->placehold('UPDATE __currencies
 						SET ?%
-						WHERE id in (?@)',
+						WHERE id IN (?@)',
                     $currency, (array)$id);
         if (!$this->db->query($query)) {
             return false;
