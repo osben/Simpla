@@ -95,6 +95,9 @@ class Config
         } elseif (isset($_SERVER['SERVER_PORT']) && '443' == $_SERVER['SERVER_PORT']) {
             $protocol = 'https';
         }
+        if (isset($_SERVER['HTTP_CF_VISITOR']) && strpos($_SERVER['HTTP_CF_VISITOR'], 'https') !== false) {
+            $protocol = 'https';
+        }
 
         $this->vars['protocol'] = $protocol;
         $this->vars['root_url'] = $protocol.'://'.$this->vars['host'];

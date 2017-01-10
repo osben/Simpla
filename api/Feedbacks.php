@@ -16,11 +16,19 @@ class Feedbacks extends Simpla
 {
     /**
      * @param  int $id
-     * @return bool|object
+     * @return object|false
      */
     public function get_feedback($id)
     {
-        $query = $this->db->placehold("SELECT f.id, f.name, f.email, f.ip, f.message, f.date FROM __feedbacks f WHERE id=? LIMIT 1", intval($id));
+        $query = $this->db->placehold('SELECT f.id, 
+                                              f.name, 
+                                              f.email, 
+                                              f.ip, 
+                                              f.message, 
+                                              f.date 
+                                        FROM __feedbacks f 
+                                        WHERE id=? 
+                                        LIMIT 1', intval($id));
 
         if ($this->db->query($query)) {
             return $this->db->result();
@@ -54,7 +62,10 @@ class Feedbacks extends Simpla
         if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND f.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR f.message LIKE "%'.$this->db->escape(trim($keyword)).'%" OR f.email LIKE "%'.$this->db->escape(trim($keyword)).'%" ');
+                $kw = $this->db->escape(trim($keyword));
+                if ($kw!=='') {
+                    $keyword_filter .= $this->db->placehold("AND f.name LIKE '%$kw%' OR f.message LIKE '%$kw%' OR f.email LIKE '%$kw%' ");
+                }
             }
         }
 
@@ -64,8 +75,16 @@ class Feedbacks extends Simpla
             $sort='ASC';
         }
 
-        $query = $this->db->placehold("SELECT f.id, f.name, f.email, f.ip, f.message, f.date
-										FROM __feedbacks f WHERE 1 $keyword_filter ORDER BY f.id $sort $sql_limit");
+        $query = $this->db->placehold("SELECT f.id, 
+                                              f.name, 
+                                              f.email, 
+                                              f.ip, 
+                                              f.message, 
+                                              f.date
+										FROM __feedbacks f 
+										WHERE 1 
+										    $keyword_filter 
+                                        ORDER BY f.id $sort $sql_limit");
 
         $this->db->query($query);
         return $this->db->results();
@@ -82,12 +101,17 @@ class Feedbacks extends Simpla
         if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND f.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR f.message LIKE "%'.$this->db->escape(trim($keyword)).'%" OR f.email LIKE "%'.$this->db->escape(trim($keyword)).'%" ');
+                $kw = $this->db->escape(trim($keyword));
+                if ($kw!=='') {
+                    $keyword_filter .= $this->db->placehold("AND f.name LIKE '%$kw%' OR f.message LIKE '%$kw%' OR f.email LIKE '%$kw%' ");
+                }
             }
         }
 
-        $query = $this->db->placehold("SELECT count(distinct f.id) as count
-										FROM __feedbacks f WHERE 1 $keyword_filter");
+        $query = $this->db->placehold("SELECT COUNT(DISTINCT f.id) AS count
+										FROM __feedbacks f 
+										WHERE 1 
+										$keyword_filter");
 
         $this->db->query($query);
         return $this->db->result('count');
@@ -100,8 +124,8 @@ class Feedbacks extends Simpla
     public function add_feedback($feedback)
     {
         $query = $this->db->placehold('INSERT INTO __feedbacks
-		SET ?%,
-		date = NOW()',
+		    SET ?%,
+		    date = NOW()',
         $feedback);
 
         if (!$this->db->query($query)) {
@@ -125,7 +149,7 @@ class Feedbacks extends Simpla
             unset($feedback->date);
             $date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
         }
-        $query = $this->db->placehold("UPDATE __feedbacks SET ?% $date_query WHERE id in(?@) LIMIT 1", $feedback, (array)$id);
+        $query = $this->db->placehold("UPDATE __feedbacks SET ?% $date_query WHERE id IN( ?@ ) LIMIT 1", $feedback, (array)$id);
         $this->db->query($query);
         return $id;
     }
@@ -137,7 +161,7 @@ class Feedbacks extends Simpla
     public function delete_feedback($id)
     {
         if (!empty($id)) {
-            $query = $this->db->placehold("DELETE FROM __feedbacks WHERE id=? LIMIT 1", intval($id));
+            $query = $this->db->placehold('DELETE FROM __feedbacks WHERE id=? LIMIT 1', intval($id));
             $this->db->query($query);
         }
     }

@@ -54,7 +54,12 @@ class Categories extends Simpla
      */
     public function get_product_categories($product_id)
     {
-        $query = $this->db->placehold("SELECT product_id, category_id, position FROM __products_categories WHERE product_id in(?@) ORDER BY position", (array)$product_id);
+        $query = $this->db->placehold("SELECT product_id, 
+                                              category_id, 
+                                              position 
+                                        FROM __products_categories
+                                        WHERE product_id IN( ?@ )
+                                        ORDER BY position", (array)$product_id);
         $this->db->query($query);
         return $this->db->results();
     }
@@ -66,7 +71,11 @@ class Categories extends Simpla
      */
     public function get_products_categories()
     {
-        $query = $this->db->placehold("SELECT product_id, category_id, position FROM __products_categories ORDER BY position");
+        $query = $this->db->placehold("SELECT product_id, 
+                                              category_id, 
+                                              position 
+                                        FROM __products_categories 
+                                        ORDER BY position");
         $this->db->query($query);
         return $this->db->results();
     }
@@ -96,6 +105,7 @@ class Categories extends Simpla
         if (!isset($this->all_categories)) {
             $this->init_categories();
         }
+
         if (is_int($id) && array_key_exists(intval($id), $this->all_categories)) {
             return $category = $this->all_categories[intval($id)];
         } elseif (is_string($id)) {
@@ -112,7 +122,7 @@ class Categories extends Simpla
     /**
      * Добавление категории
      *
-     * @param $category
+     * @param  $category
      * @return mixed
      */
     public function add_category($category)
@@ -159,8 +169,8 @@ class Categories extends Simpla
     /**
      * Удаление категории
      *
-     * @param $ids
-     * @return mixed
+     * @param  $ids
+     * @return void
      */
     public function delete_category($ids)
     {
@@ -170,15 +180,14 @@ class Categories extends Simpla
                 $this->delete_image($category->children);
             }
             if (!empty($category->children)) {
-                $query = $this->db->placehold("DELETE FROM __categories WHERE id in(?@)", $category->children);
+                $query = $this->db->placehold("DELETE FROM __categories WHERE id IN( ?@ )", $category->children);
                 $this->db->query($query);
-                $query = $this->db->placehold("DELETE FROM __products_categories WHERE category_id in(?@)", $category->children);
+                $query = $this->db->placehold("DELETE FROM __products_categories WHERE category_id IN( ?@ )", $category->children);
                 $this->db->query($query);
             }
         }
         unset($this->categories_tree);
         unset($this->all_categories);
-        return $id;
     }
 
     /**
@@ -216,12 +225,12 @@ class Categories extends Simpla
         $categories_ids = (array) $categories_ids;
         $query = $this->db->placehold("SELECT image FROM __categories WHERE id in(?@)", $categories_ids);
         $this->db->query($query);
-        $filenames = $this->db->results('image');
-        if (!empty($filenames)) {
+        $files_name = $this->db->results('image');
+        if (!empty($files_name)) {
             $query = $this->db->placehold("UPDATE __categories SET image=NULL WHERE id in(?@)", $categories_ids);
             $this->db->query($query);
-            foreach ($filenames as $filename) {
-                $query = $this->db->placehold("SELECT count(*) as count FROM __categories WHERE image=?", $filename);
+            foreach ($files_name as $filename) {
+                $query = $this->db->placehold("SELECT COUNT(*) AS count FROM __categories WHERE image=?", $filename);
                 $this->db->query($query);
                 $count = $this->db->result('count');
                 if ($count == 0) {
@@ -248,7 +257,17 @@ class Categories extends Simpla
         $pointers[0]->level = 0;
 
         // Выбираем все категории
-        $query = $this->db->placehold("SELECT c.id, c.parent_id, c.name, c.description, c.url, c.meta_title, c.meta_keywords, c.meta_description, c.image, c.visible, c.position
+        $query = $this->db->placehold("SELECT c.id, 
+                                              c.parent_id, 
+                                              c.name, 
+                                              c.description, 
+                                              c.url, 
+                                              c.meta_title, 
+                                              c.meta_keywords, 
+                                              c.meta_description, 
+                                              c.image, 
+                                              c.visible, 
+                                              c.position
 										FROM __categories c
 										ORDER BY c.parent_id, c.position");
 

@@ -22,7 +22,17 @@ class Comments extends Simpla
      */
     public function get_comment($id)
     {
-        $query = $this->db->placehold("SELECT c.id, c.object_id, c.name, c.ip, c.type, c.text, c.date, c.approved FROM __comments c WHERE id=? LIMIT 1", intval($id));
+        $query = $this->db->placehold("SELECT c.id, 
+                                              c.object_id, 
+                                              c.name, 
+                                              c.ip, 
+                                              c.type, 
+                                              c.text, 
+                                              c.date, 
+                                              c.approved 
+                                        FROM __comments c 
+                                        WHERE c.id=? 
+                                        LIMIT 1", intval($id));
 
         if ($this->db->query($query)) {
             return $this->db->result();
@@ -40,13 +50,14 @@ class Comments extends Simpla
     public function get_comments($filter = array())
     {
         // По умолчанию
-        $limit = 0;
+        $limit = 100;
         $page = 1;
         $object_id_filter = '';
         $type_filter = '';
         $keyword_filter = '';
         $approved_filter = '';
         $ip = '';
+        $sort = 'DESC';
 
         if (isset($filter['limit'])) {
             $limit = max(1, intval($filter['limit']));
@@ -56,6 +67,9 @@ class Comments extends Simpla
             $page = max(1, intval($filter['page']));
         }
 
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+
+
         if (isset($filter['ip'])) {
             $ip = $this->db->placehold("OR c.ip=?", $filter['ip']);
         }
@@ -63,14 +77,8 @@ class Comments extends Simpla
             $approved_filter = $this->db->placehold("AND (c.approved=? $ip)", intval($filter['approved']));
         }
 
-        if ($limit) {
-            $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
-        } else {
-            $sql_limit = '';
-        }
-
         if (!empty($filter['object_id'])) {
-            $object_id_filter = $this->db->placehold('AND c.object_id in(?@)', (array)$filter['object_id']);
+            $object_id_filter = $this->db->placehold('AND c.object_id IN( ?@ )', (array)$filter['object_id']);
         }
 
         if (!empty($filter['type'])) {
@@ -80,14 +88,21 @@ class Comments extends Simpla
         if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND c.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR c.text LIKE "%'.$this->db->escape(trim($keyword)).'%" ');
+                $kw = $this->db->escape(trim($keyword));
+                if ($kw!=='') {
+                    $keyword_filter .= $this->db->placehold("AND c.name LIKE '%$kw%' OR c.text LIKE '%$kw%' ");
+                }
             }
         }
 
-
-        $sort='DESC';
-
-        $query = $this->db->placehold("SELECT c.id, c.object_id, c.ip, c.name, c.text, c.type, c.date, c.approved
+        $query = $this->db->placehold("SELECT c.id, 
+                                              c.object_id, 
+                                              c.ip, 
+                                              c.name, 
+                                              c.text, 
+                                              c.type, 
+                                              c.date, 
+                                              c.approved
 										FROM __comments c
 										WHERE 1
 											$object_id_filter
@@ -115,7 +130,7 @@ class Comments extends Simpla
         $keyword_filter = '';
 
         if (!empty($filter['object_id'])) {
-            $object_id_filter = $this->db->placehold('AND c.object_id in(?@)', (array)$filter['object_id']);
+            $object_id_filter = $this->db->placehold('AND c.object_id IN( ?@ )', (array)$filter['object_id']);
         }
 
         if (!empty($filter['type'])) {
@@ -129,17 +144,20 @@ class Comments extends Simpla
         if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
-                $keyword_filter .= $this->db->placehold('AND c.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR c.text LIKE "%'.$this->db->escape(trim($keyword)).'%" ');
+                $kw = $this->db->escape(trim($keyword));
+                if ($kw!=='') {
+                    $keyword_filter .= $this->db->placehold("AND c.name LIKE '%$kw%' OR c.text LIKE '%$kw%' ");
+                }
             }
         }
 
-        $query = $this->db->placehold("SELECT count(distinct c.id) as count
+        $query = $this->db->placehold("SELECT COUNT(DISTINCT c.id) AS count
 										FROM __comments c
 										WHERE 1
-										$object_id_filter
-										$type_filter
-										$keyword_filter
-										$approved_filter", $this->settings->date_format);
+										    $object_id_filter
+										    $type_filter
+										    $keyword_filter
+										    $approved_filter", $this->settings->date_format);
 
         $this->db->query($query);
         return $this->db->result('count');
@@ -153,35 +171,36 @@ class Comments extends Simpla
      */
     public function add_comment($comment)
     {
-        $query = $this->db->placehold('INSERT INTO __comments
-		SET ?%,
-		date = NOW()',
-        $comment);
+        $comment = (array) $comment;
+
+        $query = $this->db->placehold('INSERT INTO __comments SET ?%, date = NOW()', $comment);
 
         if (!$this->db->query($query)) {
             return false;
         }
 
-        $id = $this->db->insert_id();
-        return $id;
+        return $this->db->insert_id();
     }
 
     /**
      * Изменение комментария
      *
-     * @param $id
-     * @param $comment
+     * @param  int $id
+     * @param  array|object $comment
      * @return mixed
      */
     public function update_comment($id, $comment)
     {
+        $comment = (array)$comment;
+
         $date_query = '';
-        if (isset($comment->date)) {
-            $date = $comment->date;
-            unset($comment->date);
+
+        if (isset($comment['date'])) {
+            $date = $comment['date'];
+            unset($comment['date']);
             $date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
         }
-        $query = $this->db->placehold("UPDATE __comments SET ?% $date_query WHERE id in(?@) LIMIT 1", $comment, (array)$id);
+        $query = $this->db->placehold("UPDATE __comments SET ?% $date_query WHERE id IN( ?@ ) LIMIT 1", $comment, (array)$id);
         $this->db->query($query);
         return $id;
     }
@@ -189,7 +208,7 @@ class Comments extends Simpla
     /**
      * Удаление комментария
      *
-     * @param $id
+     * @param int $id
      */
     public function delete_comment($id)
     {

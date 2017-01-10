@@ -109,7 +109,7 @@ class IndexAdmin extends Simpla
 
         $this->design->set_compiled_dir('simpla/design/compiled');
 
-        $this->design->assign('settings',    $this->settings);
+        $this->design->assign('settings',  $this->settings);
         $this->design->assign('config',    $this->config);
 
         // Администратор
@@ -172,9 +172,9 @@ class IndexAdmin extends Simpla
         }
 
         if (!empty($wrapper)) {
-            return $this->body = $this->design->fetch($wrapper);
+            return $this->design->fetch($wrapper);
         } else {
-            return $this->body = $content;
+            return $content;
         }
     }
 }

@@ -69,7 +69,7 @@ class Payment extends Simpla
                 if (is_readable($modules_dir.$dir.'/settings.xml') && $xml = simplexml_load_file($modules_dir.$dir.'/settings.xml')) {
                     $module = new \stdClass();
 
-                    $module->name = (string)$xml->name;
+                    $module->name = (string) $xml->name;
                     $module->settings = array();
 
                     foreach ($xml->settings as $setting) {
@@ -91,6 +91,10 @@ class Payment extends Simpla
         return $modules;
     }
 
+    /**
+     * @param  int $id
+     * @return array|false
+     */
     public function get_payment_deliveries($id)
     {
         $query = $this->db->placehold("SELECT delivery_id FROM __delivery_payment WHERE payment_method_id=?", intval($id));
@@ -99,25 +103,39 @@ class Payment extends Simpla
         return $this->db->results('delivery_id');
     }
 
+    /**
+     * @param  int $id
+     * @param  array|object $payment_method
+     * @return mixed
+     */
     public function update_payment_method($id, $payment_method)
     {
-        $query = $this->db->placehold("UPDATE __payment_methods SET ?% WHERE id in(?@)", $payment_method, (array)$id);
+        $query = $this->db->placehold("UPDATE __payment_methods SET ?% WHERE id IN(?@)", $payment_method, (array)$id);
         $this->db->query($query);
 
         return $id;
     }
 
+    /**
+     * @param  int $method_id
+     * @param  mixed $settings
+     * @return mixed
+     */
     public function update_payment_settings($method_id, $settings)
     {
         if (!is_string($settings)) {
             $settings = serialize($settings);
         }
-        $query = $this->db->placehold("UPDATE __payment_methods SET settings=? WHERE id in(?@) LIMIT 1", $settings, (array)$method_id);
+        $query = $this->db->placehold("UPDATE __payment_methods SET settings=? WHERE id IN(?@) LIMIT 1", $settings, (array)$method_id);
         $this->db->query($query);
 
         return $method_id;
     }
 
+    /**
+     * @param  int $id
+     * @param  array $deliveries_ids
+     */
     public function update_payment_deliveries($id, $deliveries_ids)
     {
         $query = $this->db->placehold("DELETE FROM __delivery_payment WHERE payment_method_id=?", intval($id));
@@ -129,6 +147,10 @@ class Payment extends Simpla
         }
     }
 
+    /**
+     * @param  array|object $payment_method
+     * @return bool|mixed
+     */
     public function add_payment_method($payment_method)
     {
         $query = $this->db->placehold('INSERT INTO __payment_methods
@@ -145,6 +167,9 @@ class Payment extends Simpla
         return $id;
     }
 
+    /**
+     * @param int $id
+     */
     public function delete_payment_method($id)
     {
         if (!empty($id)) {

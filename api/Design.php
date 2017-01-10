@@ -19,7 +19,6 @@ require_once(dirname(dirname(__FILE__)).'/Smarty/libs/Smarty.class.php');
 
 class Design extends Simpla
 {
-
     public $smarty;
     public $compile_dir;
     public $template_dir;
@@ -43,10 +42,10 @@ class Design extends Simpla
         $this->smarty->error_reporting = E_ALL & ~E_NOTICE;
 
         // Берем тему из настроек
-        $this->theme = $this->settings->theme;
-        $this->compile_dir = $this->config->root_dir.'/compiled/'. $this->theme ;
+        $this->theme        = $this->settings->theme;
+        $this->compile_dir  = $this->config->root_dir.'/compiled/'. $this->theme ;
         $this->template_dir = $this->config->root_dir.'/design/'. $this->theme .'/html';
-        $this->cache_dir = $this->config->root_dir.'/cache';
+        $this->cache_dir    = $this->config->root_dir.'/cache';
 
         $this->set_compiled_dir($this->compile_dir);
         $this->set_templates_dir($this->template_dir);
@@ -117,7 +116,6 @@ class Design extends Simpla
     public function set_templates_dir($template_dir)
     {
         $this->smarty->setTemplateDir($template_dir);
-
     }
 
     /**
@@ -130,7 +128,9 @@ class Design extends Simpla
     }
 
     /**
+     * Очистить кеш
      *
+     * @return mixed
      */
     public function clear_cache()
     {
@@ -189,7 +189,7 @@ class Design extends Simpla
     }
 
     /**
-     * @param $params
+     * @param  $params
      * @return string
      */
     public function url_modifier($params)
@@ -202,10 +202,10 @@ class Design extends Simpla
     }
 
     /**
-     * @param $number
-     * @param $singular
-     * @param $plural1
-     * @param null $plural2
+     * @param  $number
+     * @param  $singular
+     * @param  $plural1
+     * @param  null $plural2
      * @return null
      */
     public function plural_modifier($number, $singular, $plural1, $plural2=null)
@@ -235,7 +235,7 @@ class Design extends Simpla
 
     /**
      * @param  array $params
-     * @return false|mixed
+     * @return mixed|false
      */
     public function first_modifier($params = array())
     {

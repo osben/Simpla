@@ -12,9 +12,14 @@
 
 require_once('Simpla.php');
 
+/**
+ * Class Database
+ * @property MySQLi $mysqli
+ */
 class Database extends Simpla
 {
     private $mysqli;
+
     private $res;
 
     /**
@@ -47,7 +52,7 @@ class Database extends Simpla
         }
         // Иначе устанавливаем соединение
         else {
-            $this->mysqli = new mysqli($this->config->db_server, $this->config->db_user, $this->config->db_password, $this->config->db_name);
+            $this->mysqli = new \mysqli($this->config->db_server, $this->config->db_user, $this->config->db_password, $this->config->db_name);
         }
 
         // Выводим сообщение, в случае ошибки
@@ -111,8 +116,8 @@ class Database extends Simpla
     /**
      * Экранирование
      *
-     * @param $str
-     * @return mixed
+     * @param  $str
+     * @return string
      */
     public function escape($str)
     {
@@ -148,7 +153,7 @@ class Database extends Simpla
      * Возвращает результаты запроса. Необязательный второй аргумент указывает какую колонку возвращать вместо всего массива колонок
      *
      * @param  null|string $field
-     * @return array|object|bool
+     * @return array|false
      */
     public function results($field = null)
     {
@@ -175,8 +180,8 @@ class Database extends Simpla
     /**
      * Возвращает первый результат запроса. Необязательный второй аргумент указывает какую колонку возвращать вместо всего массива колонок
      *
-     * @param null $field
-     * @return bool|object|string
+     * @param  string|null $field
+     * @return object|false
      */
     public function result($field = null)
     {
@@ -207,7 +212,7 @@ class Database extends Simpla
     /**
      * Возвращает количество выбранных строк
      *
-     * @return mixed
+     * @return int
      */
     public function num_rows()
     {
@@ -217,7 +222,7 @@ class Database extends Simpla
     /**
      * Возвращает количество затронутых строк
      *
-     * @return mixed
+     * @return int
      */
     public function affected_rows()
     {
@@ -227,7 +232,7 @@ class Database extends Simpla
     /**
      * Компиляция плейсхолдера
      *
-     * @param $tmpl
+     * @param  string $tmpl
      * @return array
      */
     private function sql_compile_placeholder($tmpl)
@@ -498,7 +503,7 @@ class Database extends Simpla
                                     fwrite($h,  $row[$i]);
                                     break;
                                 case 'string':
-                                case 'blob' :
+                                case 'blob':
                                 default:
                                     fwrite($h, "'". $this->mysqli->real_escape_string($row[$i])."'");
 
