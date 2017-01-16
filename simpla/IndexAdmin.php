@@ -59,7 +59,7 @@ class IndexAdmin extends Simpla
         'ManagerAdmin'        => 'managers',
         'LicenseAdmin'        => 'license'
     );
-
+	private $module = null;
     // Конструктор
     public function __construct()
     {
@@ -68,7 +68,6 @@ class IndexAdmin extends Simpla
 
 
         $p=11;
-        $g=2;
         $x=7;
         $r = '';
         $s = $x;
@@ -113,8 +112,8 @@ class IndexAdmin extends Simpla
         $this->design->assign('config',    $this->config);
 
         // Администратор
-        $this->manager = $this->managers->get_manager();
-        $this->design->assign('manager', $this->manager);
+        $manager = $this->managers->get_manager();
+        $this->design->assign('manager', $manager);
 
         // Берем название модуля из get-запроса
         $module = $this->request->get('module', 'string');
@@ -149,11 +148,12 @@ class IndexAdmin extends Simpla
         $currency = $this->money->get_currency();
         $this->design->assign("currency", $currency);
 
+	    $content = null;
         // Проверка прав доступа к модулю
         if (isset($this->modules_permissions[get_class($this->module)])
         && $this->managers->access($this->modules_permissions[get_class($this->module)])) {
             $content = $this->module->fetch();
-            $this->design->assign("content", $content);
+            $this->design->assign("content", $this->module->fetch());
         } else {
             $this->design->assign("content", "Permission denied");
         }
