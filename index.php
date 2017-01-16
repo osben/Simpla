@@ -11,7 +11,6 @@
 
 // Засекаем время
 $time_start = microtime(true);
-function_exists('memory_get_usage') ? define('MEM_USAGE', memory_get_usage()) : null;
 session_start();
 
 require_once('view/IndexView.php');
