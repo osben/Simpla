@@ -41,7 +41,7 @@
 							</div>
 						{/if}
 						<div class="name cell">
-							<a href="files/backup/{$export->name}">{$export->name}</a>
+							<a href="files/export/{$export->name}">{$export->name}</a>
 							({if $export->size>1024*1024}{($export->size/1024/1024)|round:2} МБ{else}{($export->size/1024)|round:2} КБ{/if}
 							)
 						</div>
