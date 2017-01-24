@@ -176,7 +176,7 @@ class Features extends Simpla
         if (is_array($categories)) {
             $values = array();
             foreach ($categories as $category) {
-                $values[] = '($id , ' . intval($category) . ')';
+	            $values[] = '(' . $id . ', ' . intval($category) . ')';
             }
 
             $query = $this->db->placehold('INSERT INTO __categories_features (feature_id, category_id) VALUES ' . implode(', ', $values));
