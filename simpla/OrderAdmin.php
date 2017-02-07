@@ -26,8 +26,8 @@ class OrderAdmin extends Simpla
             $order->address = $this->request->post('address');
             $order->comment = $this->request->post('comment');
             $order->note = $this->request->post('note');
-            $order->discount = $this->request->post('discount', 'floatr');
-            $order->coupon_discount = $this->request->post('coupon_discount', 'floatr');
+            $order->discount = $this->request->post('discount', 'float');
+            $order->coupon_discount = $this->request->post('coupon_discount', 'float');
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
             $order->delivery_price = $this->request->post('delivery_price', 'float');
             $order->payment_method_id = $this->request->post('payment_method_id', 'integer');
@@ -86,45 +86,34 @@ class OrderAdmin extends Simpla
                     }
                 }
 
-                // Принять?
-                if ($this->request->post('status_new')) {
-                    $new_status = 0;
-                } elseif ($this->request->post('status_accept')) {
-                    $new_status = 1;
-                } elseif ($this->request->post('status_done')) {
-                    $new_status = 2;
-                } elseif ($this->request->post('status_deleted')) {
-                    $new_status = 3;
-                } else {
-                    $new_status = $this->request->post('status', 'string');
-                }
-
+	            $new_status = $this->request->post('status', 'integer');
                 if ($new_status == 0) {
                     if (!$this->orders->open(intval($order->id))) {
                         $this->design->assign('message_error', 'error_open');
                     } else {
-                        $this->orders->update_order($order->id, array('status'=>0));
+                        $this->orders->update_order($order->id, array('status'=>$new_status));
                     }
                 } elseif ($new_status == 1) {
                     if (!$this->orders->close(intval($order->id))) {
                         $this->design->assign('message_error', 'error_closing');
                     } else {
-                        $this->orders->update_order($order->id, array('status'=>1));
+                        $this->orders->update_order($order->id, array('status'=>$new_status));
                     }
                 } elseif ($new_status == 2) {
                     if (!$this->orders->close(intval($order->id))) {
                         $this->design->assign('message_error', 'error_closing');
                     } else {
-                        $this->orders->update_order($order->id, array('status'=>2));
+                        $this->orders->update_order($order->id, array('status'=>$new_status));
                     }
                 } elseif ($new_status == 3) {
                     if (!$this->orders->open(intval($order->id))) {
                         $this->design->assign('message_error', 'error_open');
                     } else {
-                        $this->orders->update_order($order->id, array('status'=>3));
+                        $this->orders->update_order($order->id, array('status'=>$new_status));
                     }
                     header('Location: '.$this->request->get('return'));
                 }
+
                 $order = $this->orders->get_order($order->id);
 
                 // Отправляем письмо пользователю
