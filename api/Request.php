@@ -65,15 +65,15 @@ class Request extends Simpla
             return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
         }
 
-        if ($type == 'integer') {
+        if ($type == 'integer' || $type == 'int') {
             return intval($val);
         }
 
-        if ($type == 'float') {
+        if ($type == 'float' || $type == 'floatval') {
             return floatval($val);
         }
 
-        if ($type == 'boolean') {
+        if ($type == 'boolean' || $type == 'bool') {
             return !empty($val);
         }
 
