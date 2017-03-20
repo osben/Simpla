@@ -1,7 +1,17 @@
 {capture name=tabs}
-	{if in_array('import', $manager->permissions)}<li><a href="index.php?module=ImportAdmin">Импорт</a></li>{/if}
-	<li class="active"><a href="index.php?module=ExportAdmin">Экспорт</a></li>
-	{if in_array('backup', $manager->permissions)}<li><a href="index.php?module=BackupAdmin">Бекап</a></li>{/if}
+	{if in_array('import', $manager->permissions)}
+		<li>
+			<a href="index.php?module=ImportAdmin">Импорт</a>
+		</li>
+	{/if}
+	<li class="active">
+		<a href="index.php?module=ExportAdmin">Экспорт</a>
+	</li>
+	{if in_array('backup', $manager->permissions)}
+		<li>
+			<a href="index.php?module=BackupAdmin">Бекап</a>
+		</li>
+	{/if}
 {/capture}
 
 {$meta_title='Экспорт товаров' scope=root}
@@ -9,15 +19,15 @@
 {if $message_error}
 	<!-- Системное сообщение -->
 	<div class="message message_error">
-	<span class="text">
-		{if $message_error == 'no_permission'}
-			Установите права на запись в папку {$export_files_dir}
-		{elseif $message_error == 'iconv_or_mb_convert_encoding'}
-			Отсутствует iconv или mb_convert_encoding
-		{else}
-			{$message_error}
-		{/if}
-	</span>
+		<span class="text">
+			{if $message_error == 'no_permission'}
+				Установите права на запись в папку {$export_files_dir}
+			{elseif $message_error == 'iconv_or_mb_convert_encoding'}
+				Отсутствует iconv или mb_convert_encoding
+			{else}
+				{$message_error}
+			{/if}
+		</span>
 	</div>
 	<!-- Системное сообщение (The End)-->
 {/if}
@@ -26,7 +36,7 @@
 <div id="main_list">
 	<h1>Экспорт товаров</h1>
 	{if $message_error != 'no_permission'}
-		<div id='progressbar'></div>
+		<div id="progressbar"></div>
 		<input class="button_green" id="start" type="button" name="" value="Экспортировать"/>
 	{/if}
 	{if $exports}
@@ -98,8 +108,7 @@
 				data: {page: page, filename: filename},
 				dataType: 'json',
 				success: function (data) {
-					if (data.error)
-					{
+					if (data.error) {
 						$("#progressbar").hide('fast');
 						alert(data.error);
 					}
@@ -125,13 +134,7 @@
 		}
 
 		// Раскраска строк
-		function colorize() {
-			$("#list div.row:even").addClass('even');
-			$("#list div.row:odd").removeClass('even');
-		}
-
-		// Раскрасить строки сразу
-		colorize();
+		$("#list div.row").colorize();
 
 		// Выделить все
 		$("#check_all").click(function () {
@@ -155,9 +158,28 @@
 </script>
 
 <style>
-	#list { margin-top: 20px; }
-	.ui-progressbar-value { background-image: url(design/images/progress.gif); background-position:left; border-color: #009ae2;}
-	#progressbar{ clear: both; height:29px; }
-	#result{ clear: both; width:100%;}
-	#download{ display:none;  clear: both; }
+	#list {
+		margin-top: 20px;
+	}
+
+	.ui-progressbar-value {
+		background-image: url(design/images/progress.gif);
+		background-position: left;
+		border-color: #009ae2;
+	}
+
+	#progressbar {
+		clear: both;
+		height: 29px;
+	}
+
+	#result {
+		clear: both;
+		width: 100%;
+	}
+
+	#download {
+		display: none;
+		clear: both;
+	}
 </style>

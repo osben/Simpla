@@ -1,31 +1,43 @@
 {* Вкладки *}
 {capture name=tabs}
 	{if in_array('orders', $manager->permissions)}
-		<li {if $order->status==0}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=0">Новые</a></li>
-		<li {if $order->status==1}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=1">Приняты</a></li>
-		<li {if $order->status==2}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=2">Выполнены</a></li>
-		<li {if $order->status==3}class="active"{/if}><a href="index.php?module=OrdersAdmin&status=3">Удалены</a></li>
-	{if $keyword}
-	<li class="active"><a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a></li>
-	{/if}
+		<li{if $order->status==0} class="active"{/if}>
+			<a href="index.php?module=OrdersAdmin&status=0">Новые</a>
+		</li>
+		<li{if $order->status==1} class="active"{/if}>
+			<a href="index.php?module=OrdersAdmin&status=1">Приняты</a>
+		</li>
+		<li{if $order->status==2} class="active"{/if}>
+			<a href="index.php?module=OrdersAdmin&status=2">Выполнены</a>
+		</li>
+		<li{if $order->status==3} class="active"{/if}>
+			<a href="index.php?module=OrdersAdmin&status=3">Удалены</a>
+		</li>
+		{if $keyword}
+			<li class="active">
+				<a href="{url module=OrdersAdmin keyword=$keyword id=null label=null}">Поиск</a>
+			</li>
+		{/if}
 	{/if}
 	{if in_array('labels', $manager->permissions)}
-	<li><a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a></li>
+		<li>
+			<a href="{url module=OrdersLabelsAdmin keyword=null id=null page=null label=null}">Метки</a>
+		</li>
 	{/if}
 {/capture}
 
 
 {if $order->id}
-{$meta_title = "Заказ №`$order->id`" scope=root}
+	{$meta_title = "Заказ №`$order->id`" scope=root}
 {else}
-{$meta_title = 'Новый заказ' scope=root}
+	{$meta_title = 'Новый заказ' scope=root}
 {/if}
 
 <!-- Основная форма -->
 <form method=post id=order enctype="multipart/form-data">
-<input type=hidden name="session_id" value="{$smarty.session.id}">
+	<input type=hidden name="session_id" value="{$smarty.session.id}">
 
-<div id="name">
+	<div id="name">
 	<input name=id type="hidden" value="{$order->id|escape}"/>
 	<h1>{if $order->id}Заказ №{$order->id|escape}{else}Новый заказ{/if}
 	<select class=status name="status">
@@ -50,29 +62,29 @@
 </div>
 
 
-{if $message_error}
-<!-- Системное сообщение -->
-<div class="message message_error">
-	<span class="text">{if $message_error=='error_closing'}Нехватка товара на складе{else}{$message_error|escape}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
+	{if $message_error}
+	<!-- Системное сообщение -->
+	<div class="message message_error">
+		<span class="text">{if $message_error=='error_closing'}Нехватка товара на складе{else}{$message_error|escape}{/if}</span>
+		{if $smarty.get.return}
+		<a class="button" href="{$smarty.get.return}">Вернуться</a>
+		{/if}
+	</div>
+	<!-- Системное сообщение (The End)-->
+	{elseif $message_success}
+	<!-- Системное сообщение -->
+	<div class="message message_success">
+		<span class="text">{if $message_success=='updated'}Заказ обновлен{elseif $message_success=='added'}Заказ добавлен{else}{$message_success}{/if}</span>
+		{if $smarty.get.return}
+		<a class="button" href="{$smarty.get.return}">Вернуться</a>
+		{/if}
+	</div>
+	<!-- Системное сообщение (The End)-->
 	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
-{elseif $message_success}
-<!-- Системное сообщение -->
-<div class="message message_success">
-	<span class="text">{if $message_success=='updated'}Заказ обновлен{elseif $message_success=='added'}Заказ добавлен{else}{$message_success}{/if}</span>
-	{if $smarty.get.return}
-	<a class="button" href="{$smarty.get.return}">Вернуться</a>
-	{/if}
-</div>
-<!-- Системное сообщение (The End)-->
-{/if}
 
 
 
-<div id="order_details">
+	<div id="order_details">
 	<h2>Детали заказа <a href='#' class="edit_order_details"><img src='design/images/pencil.png' alt='Редактировать' title='Редактировать'></a></h2>
 
 	<div id="user">
@@ -189,7 +201,7 @@
 </div>
 
 
-<div id="purchases">
+	<div id="purchases">
 
 	<div id="list" class="purchases">
 		{foreach $purchases as $purchase}
@@ -385,13 +397,7 @@
 $(function() {
 
 	// Раскраска строк
-	function colorize()
-	{
-		$("#list div.row:even").addClass('even');
-		$("#list div.row:odd").removeClass('even');
-	}
-	// Раскрасить строки сразу
-	colorize();
+	$("#list div.row").colorize();
 
 	// Удаление товара
 	$(".purchases a.delete").live('click', function() {
