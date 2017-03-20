@@ -91,7 +91,7 @@ class ExportAjax extends Simpla
             $options = $this->features->get_product_options($p->id);
             foreach ($options as $option) {
                 if (!isset($products[$option->product_id][$option->name])) {
-                    $products[$option->product_id][$option->name] = str_replace(',', '.', trim($option->value));
+                    $products[$option->product_id][$option->name] = preg_replace('/(\d+),(\d+)/', '$1.$2', trim($option->value));
                 }
             }
         }
