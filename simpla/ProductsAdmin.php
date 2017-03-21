@@ -75,15 +75,17 @@ class ProductsAdmin extends Simpla
             // Сохранение цен и наличия
             $prices = $this->request->post('price');
             $stocks = $this->request->post('stock');
+            if(!empty($prices) && !empty($stocks)) {
+                foreach ($prices as $id=>$price) {
+                    $stock = $stocks[$id];
+                    if ($stock == '∞' || $stock == '') {
+                        $stock = null;
+                    }
 
-            foreach ($prices as $id=>$price) {
-                $stock = $stocks[$id];
-                if ($stock == '∞' || $stock == '') {
-                    $stock = null;
+                    $this->variants->update_variant($id, array('price'=>$price, 'stock'=>$stock));
                 }
-
-                $this->variants->update_variant($id, array('price'=>$price, 'stock'=>$stock));
             }
+
 
             // Сортировка
             $positions = $this->request->post('positions');
