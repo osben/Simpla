@@ -153,7 +153,7 @@ class IndexAdmin extends Simpla
         if (isset($this->modules_permissions[get_class($this->module)])
         && $this->managers->access($this->modules_permissions[get_class($this->module)])) {
             $content = $this->module->fetch();
-            $this->design->assign("content", $this->module->fetch());
+            $this->design->assign("content",  $content);
         } else {
             $this->design->assign("content", "Permission denied");
         }

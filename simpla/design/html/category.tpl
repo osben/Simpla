@@ -87,10 +87,10 @@
 			});
 
 			// Автозаполнение мета-тегов
-			var meta_title_touched = true,
-				meta_keywords_touched = true,
-				meta_description_touched = true,
-				url_touched = true;
+			meta_title_touched = true;
+		    meta_keywords_touched = true;
+			meta_description_touched = true;
+			url_touched = true;
 
 			if ($('input[name="meta_title"]').val() == generate_meta_title() || $('input[name="meta_title"]').val() == '')
 				meta_title_touched = false;
