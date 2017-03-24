@@ -43,6 +43,7 @@ class Database extends Simpla
      * Подключение к базе данных
      *
      * @return bool|mysqli
+     * @throws Exception
      */
     public function connect()
     {
@@ -57,8 +58,7 @@ class Database extends Simpla
 
         // Выводим сообщение, в случае ошибки
         if ($this->mysqli->connect_error) {
-            trigger_error("Could not connect to the database: ".$this->mysqli->connect_error, E_USER_WARNING);
-            return false;
+            throw new \Exception('Error: ' . $this->mysqli->error . '<br />Error No: ' . $this->mysqli->errno);
         }
         // Или настраиваем соединение
         else {
@@ -139,9 +139,7 @@ class Database extends Simpla
         if (!empty($args)) {
             $result = $this->sql_placeholder_ex($tmpl, $args, $error);
             if ($result === false) {
-                $error = "Placeholder substitution error. Diagnostics: \"$error\"";
-                trigger_error($error, E_USER_WARNING);
-                return false;
+                throw new \Exception('Placeholder substitution error. Diagnostics: ' . $error );
             }
             return $result;
         } else {
@@ -159,8 +157,7 @@ class Database extends Simpla
     {
         $results = array();
         if (!$this->res) {
-            trigger_error($this->mysqli->error, E_USER_WARNING);
-            return false;
+            throw new \Exception('Error: ' . $this->mysqli->error . '<br />Error No: ' . $this->mysqli->errno);
         }
 
         if ($this->res->num_rows == 0) {
@@ -179,15 +176,14 @@ class Database extends Simpla
 
     /**
      * Возвращает первый результат запроса. Необязательный второй аргумент указывает какую колонку возвращать вместо всего массива колонок
-     *
      * @param  string|null $field
      * @return object|false
+     * @throws Exception
      */
     public function result($field = null)
     {
         if (!$this->res) {
-            $this->error_msg = "Could not execute query to database";
-            return false;
+            throw new \Exception('Could not execute query to database');
         }
         $row = $this->res->fetch_object();
         if (!empty($field) && isset($row->$field)) {
@@ -490,7 +486,7 @@ class Database extends Simpla
                     array_push($field_name, $m->name);
                 }
                 $fields = implode('`, `', $field_name);
-                fwrite($h,  "INSERT INTO `$table_no_prefix` (`$fields`) VALUES\n");
+                fwrite($h, "INSERT INTO `$table_no_prefix` (`$fields`) VALUES\n");
                 $index=0;
                 while ($row = $result->fetch_row()) {
                     fwrite($h, "(");
@@ -500,7 +496,7 @@ class Database extends Simpla
                         } else {
                             switch ($field_type[$i]) {
                                 case 'int':
-                                    fwrite($h,  $row[$i]);
+                                    fwrite($h, $row[$i]);
                                     break;
                                 case 'string':
                                 case 'blob':
@@ -510,13 +506,13 @@ class Database extends Simpla
                             }
                         }
                         if ($i < $num_fields-1) {
-                            fwrite($h,  ",");
+                            fwrite($h, ",");
                         }
                     }
                     fwrite($h, ")");
 
                     if ($index < $num_rows-1) {
-                        fwrite($h,  ",");
+                        fwrite($h, ",");
                     } else {
                         fwrite($h, ";");
                     }
