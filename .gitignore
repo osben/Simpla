@@ -12,8 +12,6 @@ simpla/design/compiled/*
 # logos categories
 /files/categories/*
 !/files/categories/index.html
-!/files/categories/
-
 
 # digital products
 /files/downloads/*
