@@ -25,7 +25,7 @@
 {/capture}
 
 {if $label->id}
-	{$meta_title = $label->name scope=root}
+	{$meta_title = $label->name|escape scope=root}
 {else}
 	{$meta_title = 'Новая метка' scope=root}
 {/if}

@@ -17,16 +17,16 @@ class PageAdmin extends Simpla
     {
         $page = new \stdClass();
         if ($this->request->method('POST')) {
-            $page->id = $this->request->post('id', 'integer');
-            $page->name = $this->request->post('name');
-            $page->header = $this->request->post('header');
-            $page->url = trim($this->request->post('url'));
-            $page->meta_title = $this->request->post('meta_title');
-            $page->meta_keywords = $this->request->post('meta_keywords');
+            $page->id               = $this->request->post('id', 'integer');
+            $page->name             = $this->request->post('name');
+            $page->header           = $this->request->post('header');
+            $page->url              = trim($this->request->post('url'));
+            $page->meta_title       = $this->request->post('meta_title');
+            $page->meta_keywords    = $this->request->post('meta_keywords');
             $page->meta_description = $this->request->post('meta_description');
-            $page->body = $this->request->post('body');
-            $page->menu_id = $this->request->post('menu_id', 'integer');
-            $page->visible = $this->request->post('visible', 'boolean');
+            $page->body             = $this->request->post('body');
+            $page->menu_id          = $this->request->post('menu_id', 'integer');
+            $page->visible          = $this->request->post('visible', 'boolean');
 
             ## Не допустить одинаковые URL разделов.
             if (($p = $this->pages->get_page($page->url)) && $p->id!=$page->id) {
