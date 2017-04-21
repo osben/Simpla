@@ -17,9 +17,9 @@ class ManagerAdmin extends Simpla
     public function fetch()
     {
         if ($this->request->method('post')) {
-            $manager = new \stdClass();
+            $manager            = new \stdClass();
             $manager->old_login = $this->request->post('old_login');
-            $manager->login = $this->request->post('login');
+            $manager->login     = $this->request->post('login');
 
             if (!is_writable($this->managers->passwd_file)) {
                 $this->design->assign('message_error', 'not_writable');

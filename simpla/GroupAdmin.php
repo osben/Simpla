@@ -17,9 +17,9 @@ class GroupAdmin extends Simpla
     {
         $group = new \stdClass();
         if ($this->request->method('post')) {
-            $group->id = $this->request->post('id', 'integer');
-            $group->name = $this->request->post('name');
-            $group->discount = $this->request->post('discount');
+            $group->id          = $this->request->post('id', 'integer');
+            $group->name        = $this->request->post('name');
+            $group->discount    = $this->request->post('discount');
 
             if (empty($group->name)) {
                 $this->design->assign('message_error', 'name_empty');
