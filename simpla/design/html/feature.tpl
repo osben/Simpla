@@ -21,7 +21,7 @@
 {/capture}
 
 {if $feature->id}
-	{$meta_title = $feature->name scope=root}
+	{$meta_title = $feature->name|escape scope=root}
 {else}
 	{$meta_title = 'Новое свойство' scope=root}
 {/if}

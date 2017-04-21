@@ -18,13 +18,13 @@ class DeliveryAdmin extends Simpla
     {
         $delivery = new \stdClass();
         if ($this->request->method('post')) {
-            $delivery->id                = $this->request->post('id', 'intgeger');
-            $delivery->enabled            = $this->request->post('enabled', 'boolean');
-            $delivery->name                = $this->request->post('name');
-            $delivery->description        = $this->request->post('description');
+            $delivery->id               = $this->request->post('id', 'integer');
+            $delivery->enabled          = $this->request->post('enabled', 'boolean');
+            $delivery->name             = $this->request->post('name');
+            $delivery->description      = $this->request->post('description');
             $delivery->price            = $this->request->post('price');
             $delivery->free_from        = $this->request->post('free_from');
-            $delivery->separate_payment    = $this->request->post('separate_payment');
+            $delivery->separate_payment = $this->request->post('separate_payment');
 
             if (!$delivery_payments = $this->request->post('delivery_payments')) {
                 $delivery_payments = array();

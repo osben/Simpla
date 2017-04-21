@@ -32,7 +32,6 @@ class GroupsAdmin extends Simpla
         }
 
         $groups = $this->users->get_groups();
-
         $this->design->assign('groups', $groups);
 
         return $this->design->fetch('groups.tpl');
