@@ -3,7 +3,7 @@
 /**
  * Simpla CMS
  *
- * @copyright	2016 Denis Pikusov
+ * @copyright	2017 Denis Pikusov
  * @link		http://simplacms.ru
  * @author		Denis Pikusov
  *
@@ -52,7 +52,7 @@ require_once('Simpla.php');
  */
 class Config
 {
-    public $version = '2.3.7';
+    public $version = '2.3.8';
 
     // Файл для хранения настроек
     public $config_file = 'config/config.php';
