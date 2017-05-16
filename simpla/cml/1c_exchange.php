@@ -614,7 +614,7 @@ function import_product($xml_product)
             $p = new \stdClass();
             if (!empty($xml_product->Описание)) {
                 $description = strval($xml_product->Описание);
-                $p->meta_description = $description;
+                $p->meta_description = strip_tags($description);
                 $p->annotation = $description;
                 $p->body = $description;
             }
