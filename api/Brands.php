@@ -36,7 +36,18 @@ class Brands extends Simpla
         }
 
         if (!empty($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id LEFT JOIN __products_categories pc ON p.id = pc.product_id WHERE pc.category_id IN( ?@ ) $visible_filter $in_stock_filter", (array)$filter['category_id']);
+            $category_id_filter = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id 
+                                                        LEFT JOIN __products_categories pc ON p.id = pc.product_id 
+                                                        WHERE 1
+                                                        AND pc.category_id IN( ?@ ) 
+                                                        $visible_filter 
+                                                        $in_stock_filter", (array)$filter['category_id']);
+            $group_by = 'GROUP BY b.id';
+        } elseif(isset($filter['visible']) || isset($filter['in_stock'])) {
+            $category_id_filter = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id  
+                                    WHERE 1
+                                    $visible_filter 
+                                    $in_stock_filter");
             $group_by = 'GROUP BY b.id';
         }
 
@@ -51,7 +62,7 @@ class Brands extends Simpla
                                               b.image
 										FROM __brands b
 											$category_id_filter
-				                        $group_by
+				                            $group_by
 				                        ORDER BY $order");
         $this->db->query($query);
 
