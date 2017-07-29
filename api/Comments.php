@@ -3,9 +3,9 @@
 /**
  * Simpla CMS
  *
- * @copyright	2017 Denis Pikusov
- * @link		http://simplacms.ru
- * @author		Denis Pikusov
+ * @copyright    2017 Denis Pikusov
+ * @link        http://simplacms.ru
+ * @author        Denis Pikusov
  *
  */
 
@@ -67,7 +67,7 @@ class Comments extends Simpla
             $page = max(1, intval($filter['page']));
         }
 
-        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page-1)*$limit, $limit);
+        $sql_limit = $this->db->placehold(' LIMIT ?, ? ', ($page - 1) * $limit, $limit);
 
 
         if (isset($filter['ip'])) {
@@ -89,7 +89,7 @@ class Comments extends Simpla
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $kw = $this->db->escape(trim($keyword));
-                if ($kw!=='') {
+                if ($kw !== '') {
                     $keyword_filter .= $this->db->placehold("AND c.name LIKE '%$kw%' OR c.text LIKE '%$kw%' ");
                 }
             }
@@ -145,7 +145,7 @@ class Comments extends Simpla
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $kw = $this->db->escape(trim($keyword));
-                if ($kw!=='') {
+                if ($kw !== '') {
                     $keyword_filter .= $this->db->placehold("AND c.name LIKE '%$kw%' OR c.text LIKE '%$kw%' ");
                 }
             }
@@ -171,9 +171,9 @@ class Comments extends Simpla
      */
     public function add_comment($comment)
     {
-        $comment = (array) $comment;
+        $comment = (array)$comment;
 
-        $query = $this->db->placehold('INSERT INTO __comments SET ?%, date = NOW()', $comment);
+        $query = $this->db->placehold('INSERT INTO __comments SET ?%, DATE = NOW()', $comment);
 
         if (!$this->db->query($query)) {
             return false;
@@ -191,16 +191,7 @@ class Comments extends Simpla
      */
     public function update_comment($id, $comment)
     {
-        $comment = (array)$comment;
-
-        $date_query = '';
-
-        if (isset($comment['date'])) {
-            $date = $comment['date'];
-            unset($comment['date']);
-            $date_query = $this->db->placehold(', date=STR_TO_DATE(?, ?)', $date, $this->settings->date_format);
-        }
-        $query = $this->db->placehold("UPDATE __comments SET ?% $date_query WHERE id IN( ?@ ) LIMIT 1", $comment, (array)$id);
+        $query = $this->db->placehold("UPDATE __comments SET ?% WHERE id IN( ?@ ) LIMIT 1", $comment, (array)$id);
         $this->db->query($query);
         return $id;
     }
