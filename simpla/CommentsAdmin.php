@@ -3,7 +3,7 @@
 /**
  * Simpla CMS
  *
- * @copyright	2016 Denis Pikusov
+ * @copyright	2017 Denis Pikusov
  * @link		http://simplacms.ru
  * @author		Denis Pikusov
  *
@@ -19,7 +19,7 @@ class CommentsAdmin extends Simpla
     {
         $filter = array();
         $filter['page'] = max(1, $this->request->get('page', 'integer'));
-            
+
         $filter['limit'] = 40;
 
         // Тип
@@ -39,7 +39,7 @@ class CommentsAdmin extends Simpla
 
         // Обработка действий
         if ($this->request->method('post')) {
-            
+
             // Действия с выбранными
             $ids = $this->request->post('check');
             if (!empty($ids) && is_array($ids)) {
@@ -69,7 +69,7 @@ class CommentsAdmin extends Simpla
             $filter['limit'] = $comments_count;
         }
         $comments = $this->comments->get_comments($filter);
-        
+
         // Выбирает объекты, которые прокомментированы:
         $products_ids = array();
         $posts_ids = array();
@@ -90,7 +90,7 @@ class CommentsAdmin extends Simpla
         foreach ($this->blog->get_posts(array('id'=>$posts_ids)) as $p) {
             $posts[$p->id] = $p;
         }
-            
+
         foreach ($comments as &$comment) {
             if ($comment->type == 'product' && isset($products[$comment->object_id])) {
                 $comment->product = $products[$comment->object_id];
@@ -99,8 +99,8 @@ class CommentsAdmin extends Simpla
                 $comment->post = $posts[$comment->object_id];
             }
         }
-        
-        
+
+
         $this->design->assign('pages_count', ceil($comments_count/$filter['limit']));
         $this->design->assign('current_page', $filter['page']);
 

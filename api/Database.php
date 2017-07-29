@@ -4,7 +4,7 @@
 /**
  * Simpla CMS
  *
- * @copyright	2016 Denis Pikusov
+ * @copyright	2017 Denis Pikusov
  * @link		http://simplacms.ru
  * @author		Denis Pikusov
  *

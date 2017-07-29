@@ -3,7 +3,7 @@
 /**
  * Simpla CMS
  *
- * @copyright	2016 Denis Pikusov
+ * @copyright	2017 Denis Pikusov
  * @link		http://simplacms.ru
  * @author		Denis Pikusov
  *
@@ -41,7 +41,7 @@ class CategoriesAdmin extends Simpla
                     }
             }
             }
-        
+
             // Сортировка
             $positions = $this->request->post('positions');
             $ids = array_keys($positions);
@@ -54,7 +54,7 @@ class CategoriesAdmin extends Simpla
         $categories = $this->categories->get_categories_tree();
 
         $this->design->assign('categories', $categories);
-        
+
         return $this->design->fetch('categories.tpl');
     }
 }
