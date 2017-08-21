@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>
+		Яндекс.Платежка (версия 1.0.0)
+	</name>
+	<settings>
+		<variable>yandex_fast_pay_id</variable>
+		<name>ID формы</name>
+	</settings>
+	<settings>
+		<variable>yandex_fast_pay_narrative</variable>
+		<name>Назначение платежа</name>
+	</settings>
+</module>
