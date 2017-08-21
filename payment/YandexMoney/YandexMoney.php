@@ -4,6 +4,7 @@
 	License: Любое использование Вами программы означает полное и безоговорочное принятие Вами условий лицензионного договора, размещенного по адресу https://money.yandex.ru/doc.xml?id=527132 (далее – «Лицензионный договор»). Если Вы не принимаете условия Лицензионного договора в полном объёме, Вы не имеете права использовать программу в каких-либо целях.
 */
 require_once('api/Simpla.php');
+require_once (dirname(__FILE__).'/../../../Tools.php');
 
 class YandexMoney extends Simpla
 {
@@ -22,6 +23,56 @@ class YandexMoney extends Simpla
 		$payment_sitemode = ($settings['yandex_paymode']=='site')?true:false;
 		$payment_type = ($payment_sitemode)?$settings['yandex_paymenttype']:'';
 
+		if (isset($settings['ya_kassa_send_check']) && $settings['ya_kassa_send_check']) {
+            $purchases = $this->orders->get_purchases(array('order_id'=>intval($order->id)));
+
+            $receipt = array(
+                'customerContact' => $order->email,
+                'items' => array(),
+            );
+
+            $id_tax = (isset($settings['ya_kassa_tax']) && $settings['ya_kassa_tax'] ? $settings['ya_kassa_tax'] : 1);
+
+            $sum = 0;
+            foreach ($purchases as $purchase) {
+                $sum += $purchase->price * $purchase->amount;
+            }
+
+            if ($order->delivery_id && $order->delivery_price > 0) {
+                $sum += $order->delivery_price;
+            }
+
+            unset($purshase);
+
+            $disc = number_format($price/$sum, 2, '.', '');
+
+            foreach ($purchases as $purchase) {
+                $receipt['items'][] = array(
+                    'quantity' => $purchase->amount,
+                    'text' => substr($purchase->product_name, 0, 128),
+                    'tax' => $id_tax,
+                    'price' => array(
+                        'amount' => number_format($purchase->price * ($disc), 2, '.', ''),
+                        'currency' => 'RUB'
+                    ),
+                );
+            }
+
+            if ($order->delivery_id && $order->delivery_price > 0) {
+                $delivery = $this->delivery->get_delivery($order->delivery_id);
+
+                $receipt['items'][] = array(
+                    'quantity' => 1,
+                    'text' => substr($delivery->name, 0, 128),
+                    'tax' => $id_tax,
+                    'price' => array(
+                        'amount' => number_format($order->delivery_price * ($disc), 2, '.', ''),
+                        'currency' => 'RUB'
+                    ),
+                );
+            }
+        }
+
 		$button = '<form method="POST" action="https://'.$payment_url.'money.yandex.ru/eshop.xml">
 					<input type="hidden" name="shopid" value="'.$settings['yandex_shopid'].'">
 					<input type="hidden" name="sum" value="'.$price.'">
@@ -32,7 +83,7 @@ class YandexMoney extends Simpla
 					
 					<input type="hidden" name="cps_email" value="'.htmlspecialchars($order->email, ENT_QUOTES).'">
 					<input type="hidden" name="cps_phone" value="'.htmlspecialchars(preg_replace("/[-+()]/",'',$order->phone), ENT_QUOTES).'">
-
+                    '.(isset($settings['ya_kassa_send_check']) && $settings['ya_kassa_send_check'] ? '<input type="hidden" name="ym_merchant_receipt" value=\''.json_encode($receipt).'\'>' : '').'
 					<input type="hidden" name="customerNumber" value="'.$order->id.'">
 					<input type="hidden" name="paymentType" value="'.$payment_type.'">
 					<input type="hidden" name="cms_name" value="simplacms"/>

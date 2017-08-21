@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
 	<name>
-		Яндекс.Касса (версия 1.2.0.2)
+		Яндекс.Деньги (версия 1.2.0.2)
 	</name>
 	<settings>
 		<variable>yandex_shopid</variable>
@@ -27,6 +27,46 @@
 			<value>site</value>
 		</options>
 	</settings>
+	<settings>
+		<variable>ya_kassa_send_check</variable>
+		<name>Отправлять в Яндекс.Кассу данные для чеков (54-ФЗ)</name>
+		<options>
+			<name>Включить</name>
+			<value>1</value>
+		</options>
+        <options>
+            <name>Выключить</name>
+            <value>0</value>
+        </options>
+	</settings>
+    <settings>
+        <variable>ya_kassa_tax</variable>
+        <name>Ставка по умолчанию</name>
+        <options>
+            <name>Без НДС</name>
+            <value>1</value>
+        </options>
+        <options>
+            <name>0%</name>
+            <value>2</value>
+        </options>
+        <options>
+            <name>10%</name>
+            <value>3</value>
+        </options>
+        <options>
+            <name>18%</name>
+            <value>4</value>
+        </options>
+        <options>
+            <name>Рассчётная ставка 10/110</name>
+            <value>5</value>
+        </options>
+        <options>
+            <name>Рассчётная ставка 18/118</name>
+            <value>6</value>
+        </options>
+    </settings>
 	<settings>
 		<variable>yandex_paymenttype</variable>
 		<name>Способ оплаты (для режима оплаты с выбором на стороне магазина)</name>
