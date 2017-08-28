@@ -5,8 +5,6 @@
  */
 require_once('api/Simpla.php');
 
-//require_once(dirname(__FILE__) . '/../../../Tools.php');
-
 class YandexFastPay extends Simpla
 {
     const QUICK_PAY_VERSION = 2;
@@ -18,8 +16,6 @@ class YandexFastPay extends Simpla
         if (empty($button_text)) {
             $button_text = 'Перейти к оплате';
         }
-
-
 
         $order = $this->orders->get_order((int)$order_id);
         $payment_method = $this->payment->get_payment_method($order->payment_method_id);
