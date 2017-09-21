@@ -22,6 +22,7 @@ class Brands extends Simpla
     public function get_brands($filter = array())
     {
         $category_id_filter = '';
+        $is_main_category_filter = '';
         $visible_filter = '';
         $in_stock_filter = '';
         $group_by = '';
@@ -36,8 +37,15 @@ class Brands extends Simpla
         }
 
         if (!empty($filter['category_id'])) {
+
+            if (!empty($filter['is_main_category'])) {
+                $is_main_category_filter ='AND pc.position=( SELECT MIN(pc2.position) 
+											                    FROM __products_categories pc2 
+											                    WHERE pc.product_id = pc2.product_id)';
+            }
+
             $category_id_filter = $this->db->placehold("LEFT JOIN __products p ON p.brand_id=b.id 
-                                                        LEFT JOIN __products_categories pc ON p.id = pc.product_id 
+                                                        LEFT JOIN __products_categories pc ON p.id = pc.product_id $is_main_category_filter
                                                         WHERE 1
                                                         AND pc.category_id IN( ?@ ) 
                                                         $visible_filter 

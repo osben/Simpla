@@ -31,7 +31,7 @@ class Categories extends Simpla
         }
 
         if (!empty($filter['product_id'])) {
-            $query = $this->db->placehold("SELECT category_id FROM __products_categories WHERE product_id in(?@) ORDER BY position", (array)$filter['product_id']);
+            $query = $this->db->placehold("SELECT category_id FROM __products_categories WHERE product_id IN( ?@ ) ORDER BY position", (array)$filter['product_id']);
             $this->db->query($query);
             $categories_ids = $this->db->results('category_id');
             $result = array();
@@ -52,6 +52,7 @@ class Categories extends Simpla
      * @param $product_id
      * @return array|bool
      */
+    /* TODO Используется только в export.php можно переделать на метод get_categories(array('product_id'=>...))*/
     public function get_product_categories($product_id)
     {
         $query = $this->db->placehold("SELECT product_id, 
@@ -66,7 +67,7 @@ class Categories extends Simpla
 
     /**
      * Функция возвращает id категорий для всех товаров
-     *
+     * TODO Используется в REST а он не рабочий , remove
      * @return array|bool
      */
     public function get_products_categories()

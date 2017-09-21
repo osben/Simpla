@@ -63,9 +63,14 @@ class Products extends Simpla
 
         if (!empty($filter['category_id'])) {
             $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id IN(?@)', (array)$filter['category_id']);
+            // выборка по глявной категории
+            if (!empty($filter['is_main_category'])) {
+                $category_id_filter .='AND pc.position=( SELECT MIN(pc2.position) 
+											                    FROM __products_categories pc2 
+											                    WHERE pc.product_id = pc2.product_id)';
+            }
             $group_by = "GROUP BY p.id";
         }
-
         if (!empty($filter['brand_id'])) {
             $brand_id_filter = $this->db->placehold('AND p.brand_id IN(?@)', (array)$filter['brand_id']);
         }
@@ -182,8 +187,15 @@ class Products extends Simpla
         $features_filter = '';
 
         if (!empty($filter['category_id'])) {
-            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id in(?@)', (array)$filter['category_id']);
+            $category_id_filter = $this->db->placehold('INNER JOIN __products_categories pc ON pc.product_id = p.id AND pc.category_id IN(?@)', (array)$filter['category_id']);
+            // выборка по глявной категории
+            if (!empty($filter['is_main_category'])) {
+                $category_id_filter .='AND pc.position=( SELECT MIN(pc2.position) 
+											                    FROM __products_categories pc2 
+											                    WHERE pc.product_id = pc2.product_id)';
+            }
         }
+
 
         if (!empty($filter['brand_id'])) {
             $brand_id_filter = $this->db->placehold('AND p.brand_id in(?@)', (array)$filter['brand_id']);
