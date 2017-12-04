@@ -18,7 +18,7 @@ class PaymentMethodAdmin extends Simpla
     {
         $payment_method = new \stdClass();
         if ($this->request->method('post')) {
-            $payment_method->id            = $this->request->post('id', 'intgeger');
+            $payment_method->id            = $this->request->post('id', 'integer');
             $payment_method->enabled        = $this->request->post('enabled', 'boolean');
             $payment_method->name            = $this->request->post('name');
             $payment_method->currency_id    = $this->request->post('currency_id');
@@ -35,10 +35,10 @@ class PaymentMethodAdmin extends Simpla
                 $this->design->assign('message_error', 'empty_name');
             } elseif (empty($payment_method->id)) {
                 $payment_method->id = $this->payment->add_payment_method($payment_method);
-                $this->design->assign('message_success', 'Добавлено');
+                $this->design->assign('message_success', 'added');
             } else {
                 $this->payment->update_payment_method($payment_method->id, $payment_method);
-                $this->design->assign('message_success', 'Обновлено');
+                $this->design->assign('message_success', 'updated');
             }
             if ($payment_method->id) {
                 $this->payment->update_payment_settings($payment_method->id, $payment_settings);
@@ -55,6 +55,7 @@ class PaymentMethodAdmin extends Simpla
             $payment_deliveries = $this->payment->get_payment_deliveries($payment_method->id);
         }
         $this->design->assign('payment_deliveries', $payment_deliveries);
+
         // Связанные способы доставки
         $deliveries = $this->delivery->get_deliveries();
         $this->design->assign('deliveries', $deliveries);
