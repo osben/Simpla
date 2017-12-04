@@ -432,7 +432,7 @@ class Products extends Simpla
         $product = $this->get_product($id);
         $product->id = null;
         $product->external_id = '';
-        $product->created = null;
+        unset($product->created);
         $product->visible = 0;
 
         // Сдвигаем товары вперед и вставляем копию на соседнюю позицию
