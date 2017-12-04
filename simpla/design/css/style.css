@@ -1075,7 +1075,7 @@ span.order_label {
 	background-image: url(../images/lightbulb.png);
 }
 
-.invisible .icons a.enable {
+.invisible > .icons a.enable, .invisible > .tree_row .icons a.enable {
 	background-image: url(../images/lightbulb_off.png);
 }
 
