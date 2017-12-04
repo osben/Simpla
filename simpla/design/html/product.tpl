@@ -516,7 +516,7 @@
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
 	<div id="name">
-		<input class="name" name="name" type="text" value="{$product->name|escape}"/>
+		<input class="name" name="name" type="text" value="{$product->name|escape}" placeholder="Название товара" required>
 		<input name="id" type="hidden" value="{$product->id|escape}"/>
 		<div class="checkbox">
 			<input name=visible value="1" type="checkbox" id="active_checkbox"{if $product->visible} checked{/if}/>
@@ -676,7 +676,7 @@
 				<li>
 					<label for="url" class="property">Адрес</label>
 					<div class="page_url"> /products/</div>
-					<input id="url" name="url" class="page_url" type="text" value="{$product->url|escape}"/>
+					<input id="url" name="url" class="page_url" type="text" value="{$product->url|escape}" required>
 				</li>
 				<li>
 					<label for="meta_title" class="property">Заголовок</label>

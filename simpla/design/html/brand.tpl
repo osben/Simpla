@@ -109,7 +109,7 @@
 {/literal}
 
 {if $message_success}
-	<!-- Системное сообщение -->
+
 	<div class="message message_success">
 		<span class="text">
 			{if $message_error=='url_exists'}
@@ -121,6 +121,7 @@
 			{/if}
 		</span>
 		<a class="link" target="_blank" href="../brands/{$brand->url}">Открыть бренд на сайте</a>
+
 		{if $smarty.get.return}
 			<a class="button" href="{$smarty.get.return}">Вернуться</a>
 		{/if}
@@ -136,13 +137,10 @@
   				<img src="{$config->root_url}/simpla/design/images/twitter_icon.png"/>
 			</a>
 		</span>
-
 	</div>
-	<!-- Системное сообщение (The End)-->
 {/if}
 
 {if $message_error}
-	<!-- Системное сообщение -->
 	<div class="message message_error">
 		<span class="text">
 			{if $message_error=='url_exists'}
@@ -155,57 +153,47 @@
 			<a class="button" href="{$smarty.get.return}">Вернуться</a>
 		{/if}
 	</div>
-	<!-- Системное сообщение (The End)-->
 {/if}
 
 
-<!-- Основная форма -->
 <form method="post" id="product" enctype="multipart/form-data">
 	<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
 	<div id="name">
-		<input placeholder="" class="name" name=name type="text" value="{$brand->name|escape}"/>
+		<input class="name" name=name type="text" value="{$brand->name|escape}" placeholder="Название бренда" required>
 		<input name="id" type="hidden" value="{$brand->id|escape}"/>
 	</div>
 
-	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
 
-		<!-- Параметры страницы -->
 		<div class="block layer">
 			<h2>Параметры страницы</h2>
 			<ul>
 				<li>
 					<label for="url" class="property">Адрес</label>
 					<div class="page_url"> /brands/</div>
-					<input id="url" name="url" class="page_url" type="text" value="{$brand->url|escape}"/>
+					<input id="url" name="url" class="page_url" type="text" value="{$brand->url|escape}" required>
 				</li>
 				<li>
 					<label for="meta_title" class="property">Заголовок</label>
-					<input id="meta_title" name="meta_title" class="simpla_inp" type="text" value="{$brand->meta_title|escape}"/>
+					<input id="meta_title" name="meta_title" class="simpla_inp" type="text" value="{$brand->meta_title|escape}">
 				</li>
 				<li>
 					<label for="meta_keywords" class="property">Ключевые слова</label>
-					<input id="meta_keywords" name="meta_keywords" class="simpla_inp" type="text" value="{$brand->meta_keywords|escape}"/>
+					<input id="meta_keywords" name="meta_keywords" class="simpla_inp" type="text" value="{$brand->meta_keywords|escape}">
 				</li>
 				<li>
 					<label for="meta_description" class="property">Описание</label>
-					<textarea id="meta_description" name="meta_description" class="simpla_inp">
-						{$brand->meta_description|escape}
-					</textarea>
+					<textarea id="meta_description" name="meta_description" class="simpla_inp">{$brand->meta_description|escape}</textarea>
 				</li>
 			</ul>
 		</div>
-		<!-- Параметры страницы (The End)-->
 
 		<input class="button_green button_save" type="submit" name="" value="Сохранить"/>
 	</div>
-	<!-- Левая колонка свойств товара (The End)-->
 
-	<!-- Правая колонка свойств товара -->
 	<div id="column_right">
 
-		<!-- Изображение -->
 		<div class="block layer images">
 			<h2>Изображение бренда</h2>
 			<input class="upload_image" name="image" type="file" accept="image/*">
@@ -223,16 +211,13 @@
 		</div>
 
 	</div>
-	<!-- Правая колонка свойств товара (The End)-->
 
-	<!-- Описагние бренда -->
 	<div class="block layer">
 		<h2>Описание</h2>
 		<textarea id="description" name="description" class="editor_large">{$brand->description|escape}</textarea>
 	</div>
-	<!-- Описание бренда (The End)-->
+
 	<input class="button_green button_save" type="submit" name="save" value="Сохранить"/>
 
 </form>
-<!-- Основная форма (The End) -->
 
