@@ -47,7 +47,7 @@
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
 
     <div id="name">
-        <input class="name" name="name" type="text" value="{$delivery->name|escape}" placeholder="">
+        <input class="name" name="name" type="text" value="{$delivery->name|escape}" placeholder="Название способа доставки" required>
         <input name="id" type="hidden" value="{$delivery->id}">
         <div class="checkbox">
             <input id="active_checkbox" name="enabled" value="1" type="checkbox"{if $delivery->enabled} checked{/if}/>

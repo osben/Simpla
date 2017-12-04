@@ -60,7 +60,7 @@
 <form method=post id=product>
 
 	<div id="name">
-		<input placeholder="" class="name" name=name type="text" value="{$feature->name|escape}"/>
+		<input class="name" name=name type="text" value="{$feature->name|escape}" placeholder="Название свойства" required>
 		<input name="id" type="hidden" value="{$feature->id|escape}"/>
 	</div>
 

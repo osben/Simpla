@@ -213,11 +213,11 @@
 	<input type=hidden name="session_id" value="{$smarty.session.id}">
 	<div id="name">
 
-		<input placeholder="" class="name" name="name" type="text" value="{$category->name|escape}" required>
+		<input class="name" name="name" type="text" value="{$category->name|escape}" placeholder="Название категории" required>
 		<input name="id" type="hidden" value="{$category->id|escape}"/>
 
 		<div class="checkbox">
-			<input name="visible" value="1" type="checkbox" id="active_checkbox"{if $category->visible} checked{/if}/>
+			<input id="active_checkbox" name="visible" value="1" type="checkbox"{if $category->visible} checked{/if}/>
 			<label for="active_checkbox">Активна</label>
 		</div>
 	</div>

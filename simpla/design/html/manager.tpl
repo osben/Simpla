@@ -78,11 +78,11 @@
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
     <div id="name">
         <label for="login">Логин: </label>
-        <input id="login" class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32" autocomplete="off">
+        <input id="login" class="name" name="login" type="text" value="{$m->login|escape}" maxlength="32" autocomplete="off" required>
         <input name="old_login" type="hidden" value="{$m->login|escape}"/>
         <label for="password_input">Пароль:</label>
         {if $m->login}<a class="dash_link" id="change_password">изменить</a>{/if}
-        <input id="password_input" class="name" name="password" type="password" value="" autocomplete="off">
+        <input id="password_input" class="name" name="password" type="password" value="" autocomplete="off" required>
     </div>
 
     <div id="column_left">
