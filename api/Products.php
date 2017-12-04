@@ -433,14 +433,12 @@ class Products extends Simpla
         $product->id = null;
         $product->external_id = '';
         $product->created = null;
+        $product->visible = 0;
 
         // Сдвигаем товары вперед и вставляем копию на соседнюю позицию
         $this->db->query('UPDATE __products SET position=position+1 WHERE position>?', $product->position);
         $new_id = $this->products->add_product($product);
         $this->db->query('UPDATE __products SET position=? WHERE id=?', $product->position+1, $new_id);
-
-        // Очищаем url
-        $this->db->query('UPDATE __products SET url=? WHERE id=?', '', $new_id);
 
         // Дублируем категории
         $categories = $this->categories->get_product_categories($id);
