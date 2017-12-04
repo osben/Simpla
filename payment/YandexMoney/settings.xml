@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
 	<name>
-		Яндекс.Деньги (версия 1.2.1)
+		Яндекс.Деньги (версия 1.2.2)
 	</name>
 	<settings>
 		<variable>yandex_shopid</variable>
@@ -122,7 +122,7 @@
 			<name>Через мобильный терминал (mPOS)</name>
 			<value>MP</value>
 		</options>-->
-	</settings>	
+	</settings>
 	<settings>
 		<variable>yandex_testmode</variable>
 		<name>Режим работы</name>
@@ -134,5 +134,5 @@
 			<name>Рабочий режим</name>
 			<value>0</value>
 		</options>
-	</settings>	
+	</settings>
 </module>

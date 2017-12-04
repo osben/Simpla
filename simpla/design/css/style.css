@@ -31,7 +31,7 @@
 	text-decoration: none;
 	padding: 5px 10px;
 	border: 1px solid #a3a5a5;
-	color: #0000;
+	color: #000000;
 	background: #f5f5f5 url(../images/message_button_bgd.jpg) 0 -26px;
 }
 
@@ -640,7 +640,7 @@
 
 #right_menu .drop_active a {
 	color: green;
-/*/ / background-color: #c4ffb2;*/
+	/*/ / background-color: #c4ffb2;*/
 }
 
 #right_menu .drop_hover a {
@@ -1494,7 +1494,7 @@ div#order_details div#user {
 form#order div#order_details div.view_order_detail {
 	font-size: 16px;
 	margin-bottom: 10px;
-/*/ / font-weight: bold;*/
+	/*/ / font-weight: bold;*/
 	color: #000000;
 }
 

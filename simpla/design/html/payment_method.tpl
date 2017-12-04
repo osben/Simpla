@@ -61,7 +61,7 @@
 <form method="post" id="product">
     <input type="hidden" name="session_id" value="{$smarty.session.id}">
     <div id="name">
-        <input class="name" name="name" type="text" value="{$payment_method->name|escape}" placeholder=""/>
+        <input class="name" name="name" type="text" value="{$payment_method->name|escape}" placeholder="Название способа оплаты" required>
         <input name="id" type="hidden" value="{$payment_method->id}"/>
         <div class="checkbox">
             <input id="active_checkbox" name="enabled" value="1" type="checkbox"{if $payment_method->enabled} checked{/if}/>

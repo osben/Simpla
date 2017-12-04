@@ -1,6 +1,6 @@
 <?php
 /**
- * Version: 1.2.1
+ * Version: 1.2.2
  * License: Любое использование Вами программы означает полное и безоговорочное принятие Вами условий лицензионного договора, размещенного по адресу https://money.yandex.ru/doc.xml?id=527132 (далее – «Лицензионный договор»). Если Вы не принимаете условия Лицензионного договора в полном объёме, Вы не имеете права использовать программу в каких-либо целях.
  */
 require_once('api/Simpla.php');
@@ -27,33 +27,22 @@ class YandexMoney extends Simpla
 
             $purchases = $this->orders->get_purchases(array('order_id' => intval($order->id)));
 
-            $receipt = new YandexMoneyReceipt();
+            if (isset($settings['ya_kassa_tax']) && $settings['ya_kassa_tax']) {
+                $id_tax = $settings['ya_kassa_tax'];
+            } else {
+                $id_tax = YandexMoneyReceipt::DEFAULT_TAX_RATE_ID;
+            }
+
+            $receipt = new YandexMoneyReceipt($id_tax);
             $receipt->setCustomerContact($order->email);
 
-            $id_tax = (isset($settings['ya_kassa_tax']) && $settings['ya_kassa_tax'] ? $settings['ya_kassa_tax'] : YandexMoneyReceipt::DEFAULT_TAX_RATE_ID);
-
-            $sum = 0;
             foreach ($purchases as $purchase) {
-                $sum += $purchase->price * $purchase->amount;
+                $receipt->addItem($purchase->product_name, $purchase->price, $purchase->amount);
             }
 
             if ($order->delivery_id && $order->delivery_price > 0) {
-                $sum += $order->delivery_price;
-            }
-
-            unset($purshase);
-
-            $disc = number_format($price / $sum, 2, '.', '');
-            
-            foreach ($purchases as $purchase) {
-                $itemPrice = $purchase->price * $disc;
-                $receipt->addItem($purchase->product_name, $itemPrice, $purchase->amount, $id_tax);
-            }
-
-            if ($order->delivery_id && $order->delivery_price > 0) {
-                $deliveryPrice = $order->delivery_price * $disc;
                 $delivery = $this->delivery->get_delivery($order->delivery_id);
-                $receipt->addShipping($delivery->name, $deliveryPrice, $id_tax);
+                $receipt->addShipping($delivery->name, $order->delivery_price);
             }
 
             $ymMerchantReceipt = $receipt->normalize($price)->getJson();
