@@ -507,8 +507,8 @@
 
 #product .images li img {
 	vertical-align: middle;
-	max-width: 100px;
-	max-height: 100px;
+	max-width: 98px;
+	max-height: 98px;
 }
 
 #product .images a.delete {
