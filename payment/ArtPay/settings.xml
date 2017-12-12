@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>
+		ArtPay
+	</name>
+	<settings>
+		<variable>ap_storeid</variable>
+		<name>ID магазина</name>
+	</settings>
+	<settings>
+		<variable>artpay_secret1</variable>
+		<name>Секретный ключ 1</name>
+	</settings>
+	<settings>
+		<variable>artpay_secret2</variable>
+		<name>Секретный ключ 2</name>
+	</settings>
+	<settings>
+		<variable>ap_test</variable>
+		<name>Режим работы</name>
+		<options>
+			<name>Тестовый</name>
+			<value>1</value>
+		</options>
+		<options>
+			<name>Рабочий</name>
+			<value>0</value>
+		</options>
+	</settings>
+</module>
