@@ -78,7 +78,7 @@
 			});
 			// Загрузить изображение с компьютера
 			$('#upload_image').click(function () {
-				$("<input class='upload_image' name=images[] type=file multiple  accept='image/jpeg,image/png,image/gif'>").appendTo('div#add_image').focus().click();
+				$("<input class='upload_image' name=images[] type=file multiple  accept='image/*'>").appendTo('div#add_image').focus().click();
 			});
 			// Или с URL
 			$('#add_image_url').click(function () {
