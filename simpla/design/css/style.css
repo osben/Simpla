@@ -503,28 +503,31 @@
 	line-height: 100px;
 	vertical-align: top;
 	text-align: center;
+	position: relative;
 }
 
-#product .images li img {
+#product .images li > img {
 	vertical-align: middle;
-	max-width: 100px;
-	max-height: 100px;
+	max-width: 98px;
+	max-height: 98px;
 }
 
 #product .images a.delete {
 	display: block;
-	width: 15px;
-	height: 15px;
-	margin-top: -40px;
-	margin-left: 82px;
+	width: 16px;
+	height: 16px;
 	position: absolute;
 	visibility: hidden;
+	top: 0;
+	right: 0;
 }
 
 #product .images li:hover a.delete {
 	visibility: visible;
 }
-
+#product .images a.delete img {
+	display: block;
+}
 #dropZone {
 	margin-bottom: 10px;
 	margin-right: 16px;

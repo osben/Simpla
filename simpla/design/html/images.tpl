@@ -40,7 +40,7 @@
 
 			// Загрузить
 			$("#upload_image").click(function () {
-				$(this).closest('div').append($('<input type=file name=upload_images[]>'));
+				$(this).closest('div').append($('<input type=file name=upload_images[] accept="image/*">'));
 			});
 
 			$("form").submit(function () {
