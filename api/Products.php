@@ -444,8 +444,10 @@ class Products extends Simpla
         $product = $this->get_product($id);
         $product->id = null;
         $product->external_id = '';
-        unset($product->created);
+        $product->url = '';
         $product->visible = 0;
+        unset($product->created);
+
 
         // Сдвигаем товары вперед и вставляем копию на соседнюю позицию
         $this->db->query('UPDATE __products SET position=position+1 WHERE position>?', $product->position);
