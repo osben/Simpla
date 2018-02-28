@@ -35,6 +35,8 @@ class Cart extends Simpla
 
             $variants = $this->variants->get_variants(array('id'=>array_keys($session_items)));
             if (!empty($variants)) {
+                $items = array();
+                $products_ids = array();
                 foreach ($variants as $variant) {
                     $items[$variant->id] = new \stdClass();
                     $items[$variant->id]->variant = $variant;
