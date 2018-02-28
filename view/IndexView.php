@@ -48,7 +48,7 @@ class IndexView extends View
         if (is_file($this->modules_dir."$module.php")) {
             include_once($this->modules_dir."$module.php");
             if (class_exists($module)) {
-                $this->main = new $module($this);
+                $view = new $module($this);
             } else {
                 return false;
             }
@@ -57,7 +57,7 @@ class IndexView extends View
         }
 
         // Создаем основной блок страницы
-        if (!$content = $this->main->fetch()) {
+        if (!$content = $view->fetch()) {
             return false;
         }
 
@@ -74,9 +74,9 @@ class IndexView extends View
         }
 
         if (!empty($wrapper)) {
-            return $this->body = $this->design->fetch($wrapper);
+            return $this->design->fetch($wrapper);
         } else {
-            return $this->body = $content;
+            return trim($content);
         }
     }
 }
