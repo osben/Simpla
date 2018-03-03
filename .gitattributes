@@ -1,13 +1,14 @@
 * text=auto
 *.css      text
+*.js       text
 *.htm      text
 *.html     text
 *.php      text
-*.txt        text
-*.tpl        text
-README       text
-*README*     text
-LICENSE      text
+*.txt      text
+*.tpl      text
+README     text
+*README*   text
+LICENSE    text
 
 
 ## LINTERS
