@@ -656,6 +656,7 @@ function import_product($xml_product)
         $variant->product_id = $product_id;
         $variant->stock = 0;
         $variant_id = $simpla->variants->add_variant($variant);
+        $simpla->variants->update_variant($variant_id, array('position'=>$variant_id));
     } elseif (!empty($variant_id)) {
         $simpla->variants->update_variant($variant_id, $variant);
     }
@@ -764,7 +765,8 @@ function import_variant($xml_variant)
     $variant->stock = $xml_variant->Количество;
 
     if (empty($variant_id)) {
-        $simpla->variants->add_variant($variant);
+        $variant_id = $simpla->variants->add_variant($variant);
+        $simpla->variants->update_variant($variant_id, array('position'=>$variant_id));
     } else {
         $simpla->variants->update_variant($variant_id, $variant);
     }
