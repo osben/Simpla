@@ -19,9 +19,6 @@ class Money extends Simpla
     public function __construct()
     {
         parent::__construct();
-
-        $this->design->smarty->registerPlugin('modifier', 'convert', array($this, 'convert'));
-
         $this->init_currencies();
     }
 
