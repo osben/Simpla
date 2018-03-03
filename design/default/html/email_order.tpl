@@ -125,7 +125,7 @@
 	</tr>
 	{/foreach}
 
-	{if $order->discount}
+	{if $order->discount>0}
 	<tr>
 		<td style="padding:6px; width:100; padding:6px; background-color:#ffffff; border:1px solid #e0e0e0;font-family:arial;"></td>
 		<td style="padding:6px; background-color:#f0f0f0; border:1px solid #e0e0e0;font-family:arial;">
