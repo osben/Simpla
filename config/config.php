@@ -23,7 +23,7 @@ db_prefix = s_;
 db_charset = UTF8;
 
 ;Режим SQL
-db_sql_mode =;
+db_sql_mode =" ";
 
 ;Смещение часового пояса
 ;db_timezone = +04:00;
