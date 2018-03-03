@@ -84,13 +84,6 @@ class View extends Simpla
             $this->design->assign('config',      $this->config);
             $this->design->assign('settings',    $this->settings);
 
-            // Настраиваем плагины для смарти
-            $this->design->smarty->registerPlugin("function", "get_posts",               array($this, 'get_posts_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_brands",              array($this, 'get_brands_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_browsed_products",    array($this, 'get_browsed_products'));
-            $this->design->smarty->registerPlugin("function", "get_featured_products",   array($this, 'get_featured_products_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_new_products",        array($this, 'get_new_products_plugin'));
-            $this->design->smarty->registerPlugin("function", "get_discounted_products", array($this, 'get_discounted_products_plugin'));
         }
     }
 
@@ -104,91 +97,4 @@ class View extends Simpla
         return false;
     }
 
-    /**
-     *
-     * Плагины для смарти
-     *
-     */
-    public function get_posts_plugin($params, &$smarty)
-    {
-        if (!isset($params['visible'])) {
-            $params['visible'] = 1;
-        }
-        if (!empty($params['var'])) {
-            $smarty->assign($params['var'], $this->blog->get_posts($params));
-        }
-    }
-
-    public function get_brands_plugin($params, $smarty)
-    {
-        if (!isset($params['visible'])) {
-            $params['visible'] = 1;
-        }
-        if (!empty($params['var'])) {
-            $smarty->assign($params['var'], $this->brands->get_brands($params));
-        }
-    }
-
-    public function get_browsed_products($params, &$smarty)
-    {
-        if (!empty($_COOKIE['browsed_products'])) {
-            $browsed_products_ids = explode(',', $_COOKIE['browsed_products']);
-            $browsed_products_ids = array_reverse($browsed_products_ids);
-
-            if (isset($params['limit'])) {
-                $params['id'] = array_slice($browsed_products_ids, 0, $params['limit']);
-            }
-            if (!isset($params['visible'])) {
-                $params['visible'] = 1;
-            }
-
-            $products = $this->products->get_products_compile($params);
-
-            $smarty->assign($params['var'], $products);
-        }
-    }
-
-
-    public function get_featured_products_plugin($params, &$smarty)
-    {
-        if (!isset($params['visible'])) {
-            $params['visible'] = 1;
-        }
-        $params['featured'] = 1;
-        if (!empty($params['var'])) {
-            $products = $this->products->get_products_compile($params);
-
-            $smarty->assign($params['var'], $products);
-        }
-    }
-
-
-    public function get_new_products_plugin($params, &$smarty)
-    {
-        if (!isset($params['visible'])) {
-            $params['visible'] = 1;
-        }
-        if (!isset($params['sort'])) {
-            $params['sort'] = 'created';
-        }
-        if (!empty($params['var'])) {
-            $products = $this->products->get_products_compile($params);
-
-            $smarty->assign($params['var'], $products);
-        }
-    }
-
-
-    public function get_discounted_products_plugin($params, &$smarty)
-    {
-        if (!isset($params['visible'])) {
-            $params['visible'] = 1;
-        }
-        $params['discounted'] = 1;
-        if (!empty($params['var'])) {
-            $products = $this->products->get_products_compile($params);
-
-            $smarty->assign($params['var'], $products);
-        }
-    }
 }
