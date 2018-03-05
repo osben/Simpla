@@ -55,7 +55,7 @@ $merchant = $settings['wayforpay_merchant'];
 
 $sign = array();
 foreach ($keysForSignature as $dataKey) {
-    if (in_array($dataKey, $data)) {
+    if (array_key_exists($dataKey, $data)) {
         $sign [] = $data[$dataKey];
     }
 }
@@ -68,7 +68,8 @@ if (!empty($data["merchantSignature"]) && $data["merchantSignature"] != $sign) {
 $time = time();
 
 $responseToGateway = array(
-    'orderReference' => $order->id,
+//    'orderReference' => $order->id,
+    'orderReference' => $data['orderReference'],
     'status' => 'accept',
     'time' => $time
 );
