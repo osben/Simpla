@@ -14,7 +14,7 @@
     $_SESSION["captcha_code"] = $code;
 
     $bg_image = "blank.jpg";
-    $font = "./maturasc.ttf";
+    $font = dirname(__FILE__)."/maturasc.ttf";
 
     $size = 14+rand(0, 10);
     $rotation = rand(-5, 10);
