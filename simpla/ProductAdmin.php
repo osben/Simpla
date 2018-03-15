@@ -276,7 +276,7 @@ class ProductAdmin extends Simpla
             if ($product) {
 
                 // Категории товара
-                $product_categories = $this->categories->get_categories(array('product_id'=>$product->id));
+                $product_categories = $this->categories->get_product_categories($product->id);
 
                 // Варианты товара
                 $variants = $this->variants->get_variants(array('product_id'=>$product->id));
