@@ -6,7 +6,7 @@ function smarty_function_get_brands($params, &$smarty)
         $params['visible'] = 1;
     }
     if (!empty($params['var'])) {
-        require_once('./api/Simpla.php');
+        require_once( dirname(dirname(__FILE__)) . '/Simpla.php');
         $simpla = new Simpla();
 
         $smarty->assign($params['var'], $simpla->brands->get_brands($params));

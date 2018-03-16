@@ -2,7 +2,7 @@
 
 function smarty_function_url($params, $template)
 {
-    require_once('./api/Simpla.php');
+    require_once( dirname(dirname(__FILE__)) . '/Simpla.php');
     $simpla = new Simpla();
 
     if (is_array(reset($params))) {

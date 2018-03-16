@@ -2,7 +2,7 @@
 
 function smarty_function_api($params, &$smarty)
 {
-    require_once('./api/Simpla.php');
+    require_once( dirname(dirname(__FILE__)) . '/Simpla.php');
     $simpla = new Simpla();
 
     if (!isset($params['module']) || !isset($params['method'])) {

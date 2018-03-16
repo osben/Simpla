@@ -9,7 +9,7 @@ function smarty_function_get_featured_products($params, &$smarty)
 
     if (!empty($params['var'])) {
 
-        require_once('./api/Simpla.php');
+        require_once( dirname(dirname(__FILE__)) . '/Simpla.php');
         $simpla = new Simpla();
 
         $products = $simpla->products->get_products_compile($params);

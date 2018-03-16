@@ -3,7 +3,7 @@
 function smarty_function_get_browsed_products($params, &$smarty)
 {
     if (!empty($_COOKIE['browsed_products'])) {
-        require_once('./api/Simpla.php');
+        require_once( dirname(dirname(__FILE__)) . '/Simpla.php');
         $simpla = new Simpla();
 
         $browsed_products_ids = explode(',', $_COOKIE['browsed_products']);
