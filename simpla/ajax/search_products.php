@@ -21,7 +21,7 @@
     $suggestions = array();
     foreach ($products as $product) {
         if (!empty($product->image)) {
-            $product->image = $simpla->design->resize_modifier($product->image, 35, 35);
+            $product->image = $simpla->image->resize_image($product->image, 35, 35);
         }
 
         $suggestion = new \stdClass();

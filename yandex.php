@@ -98,7 +98,7 @@ while ($p = $simpla->db->result()) {
     print "<currencyId>".$currency_code."</currencyId>" . PHP_EOL;
     print "<categoryId>".$p->category_id."</categoryId>" . PHP_EOL;
     if ($p->image) {
-        print "<picture>".$simpla->design->resize_modifier($p->image, 200, 200)."</picture>" . PHP_EOL;
+        print "<picture>".$simpla->image->resize_image($p->image, 200, 200)."</picture>" . PHP_EOL;
     }
 
     print "<name>".htmlspecialchars($p->product_name).($p->variant_name?' '.htmlspecialchars($p->variant_name):'')."</name>" . PHP_EOL;

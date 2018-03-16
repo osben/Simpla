@@ -21,7 +21,31 @@ class Image extends Simpla
         parent::__construct();
     }
 
+    public function resize_image($filename, $width=0, $height=0, $set_watermark=false) {
+        $resized_filename = $this->add_resize_params($filename, '', $width, $height, $set_watermark);
+        $resized_filename_encoded = $resized_filename;
 
+        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
+            $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+        }
+
+        $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+
+        return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
+    }
+
+    public function crop_image($filename, $width=0, $height=0, $set_watermark=false) {
+        $resized_filename = $this->add_resize_params($filename, 'crop', $width, $height, $set_watermark);
+        $resized_filename_encoded = $resized_filename;
+
+        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
+            $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+        }
+
+        $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+
+        return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
+    }
     /**
      * Создание превью изображения
      * @param  $filename файл с изображением (без пути к файлу)
