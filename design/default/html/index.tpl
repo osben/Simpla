@@ -7,33 +7,35 @@
 <head>
 	<base href="{$config->root_url}/"/>
 	<title>{$meta_title|escape}</title>
-	
+
 	{* Метатеги *}
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta name="description" content="{$meta_description|escape}" />
 	<meta name="keywords"    content="{$meta_keywords|escape}" />
 	<meta name="viewport" content="width=1024"/>
-	
+
 	{* Канонический адрес страницы *}
 	{if isset($canonical)}<link rel="canonical" href="{$config->root_url}{$canonical}"/>{/if}
-	
+	{if isset($prev)}<link rel="prev" href="{$config->root_url}{$prev}">{/if}
+	{if isset($next)}<link rel="next" href="{$config->root_url}{$next}">{/if}
+
 	{* Стили *}
 	<link href="design/{$settings->theme|escape}/css/style.css" rel="stylesheet" type="text/css" media="screen"/>
 	<link href="design/{$settings->theme|escape}/images/favicon.ico" rel="icon"          type="image/x-icon"/>
 	<link href="design/{$settings->theme|escape}/images/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
-	
+
 	{* JQuery *}
 	<script src="design/{$settings->theme|escape}/js/jquery.js"  type="text/javascript"></script>
-	
+
 	{* Всплывающие подсказки для администратора *}
 	{if $smarty.session.admin == 'admin'}
 	<script src ="simpla/design/js/admintooltip/admintooltip.js" type="text/javascript"></script>
-	<link   href="simpla/design/js/admintooltip/css/admintooltip.css" rel="stylesheet" type="text/css" /> 
+	<link   href="simpla/design/js/admintooltip/css/admintooltip.css" rel="stylesheet" type="text/css" />
 	{/if}
-	
+
 	{* Ctrl-навигация на соседние товары *}
-	<script type="text/javascript" src="design/{$settings->theme}/js/ctrlnavigate.js"></script>           
-	
+	<script type="text/javascript" src="design/{$settings->theme}/js/ctrlnavigate.js"></script>
+
 	{* Аяксовая корзина *}
 	<script src="design/{$settings->theme}/js/jquery-ui.min.js"></script>
 	<script src="design/{$settings->theme}/js/ajax_cart.js"></script>
@@ -55,11 +57,11 @@
 			});
 		</script>
 	{/literal}
-	
+
 	{* js-проверка форм *}
 	<script src="design/{$settings->theme}/js/baloon/js/baloon.js" type="text/javascript"></script>
-	<link   href="design/{$settings->theme}/js/baloon/css/baloon.css" rel="stylesheet" type="text/css" /> 
-	
+	<link   href="design/{$settings->theme}/js/baloon/css/baloon.css" rel="stylesheet" type="text/css" />
+
 	{* Автозаполнитель поиска *}
 	<script src="design/{$settings->theme}/js/autocomplete/jquery.autocomplete-min.js" type="text/javascript"></script>
 	{literal}
@@ -74,14 +76,14 @@
 		.autocomplete-suggestions .selected { background:#F0F0F0; }
 		.autocomplete-suggestions div { padding:2px 5px; white-space:nowrap; }
 		.autocomplete-suggestions strong { font-weight:normal; color:#3399FF; }
-	</style>	
+	</style>
 	<script>
 	$(function() {
 		//  Автозаполнитель поиска
 		$(".input_search").autocomplete({
 			serviceUrl:'ajax/search_products.php',
 			minChars:1,
-			noCache: false, 
+			noCache: false,
 			onSelect:
 				function(suggestion){
 					 $(".input_search").closest('form').submit();
@@ -91,20 +93,20 @@
 					var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
 					var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
 	  				return (suggestion.data.image?"<img align=absmiddle src='"+suggestion.data.image+"'> ":'') + suggestion.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>');
-				}	
+				}
 		});
 	});
 	</script>
 	{/literal}
-		
-			
+
+
 </head>
 <body>
 
 	<!-- Верхняя строка -->
 	<div id="top_background">
 	<div id="top">
-	
+
 		<!-- Меню -->
 		<ul id="menu">
 			{foreach $pages as $p}
@@ -117,7 +119,7 @@
 			{/foreach}
 		</ul>
 		<!-- Меню (The End) -->
-	
+
 		<!-- Корзина -->
 		<div id="cart_informer">
 			{* Обновляемая аяксом корзина должна быть в отдельном файле *}
@@ -143,29 +145,29 @@
 	</div>
 	</div>
 	<!-- Верхняя строка (The End)-->
-	
-	
+
+
 	<!-- Шапка -->
 	<div id="header">
 		<div id="logo">
 			<a href="/"><img src="design/{$settings->theme|escape}/images/logo.png" title="{$settings->site_name|escape}" alt="{$settings->site_name|escape}"/></a>
-		</div>	
+		</div>
 		<div id="contact">
 			(095) <span id="phone">545-54-54</span>
 			<div id="address">Москва, шоссе Энтузиастов 45/31, офис 453</div>
-		</div>	
+		</div>
 	</div>
-	<!-- Шапка (The End)--> 
+	<!-- Шапка (The End)-->
 
 
-	<!-- Вся страница --> 
+	<!-- Вся страница -->
 	<div id="main">
-	
-		<!-- Основная часть --> 
+
+		<!-- Основная часть -->
 		<div id="content">
 			{$content}
 		</div>
-		<!-- Основная часть (The End) --> 
+		<!-- Основная часть (The End) -->
 
 		<div id="left">
 
@@ -178,10 +180,10 @@
 			</div>
 			<!-- Поиск (The End)-->
 
-			
+
 			<!-- Меню каталога -->
 			<div id="catalog_menu">
-					
+
 			{* Рекурсивная функция вывода дерева категорий *}
 			{function name=categories_tree}
 			{if $categories}
@@ -201,16 +203,16 @@
 			{/function}
 			{categories_tree categories=$categories}
 			</div>
-			<!-- Меню каталога (The End)-->		
-	
-			
+			<!-- Меню каталога (The End)-->
+
+
 			<!-- Все бренды -->
 			{* Выбираем в переменную $all_brands все бренды *}
 			{get_brands var=all_brands}
 			{if $all_brands}
 			<div id="all_brands">
 				<h2>Все бренды:</h2>
-				{foreach $all_brands as $b}	
+				{foreach $all_brands as $b}
 					{if $b->image}
 					<a href="brands/{$b->url}"><img src="{$config->brands_images_dir}{$b->image}" alt="{$b->name|escape}"></a>
 					{else}
@@ -228,20 +230,20 @@
 				<h2>Валюта</h2>
 				<ul>
 					{foreach $currencies as $c}
-					{if $c->enabled} 
+					{if $c->enabled}
 					<li class="{if $c->id==$currency->id}selected{/if}"><a href='{url currency_id=$c->id}'>{$c->name|escape}</a></li>
 					{/if}
 					{/foreach}
 				</ul>
-			</div> 
+			</div>
 			{/if}
-			<!-- Выбор валюты (The End) -->	
+			<!-- Выбор валюты (The End) -->
 
-			
+
 			<!-- Просмотренные товары -->
 			{get_browsed_products var=browsed_products limit=20}
 			{if $browsed_products}
-			
+
 				<h2>Вы просматривали:</h2>
 				<ul id="browsed_products">
 				{foreach $browsed_products as $browsed_product}
@@ -252,8 +254,8 @@
 				</ul>
 			{/if}
 			<!-- Просмотренные товары (The End)-->
-			
-			
+
+
 			<!-- Меню блога -->
 			{* Выбираем в переменную $last_posts последние записи *}
 			{get_posts var=last_posts limit=5}
@@ -268,17 +270,17 @@
 			</div>
 			{/if}
 			<!-- Меню блога  (The End) -->
-			
-		</div>			
+
+		</div>
 
 	</div>
-	<!-- Вся страница (The End)--> 
-	
+	<!-- Вся страница (The End)-->
+
 	<!-- Футер -->
 	<div id="footer">
 		<a href="http://simplacms.ru">Скрипт интернет-магазина Simpla</a>
 	</div>
-	<!-- Футер (The End)--> 
-	
+	<!-- Футер (The End)-->
+
 </body>
 </html>
