@@ -444,7 +444,6 @@ class Products extends Simpla
         $product = $this->get_product($id);
         $product->id = null;
         $product->external_id = '';
-        $product->url = '';
         $product->visible = 0;
         unset($product->created);
 
