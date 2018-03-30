@@ -1,3 +1,4 @@
+DirectoryIndex index.php
 AddType application/octet-stream csv
 AuthName "Simpla CMS"
 AuthType Basic
