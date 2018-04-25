@@ -359,7 +359,7 @@ class ProductAdmin extends Simpla
             $category = reset($categories);
         }
         if (is_object($category)) {
-            $features = $this->features->get_features(array('category_id'=>$category->id));
+            $features = $this->features->get_features(array('category_id'=>$category->category_id));
             $this->design->assign('features', $features);
         }
 
