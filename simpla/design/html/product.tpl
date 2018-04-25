@@ -552,7 +552,7 @@
 									{category_select categories=$category->subcategories selected_id=$selected_id  level=$level+1}
 								{/foreach}
 							{/function}
-							{category_select categories=$categories selected_id=$product_category->id}
+							{category_select categories=$categories selected_id=$product_category->category_id}
 						</select>
 						<span {if not $smarty.foreach.categories.first}style="display:none;"{/if} class="add">
 							<i class="dash_link">Дополнительная категория</i>

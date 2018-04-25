@@ -55,7 +55,7 @@ class ProductAdmin extends Simpla
                 $pc = array();
                 foreach ($product_categories as $c) {
                     $x = new \stdClass();
-                    $x->id = $c;
+                    $x->category_id = $c;
                     $pc[] = $x;
                 }
                 $product_categories = $pc;
@@ -303,7 +303,7 @@ class ProductAdmin extends Simpla
 
         if (empty($product_categories)) {
             if ($category_id = $this->request->get('category_id')) {
-                $product_categories[0]->id = $category_id;
+                $product_categories[0]->category_id = $category_id;
             } else {
                 $product_categories = array(1);
             }
