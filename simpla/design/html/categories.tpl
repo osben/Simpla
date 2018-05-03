@@ -107,7 +107,7 @@
 
 		// Выделить все
 		$("#check_all").click(function () {
-			$('#list input[type="checkbox"][name*="check"]:not(:disabled)').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:disabled):not(:checked)').length > 0);
+			$('#list2 input[type="checkbox"][name*="check"]:not(:disabled)').attr('checked', $('#list2 input[type="checkbox"][name*="check"]:not(:disabled):not(:checked)').length > 0);
 		});
 
 		// Показать категорию
@@ -140,7 +140,7 @@
 
 		// Удалить
 		$("a.delete").click(function () {
-			$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
+			$('#list2 input[type="checkbox"][name*="check"]').attr('checked', false);
 			$(this).closest("div.row").find('input[type="checkbox"][name*="check"]:first').attr('checked', true);
 			$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 			$(this).closest("form").submit();
