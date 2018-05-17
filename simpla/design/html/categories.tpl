@@ -36,39 +36,36 @@
 		<form id="list_form" method="post">
 			<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
-			{function name=categories_tree level=0}
+			<div id="list2" class="sortable">
+				{function name=categories_tree level=0}
 				{if $categories}
-					<div id="list" class="sortable">
-
-						{foreach $categories as $category}
-							<div class="{if !$category->visible}invisible{/if} row">
-								<div class="tree_row">
-									<input type="hidden" name="positions[{$category->id}]"
-										   value="{$category->position}">
-									<div class="move cell" style="margin-left:{$level*20}px">
-										<div class="move_zone"></div>
-									</div>
-									<div class="checkbox cell">
-										<input type="checkbox" name="check[]" value="{$category->id}"/>
-									</div>
-									<div class="cell">
-										<a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">{$category->name|escape}</a>
-									</div>
-									<div class="icons cell">
-										<a class="preview" title="Предпросмотр в новом окне" href="../catalog/{$category->url}" target="_blank"></a>
-										<a class="enable" title="Активна" href="#"></a>
-										<a class="delete" title="Удалить" href="#"></a>
-									</div>
-									<div class="clear"></div>
+					{foreach $categories as $category}
+						<div class="row{if !$category->visible} invisible{/if}">
+							<div class="tree_row">
+								<input type="hidden" name="positions[{$category->id}]"
+									   value="{$category->position}">
+								<div class="move cell" style="padding-left:{$level*20}px">
+									<div class="move_zone"></div>
 								</div>
-								{categories_tree categories=$category->subcategories level=$level+1}
+								<div class="checkbox cell">
+									<input type="checkbox" name="check[]" value="{$category->id}"/>
+								</div>
+								<div class="cell name">
+									<a href="{url module=CategoryAdmin id=$category->id return=$smarty.server.REQUEST_URI}">{$category->name|escape}</a>
+								</div>
+								<div class="icons cell">
+									<a class="preview" title="Предпросмотр в новом окне" href="../catalog/{$category->url}" target="_blank"></a>
+									<a class="enable" title="Активна" href="#"></a>
+									<a class="delete" title="Удалить" href="#"></a>
+								</div>
 							</div>
-						{/foreach}
-
-					</div>
+						</div>
+						{categories_tree categories=$category->subcategories level=$level+1}
+					{/foreach}
 				{/if}
-			{/function}
-			{categories_tree categories=$categories}
+				{/function}
+				{categories_tree categories=$categories}
+			</div>
 
 			<div id="action">
 				<label id="check_all" class="dash_link">Выбрать все</label>
@@ -110,7 +107,7 @@
 
 		// Выделить все
 		$("#check_all").click(function () {
-			$('#list input[type="checkbox"][name*="check"]:not(:disabled)').attr('checked', $('#list input[type="checkbox"][name*="check"]:not(:disabled):not(:checked)').length > 0);
+			$('#list2 input[type="checkbox"][name*="check"]:not(:disabled)').attr('checked', $('#list2 input[type="checkbox"][name*="check"]:not(:disabled):not(:checked)').length > 0);
 		});
 
 		// Показать категорию
@@ -143,7 +140,7 @@
 
 		// Удалить
 		$("a.delete").click(function () {
-			$('#list input[type="checkbox"][name*="check"]').attr('checked', false);
+			$('#list2 input[type="checkbox"][name*="check"]').attr('checked', false);
 			$(this).closest("div.row").find('input[type="checkbox"][name*="check"]:first').attr('checked', true);
 			$(this).closest("form").find('select[name="action"] option[value=delete]').attr('selected', true);
 			$(this).closest("form").submit();
