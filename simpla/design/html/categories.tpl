@@ -36,7 +36,7 @@
 		<form id="list_form" method="post">
 			<input type="hidden" name="session_id" value="{$smarty.session.id}">
 
-			<div id="list2" class="sortable">
+			<div id="list" class="sortable">
 				{function name=categories_tree level=0}
 				{if $categories}
 					{foreach $categories as $category}
