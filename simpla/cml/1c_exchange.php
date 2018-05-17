@@ -230,7 +230,7 @@ if ($simpla->request->get('type') == 'sale' && $simpla->request->get('mode') == 
                 if ($purchase->variant_name) {
                     $name .= " $purchase->variant_name $id";
                 }
-                $t1_2 = $t1_1->addChild("Наименование", $name);
+                $t1_2 = $t1_1->addChild("Наименование", htmlspecialchars($name));
                 $t1_2 = $t1_1->addChild("ЦенаЗаЕдиницу", $purchase->price*(100-$order->discount)/100);
                 $t1_2 = $t1_1->addChild("Количество", $purchase->amount);
                 $t1_2 = $t1_1->addChild("Сумма", $purchase->amount*$purchase->price*(100-$order->discount)/100);
