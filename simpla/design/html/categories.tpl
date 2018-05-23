@@ -58,9 +58,10 @@
 									<a class="enable" title="Активна" href="#"></a>
 									<a class="delete" title="Удалить" href="#"></a>
 								</div>
+								<div class="clear"></div>
 							</div>
+							{categories_tree categories=$category->subcategories level=$level+1}
 						</div>
-						{categories_tree categories=$category->subcategories level=$level+1}
 					{/foreach}
 				{/if}
 				{/function}
