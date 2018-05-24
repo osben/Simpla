@@ -349,7 +349,7 @@ if ($simpla->request->get('type') == 'catalog' && $simpla->request->get('mode') 
     unset($_SESSION['categories_mapping']);
     unset($_SESSION['brand_id_option']);
     print "zip=no\n";
-    print "file_limit=1000000\n";
+    print "file_limit={$simpla->config->max_upload_filesize}";
 }
 
 if ($simpla->request->get('type') == 'catalog' && $simpla->request->get('mode') == 'file') {
