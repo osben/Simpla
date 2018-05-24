@@ -34,7 +34,7 @@ if ($simpla->request->get('type') == 'sale' && $simpla->request->get('mode') == 
         }
     }
     print "zip=no\n";
-    print "file_limit=1000000\n";
+    print "file_limit={$simpla->config->max_upload_filesize}";
 }
 
 if ($simpla->request->get('type') == 'sale' && $simpla->request->get('mode') == 'file') {
