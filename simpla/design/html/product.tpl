@@ -279,20 +279,6 @@
 					$(this).val('∞');
 			});
 
-			// Волшебные изображения
-			name_changed = false;
-			$("input[name=name]").change(function () {
-				name_changed = true;
-				images_loaded = 0;
-			});
-
-			// Волшебное описание
-			name_changed = false;
-			captcha_code = '';
-			$("input[name=name]").change(function () {
-				name_changed = true;
-			});
-
 			// Автозаполнение мета-тегов
 			meta_title_touched = true;
 			meta_keywords_touched = true;
@@ -345,8 +331,7 @@
 		}
 
 		function generate_meta_title() {
-			name = $('input[name="name"]').val();
-			return name;
+			return $('input[name="name"]').val();
 		}
 
 		function generate_meta_keywords() {
