@@ -53,9 +53,10 @@ class ProductAdmin extends Simpla
             $product_categories = $this->request->post('categories');
             if (is_array($product_categories)) {
                 $pc = array();
-                foreach ($product_categories as $c) {
+                foreach ($product_categories as $position => $c) {
                     $x = new \stdClass();
                     $x->category_id = $c;
+                    $x->position = $position;
                     $pc[] = $x;
                 }
                 $product_categories = $pc;
@@ -114,7 +115,7 @@ class ProductAdmin extends Simpla
                     $this->db->query($query);
                     if (is_array($product_categories)) {
                         foreach ($product_categories as $i=>$category) {
-                            $this->categories->add_product_category($product->id, $category->id, $i);
+                            $this->categories->add_product_category($product->id, $category->category_id, $i);
                         }
                     }
 
@@ -223,7 +224,7 @@ class ProductAdmin extends Simpla
 
                     // Свойства текущей категории
                     $category_features = array();
-                    foreach ($this->features->get_features(array('category_id'=>$product_categories[0])) as $f) {
+                    foreach ($this->features->get_features(array('category_id'=>$product_categories[0]->category_id)) as $f) {
                         $category_features[] = $f->id;
                     }
 
@@ -248,7 +249,7 @@ class ProductAdmin extends Simpla
                                 if (empty($feature_id)) {
                                     $feature_id = $this->features->add_feature(array('name'=>trim($name)));
                                 }
-                                $this->features->add_feature_category($feature_id, reset($product_categories)->id);
+                                $this->features->add_feature_category($feature_id, reset($product_categories)->category_id);
                                 $this->features->update_option($product->id, $feature_id, $value);
                             }
                         }

@@ -470,15 +470,17 @@
 		<label>Категория</label>
 		<div>
 			<ul>
-				{foreach $product_categories as $product_category name=categories}
+				{function name=category_select categories=false selected_id=0 level=0}
+					{if $categories}
+						{foreach $categories as $category}
+							<option value="{$category->id}"{if $category->id == $selected_id} selected{/if} category_name="{$category->name|escape}">{section name=sp loop=$level}&nbsp;&nbsp;&nbsp;&nbsp;{/section}{$category->name|escape}</option>
+							{category_select categories=$category->subcategories selected_id=$selected_id level=$level+1}
+						{/foreach}
+					{/if}
+				{/function}
+				{foreach $product_categories as $product_category}
 					<li>
 						<select name="categories[]">
-							{function name=category_select level=0}
-								{foreach $categories as $category}
-									<option value="{$category->id}"{if $category->id == $selected_id} selected{/if} category_name="{$category->name|escape}">{section name=sp loop=$level}&nbsp;&nbsp;&nbsp;&nbsp;{/section}{$category->name|escape}</option>
-									{category_select categories=$category->subcategories selected_id=$selected_id  level=$level+1}
-								{/foreach}
-							{/function}
 							{category_select categories=$categories selected_id=$product_category->category_id}
 						</select>
 						<span {if not $smarty.foreach.categories.first}style="display:none;"{/if} class="add">
