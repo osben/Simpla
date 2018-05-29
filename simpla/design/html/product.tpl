@@ -177,7 +177,8 @@
 
 
 			function show_category_features(category_id) {
-				$('ul.prop_ul').empty();
+				$('ul.prop_ul input[value=""]').closest('li[feature_id]').remove();
+				//$('ul.prop_ul').empty();
 				$.ajax({
 					url: "ajax/get_features.php",
 					data: {category_id: category_id, product_id: $("input[name=id]").val()},
@@ -186,7 +187,7 @@
 						for (i = 0; i < data.length; i++) {
 							feature = data[i];
 
-							line = $("<li><label class=property></label><input class='simpla_inp' type='text'/></li>");
+							line = $("<li feature_id='"+feature.id+"'><label class=property></label><input class='simpla_inp' type='text'/></li>");
 							var new_line = line.clone(true);
 							new_line.find("label.property").text(feature.name);
 							new_line.find("input").attr('name', "options[" + feature.id + "]").val(feature.value);

@@ -232,6 +232,9 @@ class ProductAdmin extends Simpla
                         foreach ($options as $option) {
                             if (in_array($option->feature_id, $category_features)) {
                                 $this->features->update_option($product->id, $option->feature_id, $option->value);
+                            } elseif(!empty($option->value)) {
+                                $this->features->update_option($product->id, $option->feature_id, $option->value);
+                                $this->features->add_feature_category($option->feature_id, reset($product_categories)->category_id);
                             }
                         }
                     }
