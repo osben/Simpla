@@ -186,7 +186,9 @@
 					success: function (data) {
 						for (i = 0; i < data.length; i++) {
 							feature = data[i];
-
+							if($('ul.prop_ul [feature_id='+feature.id+']').length > 0){
+								continue;
+							}
 							line = $("<li feature_id='"+feature.id+"'><label class=property></label><input class='simpla_inp' type='text'/></li>");
 							var new_line = line.clone(true);
 							new_line.find("label.property").text(feature.name);
