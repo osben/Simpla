@@ -166,6 +166,7 @@ class Orders extends Simpla
     {
         $keyword_filter = '';
         $label_filter = '';
+        $modified_since_filter = '';
         $status_filter = '';
         $user_filter = '';
 
@@ -179,6 +180,10 @@ class Orders extends Simpla
 
         if (!empty($filter['label'])) {
             $label_filter = $this->db->placehold('AND ol.label_id = ?', $filter['label']);
+        }
+
+        if (isset($filter['modified_since'])) {
+            $modified_since_filter = $this->db->placehold('AND o.modified > ?', $filter['modified_since']);
         }
 
         if (!empty($filter['keyword'])) {
@@ -196,6 +201,7 @@ class Orders extends Simpla
 									        $status_filter 
 									        $user_filter 
 									        $label_filter 
+									        $modified_since_filter
 									        $keyword_filter");
         $this->db->query($query);
         return $this->db->result('count');
