@@ -147,7 +147,10 @@ if ($simpla->request->get('type') == 'sale' && $simpla->request->get('mode') == 
 							<КоммерческаяИнформация ВерсияСхемы="2.04" ДатаФормирования="' . date('Y-m-d')  . '"></КоммерческаяИнформация>';
     $xml = new SimpleXMLElement($no_spaces);
 
-    $orders = $simpla->orders->get_orders(array('modified_since'=>$simpla->settings->last_1c_orders_export_date));
+    $filter = array('modified_since'=>$simpla->settings->last_1c_orders_export_date);
+    $filter['limit'] = $simpla->orders->count_orders($filter);
+
+    $orders = $simpla->orders->get_orders($filter);
     $currency = $simpla->money->get_currency();
     foreach ($orders as $order) {
         $date = new DateTime($order->date);
