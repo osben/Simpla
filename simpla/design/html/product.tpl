@@ -486,10 +486,10 @@
 						<select name="categories[]">
 							{category_select categories=$categories selected_id=$product_category->category_id}
 						</select>
-						<span {if not $smarty.foreach.categories.first}style="display:none;"{/if} class="add">
+						<span {if !$product_category@first}style="display:none;"{/if} class="add">
 							<i class="dash_link">Дополнительная категория</i>
 						</span>
-						<span {if $smarty.foreach.categories.first}style="display:none;"{/if} class="delete">
+						<span {if $product_category@first}style="display:none;"{/if} class="delete">
 							<i class="dash_link">Удалить</i>
 						</span>
 					</li>
