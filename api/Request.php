@@ -232,7 +232,7 @@ class Request extends Simpla
     public function ajax()
     {
         return isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) &&
-            ( $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' );
+            ( strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' );
     }
 }
 
