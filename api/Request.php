@@ -223,6 +223,17 @@ class Request extends Simpla
 
         return http_build_url(null, $url);
     }
+    
+    /**
+     * Determine if the request is the result of an AJAX call.
+     *
+     * @return bool
+     */
+    public function ajax()
+    {
+        return isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) &&
+            ( strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' );
+    }
 }
 
 
