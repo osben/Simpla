@@ -41,7 +41,7 @@
 
         {/literal}{if $m->login}$('#password_input').hide();{/if}{literal}
         $('#change_password').click(function () {
-            $('#password_input').show();
+			$('#password_input').attr('required', true).show();
         });
 
     });
@@ -82,7 +82,7 @@
         <input name="old_login" type="hidden" value="{$m->login|escape}"/>
         <label for="password_input">Пароль:</label>
         {if $m->login}<a class="dash_link" id="change_password">изменить</a>{/if}
-        <input id="password_input" class="name" name="password" type="password" value="" autocomplete="off" required>
+        <input id="password_input" class="name" name="password" type="password" value="" autocomplete="off">
     </div>
 
     <div id="column_left">
