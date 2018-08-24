@@ -107,8 +107,7 @@ class Database extends Simpla
 
         $args = func_get_args();
         $q = call_user_func_array(array($this, 'placehold'), $args);
-        // fix формата запроса, что бы при дебаге влез в 300 символов
-        $q = preg_replace('/\s+/', ' ', $q);
+
         return $this->res = $this->mysqli->query($q);
     }
 
@@ -136,6 +135,8 @@ class Database extends Simpla
         $tmpl = array_shift($args);
         // Заменяем все __ на префикс, но только необрамленные кавычками
         $tmpl = preg_replace('/([^"\'0-9a-z_])__([a-z_]+[^"\'])/i', "\$1".$this->config->db_prefix."\$2", $tmpl);
+        // fix формата запроса, что бы при дебаге влез в 300 символов
+        $tmpl = preg_replace('/\s+/', ' ', $tmpl);
         if (!empty($args)) {
             $result = $this->sql_placeholder_ex($tmpl, $args, $error);
             if ($result === false) {
