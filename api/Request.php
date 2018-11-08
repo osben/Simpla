@@ -74,7 +74,7 @@ class Request extends Simpla
         }
 
         if ($type == 'boolean' || $type == 'bool') {
-            return !empty($val);
+            return !empty($val) ? 1 : 0;
         }
 
         if (is_callable($type)) {
