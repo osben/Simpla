@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
 	<name>
-		Яндекс.Деньги (версия 1.2.3)
+		Яндекс.Деньги (версия 1.2.7)
 	</name>
 	<settings>
 		<variable>yandex_shopid</variable>
@@ -67,6 +67,98 @@
             <value>6</value>
         </options>
     </settings>
+	<settings>
+		<variable>ya_kassa_payment_mode</variable>
+		<name>Признак способа расчета</name>
+		<options>
+			<name>Полная предоплата</name>
+			<value>full_prepayment</value>
+		</options>
+		<options>
+			<name>Частичная предоплата</name>
+			<value>partial_prepayment</value>
+		</options>
+		<options>
+			<name>Аванс</name>
+			<value>advance</value>
+		</options>
+		<options>
+			<name>Полный расчет</name>
+			<value>full_payment</value>
+		</options>
+		<options>
+			<name>Частичный расчет и кредит</name>
+			<value>partial_payment</value>
+		</options>
+		<options>
+			<name>Кредит</name>
+			<value>credit</value>
+		</options>
+		<options>
+			<name>Выплата по кредиту</name>
+			<value>credit_payment</value>
+		</options>
+	</settings>
+	<settings>
+		<variable>ya_kassa_payment_subject</variable>
+		<name>Признак предмета расчета</name>
+		<options>
+			<name>Товар</name>
+			<value>commodity</value>
+		</options>
+		<options>
+			<name>Подакцизный товар</name>
+			<value>excise</value>
+		</options>
+		<options>
+			<name>Работа</name>
+			<value>job</value>
+		</options>
+		<options>
+			<name>Услуга</name>
+			<value>service</value>
+		</options>
+		<options>
+			<name>Ставка в азартной игре</name>
+			<value>gambling_bet</value>
+		</options>
+		<options>
+			<name>Выигрыш в азартной игре</name>
+			<value>gambling_prize</value>
+		</options>
+		<options>
+			<name>Лотерейный билет</name>
+			<value>lottery</value>
+		</options>
+		<options>
+			<name>Лотерейный билет</name>
+			<value>lottery</value>
+		</options>
+		<options>
+			<name>Выигрыш в лотерею</name>
+			<value>lottery_prize</value>
+		</options>
+		<options>
+			<name>Результаты интеллектуальной деятельности</name>
+			<value>intellectual_activity</value>
+		</options>
+		<options>
+			<name>Платеж</name>
+			<value>payment</value>
+		</options>
+		<options>
+			<name>Агентское вознаграждение</name>
+			<value>agent_commission</value>
+		</options>
+		<options>
+			<name>Несколько вариантов</name>
+			<value>composite</value>
+		</options>
+		<options>
+			<name>Другое</name>
+			<value>another</value>
+		</options>
+	</settings>
 	<settings>
 		<variable>yandex_paymenttype</variable>
 		<name>Способ оплаты (для режима оплаты с выбором на стороне магазина)</name>

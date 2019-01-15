@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module>
 	<name>
-		Яндекс.Платежка (версия 1.2.3)
+		Яндекс.Платежка (версия 1.2.7)
 	</name>
 	<settings>
 		<variable>yandex_fast_pay_id</variable>
