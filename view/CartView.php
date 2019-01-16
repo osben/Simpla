@@ -3,9 +3,9 @@
 /**
  * Simpla CMS
  *
- * @copyright	2017 Denis Pikusov
- * @link		http://simplacms.ru
- * @author		Denis Pikusov
+ * @copyright    2017 Denis Pikusov
+ * @link        http://simplacms.ru
+ * @author        Denis Pikusov
  *
  */
 
@@ -21,14 +21,16 @@ class CartView extends View
         // Если передан id варианта, добавим его в корзину
         if ($variant_id = $this->request->get('variant', 'integer')) {
             $this->cart->add_item($variant_id, $this->request->get('amount', 'integer'));
-            header('location: '.$this->config->root_url.'/cart/');
+            header('Location: ' . $this->config->root_url . '/cart', true, 302);
+            exit();
         }
 
         // Удаление товара из корзины
         if ($delete_variant_id = intval($this->request->get('delete_variant'))) {
             $this->cart->delete_item($delete_variant_id);
-            if (!isset($_POST['submit_order']) || $_POST['submit_order']!=1) {
-                header('location: '.$this->config->root_url.'/cart/');
+            if (!isset($_POST['submit_order']) || $_POST['submit_order'] != 1) {
+                header('Location: ' . $this->config->root_url . '/cart', true, 302);
+                exit();
             }
         }
 
@@ -36,12 +38,12 @@ class CartView extends View
         if (isset($_POST['checkout'])) {
             $order = new \stdClass();
             $order->delivery_id = $this->request->post('delivery_id', 'integer');
-            $order->name        = $this->request->post('name');
-            $order->email        = $this->request->post('email');
-            $order->address        = $this->request->post('address');
-            $order->phone        = $this->request->post('phone');
-            $order->comment        = $this->request->post('comment');
-            $order->ip            = $_SERVER['REMOTE_ADDR'];
+            $order->name = $this->request->post('name');
+            $order->email = $this->request->post('email');
+            $order->address = $this->request->post('address');
+            $order->phone = $this->request->post('phone');
+            $order->comment = $this->request->post('comment');
+            $order->ip = $_SERVER['REMOTE_ADDR'];
 
             $this->design->assign('delivery_id', $order->delivery_id);
             $this->design->assign('name', $order->name);
@@ -49,7 +51,7 @@ class CartView extends View
             $this->design->assign('phone', $order->phone);
             $this->design->assign('address', $order->address);
 
-            $captcha_code =  $this->request->post('captcha_code', 'string');
+            $captcha_code = $this->request->post('captcha_code', 'string');
 
             // Скидка
             $cart = $this->cart->get_cart();
@@ -77,19 +79,19 @@ class CartView extends View
 
                 // Если использовали купон, увеличим количество его использований
                 if ($cart->coupon) {
-                    $this->coupons->update_coupon($cart->coupon->id, array('usages'=>$cart->coupon->usages+1));
+                    $this->coupons->update_coupon($cart->coupon->id, array('usages' => $cart->coupon->usages + 1));
                 }
 
                 // Добавляем товары к заказу
-                foreach ($this->request->post('amounts') as $variant_id=>$amount) {
-                    $this->orders->add_purchase(array('order_id'=>$order_id, 'variant_id'=>intval($variant_id), 'amount'=>intval($amount)));
+                foreach ($this->request->post('amounts') as $variant_id => $amount) {
+                    $this->orders->add_purchase(array('order_id' => $order_id, 'variant_id' => intval($variant_id), 'amount' => intval($amount)));
                 }
                 $order = $this->orders->get_order($order_id);
 
                 // Стоимость доставки
                 $delivery = $this->delivery->get_delivery($order->delivery_id);
                 if (!empty($delivery) && $delivery->free_from > $order->total_price) {
-                    $this->orders->update_order($order->id, array('delivery_price'=>$delivery->price, 'separate_delivery'=>$delivery->separate_payment));
+                    $this->orders->update_order($order->id, array('delivery_price' => $delivery->price, 'separate_delivery' => $delivery->separate_payment));
                 }
 
                 // Отправляем письмо пользователю
@@ -102,20 +104,22 @@ class CartView extends View
                 $this->cart->empty_cart();
 
                 // Перенаправляем на страницу заказа
-                header('Location: '.$this->config->root_url.'/order/'.$order->url);
+                header('Location: ' . $this->config->root_url . '/order/' . $order->url, true, 302);
+                exit();
             }
         } else {
 
             // Если нам запостили amounts, обновляем их
             if ($amounts = $this->request->post('amounts')) {
-                foreach ($amounts as $variant_id=>$amount) {
+                foreach ($amounts as $variant_id => $amount) {
                     $this->cart->update_item($variant_id, $amount);
                 }
 
                 $coupon_code = trim($this->request->post('coupon_code', 'string'));
                 if (empty($coupon_code)) {
                     $this->cart->apply_coupon('');
-                    header('location: '.$this->config->root_url.'/cart/');
+                    header('Location: ' . $this->config->root_url . '/cart', true, 302);
+                    exit();
                 } else {
                     $coupon = $this->coupons->get_coupon((string)$coupon_code);
 
@@ -124,7 +128,8 @@ class CartView extends View
                         $this->design->assign('coupon_error', 'invalid');
                     } else {
                         $this->cart->apply_coupon($coupon_code);
-                        header('location: '.$this->config->root_url.'/cart/');
+                        header('Location: ' . $this->config->root_url . '/cart', true, 302);
+                        exit();
                     }
                 }
             }
@@ -134,12 +139,12 @@ class CartView extends View
     public function fetch()
     {
         // Способы доставки
-        $deliveries = $this->delivery->get_deliveries(array('enabled'=>1));
+        $deliveries = $this->delivery->get_deliveries(array('enabled' => 1));
         $this->design->assign('deliveries', $deliveries);
 
         // Данные пользователя
         if ($this->user) {
-            $last_order = $this->orders->get_orders(array('user_id'=>$this->user->id, 'limit'=>1));
+            $last_order = $this->orders->get_orders(array('user_id' => $this->user->id, 'limit' => 1));
             $last_order = reset($last_order);
             if ($last_order) {
                 $this->design->assign('name', $last_order->name);
@@ -153,7 +158,7 @@ class CartView extends View
         }
 
         // Если существуют валидные купоны, нужно вывести инпут для купона
-        if ($this->coupons->count_coupons(array('valid'=>1))>0) {
+        if ($this->coupons->count_coupons(array('valid' => 1)) > 0) {
             $this->design->assign('coupon_request', true);
         }
 

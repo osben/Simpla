@@ -3,9 +3,9 @@
 /**
  * Simpla CMS
  *
- * @copyright	2017 Denis Pikusov
- * @link		http://simplacms.ru
- * @author		Denis Pikusov
+ * @copyright    2017 Denis Pikusov
+ * @link        http://simplacms.ru
+ * @author        Denis Pikusov
  *
  */
 
@@ -17,8 +17,8 @@ class ProductsView extends View
     public function fetch()
     {
         // GET-Параметры
-        $category_url    = $this->request->get('category', 'string');
-        $brand_url       = $this->request->get('brand', 'string');
+        $category_url = $this->request->get('category', 'string');
+        $brand_url = $this->request->get('brand', 'string');
 
         $filter = array();
         $filter['visible'] = 1;
@@ -64,9 +64,9 @@ class ProductsView extends View
         // Свойства товаров
         if (!empty($category)) {
             $features = array();
-            foreach ($this->features->get_features(array('category_id'=>$category->id, 'in_filter'=>1)) as $feature) {
+            foreach ($this->features->get_features(array('category_id' => $category->id, 'in_filter' => 1)) as $feature) {
                 $features[$feature->id] = $feature;
-                if (($val = strval($this->request->get($feature->id)))!='') {
+                if (($val = strval($this->request->get($feature->id))) != '') {
                     $filter['features'][$feature->id] = $val;
                 }
             }
@@ -93,7 +93,7 @@ class ProductsView extends View
                 }
             }
 
-            foreach ($features as $i=>&$feature) {
+            foreach ($features as $i => &$feature) {
                 if (empty($feature->options)) {
                     unset($features[$i]);
                 }
@@ -117,7 +117,7 @@ class ProductsView extends View
             $items_per_page = $products_count;
         }
 
-        $pages_num = ceil($products_count/$items_per_page);
+        $pages_num = ceil($products_count / $items_per_page);
         $this->design->assign('total_pages_num', $pages_num);
         $this->design->assign('total_products_num', $products_count);
 
@@ -134,15 +134,15 @@ class ProductsView extends View
         // Если искали товар и найден ровно один - перенаправляем на него
         if (!empty($keyword) && !empty($products) && $products_count == 1) {
             $p = reset($products);
-            header('Location: '.$this->config->root_url.'/products/'.$p->url);
+            header('Location: ' . $this->config->root_url . '/products/' . $p->url, true, 302);
             exit();
-		}
+        }
 
         $this->design->assign('products', $products);
 
         // Выбираем бренды, они нужны нам в шаблоне
         if (!empty($category)) {
-            $brands = $this->brands->get_brands(array('category_id'=>$category->children, 'visible'=>1));
+            $brands = $this->brands->get_brands(array('category_id' => $category->children, 'visible' => 1));
             $category->brands = $brands;
         }
 

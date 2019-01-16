@@ -3,9 +3,9 @@
 /**
  * Simpla CMS
  *
- * @copyright	2017 Denis Pikusov
- * @link		http://simplacms.ru
- * @author		Denis Pikusov
+ * @copyright    2017 Denis Pikusov
+ * @link        http://simplacms.ru
+ * @author        Denis Pikusov
  *
  */
 
@@ -48,7 +48,7 @@ class BlogView extends View
             $comment = new \stdClass();
             $comment->name = $this->request->post('name');
             $comment->text = $this->request->post('text');
-            $captcha_code =  $this->request->post('captcha_code', 'string');
+            $captcha_code = $this->request->post('captcha_code', 'string');
 
             // Передадим комментарий обратно в шаблон - при ошибке нужно будет заполнить форму
             $this->design->assign('comment_text', $comment->text);
@@ -64,12 +64,12 @@ class BlogView extends View
             } else {
                 // Создаем комментарий
                 $comment->object_id = $post->id;
-                $comment->type      = 'blog';
-                $comment->ip        = $_SERVER['REMOTE_ADDR'];
+                $comment->type = 'blog';
+                $comment->ip = $_SERVER['REMOTE_ADDR'];
 
                 // Если были одобренные комментарии от текущего ip, одобряем сразу
                 $this->db->query("SELECT 1 FROM __comments WHERE approved=1 AND ip=? LIMIT 1", $comment->ip);
-                if ($this->db->num_rows()>0) {
+                if ($this->db->num_rows() > 0) {
                     $comment->approved = 1;
                 }
 
@@ -81,14 +81,15 @@ class BlogView extends View
 
                 // Приберем сохраненную капчу, иначе можно отключить загрузку рисунков и постить старую
                 unset($_SESSION['captcha_code']);
-                header('location: '.$_SERVER['REQUEST_URI'].'#comment_'.$comment_id);
+                header('Location: ' . $_SERVER['REQUEST_URI'] . '#comment_' . $comment_id, true, 302);
+                exit();
             }
         }
 
         // Комментарии к посту
-        $comments = $this->comments->get_comments(array('type'=>'blog', 'object_id'=>$post->id, 'approved'=>1, 'ip'=>$_SERVER['REMOTE_ADDR']));
+        $comments = $this->comments->get_comments(array('type' => 'blog', 'object_id' => $post->id, 'approved' => 1, 'ip' => $_SERVER['REMOTE_ADDR']));
         $this->design->assign('comments', $comments);
-        $this->design->assign('post',      $post);
+        $this->design->assign('post', $post);
 
         // Соседние записи
         $this->design->assign('next_post', $this->blog->get_next_post($post->id));
@@ -128,7 +129,7 @@ class BlogView extends View
             $items_per_page = $posts_count;
         }
 
-        $pages_num = ceil($posts_count/$items_per_page);
+        $pages_num = ceil($posts_count / $items_per_page);
         $this->design->assign('total_pages_num', $pages_num);
 
         $filter['page'] = $current_page;
@@ -150,8 +151,7 @@ class BlogView extends View
             $this->design->assign('meta_description', $this->page->meta_description);
         }
 
-        $body = $this->design->fetch('blog.tpl');
+        return $this->design->fetch('blog.tpl');
 
-        return $body;
     }
 }

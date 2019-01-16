@@ -3,9 +3,9 @@
 /**
  * Simpla CMS
  *
- * @copyright	2017 Denis Pikusov
- * @link		http://simplacms.ru
- * @author		Denis Pikusov
+ * @copyright    2017 Denis Pikusov
+ * @link        http://simplacms.ru
+ * @author        Denis Pikusov
  *
  */
 
@@ -18,10 +18,9 @@ class LoginView extends View
         // Выход
         if ($this->request->get('action') == 'logout') {
             unset($_SESSION['user_id']);
-            header('Location: '.$this->config->root_url);
+            header('Location: ' . $this->config->root_url, true, 302);
             exit();
-        }
-        // Вспомнить пароль
+        } // Вспомнить пароль
         elseif ($this->request->get('action') == 'password_remind') {
             // Если запостили email
             if ($this->request->method('post') && $this->request->post('email')) {
@@ -42,8 +41,7 @@ class LoginView extends View
                 } else {
                     $this->design->assign('error', 'user_not_found');
                 }
-            }
-            // Если к нам перешли по ссылке для восстановления пароля
+            } // Если к нам перешли по ссылке для восстановления пароля
             elseif ($this->request->get('code')) {
                 // Проверяем существование сессии
                 if (!isset($_SESSION['password_remind_code']) || !isset($_SESSION['password_remind_user_id'])) {
@@ -63,14 +61,14 @@ class LoginView extends View
 
                 // Залогиниваемся под пользователем и переходим в кабинет для изменения пароля
                 $_SESSION['user_id'] = $user->id;
-                header('Location: '.$this->config->root_url.'/user');
+                header('Location: ' . $this->config->root_url . '/user', true, 302);
+                exit();
             }
             return $this->design->fetch('password_remind.tpl');
-        }
-        // Вход
+        } // Вход
         elseif ($this->request->method('post') && $this->request->post('login')) {
-            $email            = $this->request->post('email');
-            $password        = $this->request->post('password');
+            $email = $this->request->post('email');
+            $password = $this->request->post('password');
 
             $this->design->assign('email', $email);
 
@@ -78,13 +76,15 @@ class LoginView extends View
                 $user = $this->users->get_user($email);
                 if ($user->enabled) {
                     $_SESSION['user_id'] = $user_id;
-                    $this->users->update_user($user_id, array('last_ip'=>$_SERVER['REMOTE_ADDR']));
+                    $this->users->update_user($user_id, array('last_ip' => $_SERVER['REMOTE_ADDR']));
 
                     // Перенаправляем пользователя на прошлую страницу, если она известна
                     if (!empty($_SESSION['last_visited_page'])) {
-                        header('Location: '.$_SESSION['last_visited_page']);
+                        header('Location: ' . $_SESSION['last_visited_page'], true, 302);
+                        exit();
                     } else {
-                        header('Location: '.$this->config->root_url);
+                        header('Location: ' . $this->config->root_url, true, 302);
+                        exit();
                     }
                 } else {
                     $this->design->assign('error', 'user_disabled');

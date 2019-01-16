@@ -42,9 +42,11 @@ class RegisterView extends View
             } elseif ($user_id = $this->users->add_user(array('name'=>$name, 'email'=>$email, 'password'=>$password, 'enabled'=>$default_status, 'last_ip'=>$_SERVER['REMOTE_ADDR']))) {
                 $_SESSION['user_id'] = $user_id;
                 if (!empty($_SESSION['last_visited_page'])) {
-                    header('Location: '.$_SESSION['last_visited_page']);
+                    header('Location: '.$_SESSION['last_visited_page'], true, 302);
+                    exit();
                 } else {
-                    header('Location: '.$this->config->root_url);
+                    header('Location: '.$this->config->root_url, true, 302);
+                    exit();
                 }
             } else {
                 $this->design->assign('error', 'unknown error');

@@ -89,7 +89,8 @@ class ProductView extends View
 
                 // Приберем сохраненную капчу, иначе можно отключить загрузку рисунков и постить старую
                 unset($_SESSION['captcha_code']);
-                header('location: '.$_SERVER['REQUEST_URI'].'#comment_'.$comment_id);
+                header('location: '.$_SERVER['REQUEST_URI'].'#comment_'.$comment_id, true, 302);
+                exit();
             }
         }
 
