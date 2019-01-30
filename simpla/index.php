@@ -35,7 +35,9 @@ $backend = new IndexAdmin();
 // Проверка сессии для защиты от xss
 if (!$backend->request->check_session()) {
     unset($_POST);
+    header('Location: '.$_SERVER['REQUEST_URI']);
     trigger_error('Session expired', E_USER_WARNING);
+    exit;
 }
 
 header("Content-type: text/html; charset=UTF-8");
