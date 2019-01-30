@@ -52,7 +52,7 @@ class Users extends Simpla
             $group_id_filter = $this->db->placehold('AND u.group_id IN( ?@ )', (array)$filter['group_id']);
         }
 
-        if (isset($filter['keyword'])) {
+        if (isset($filter['keyword']) AND !empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $kw = $this->db->escape(trim($keyword));
@@ -112,7 +112,7 @@ class Users extends Simpla
             $group_id_filter = $this->db->placehold('AND u.group_id IN( ?@ )', (array)$filter['group_id']);
         }
 
-        if (isset($filter['keyword'])) {
+        if (isset($filter['keyword']) AND !empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $kw = $this->db->escape(trim($keyword));
