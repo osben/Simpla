@@ -205,7 +205,7 @@ class Products extends Simpla
             $product_id_filter = $this->db->placehold('AND p.id in(?@)', (array)$filter['id']);
         }
 
-        if (isset($filter['keyword'])) {
+        if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $kw = $this->db->escape(trim($keyword));

@@ -79,7 +79,7 @@ class Blog extends Simpla
             $visible_filter = $this->db->placehold('AND b.visible = ?', intval($filter['visible']));
         }
 
-        if (isset($filter['keyword'])) {
+        if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (b.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR b.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
@@ -130,7 +130,7 @@ class Blog extends Simpla
             $visible_filter = $this->db->placehold('AND b.visible = ?', intval($filter['visible']));
         }
 
-        if (isset($filter['keyword'])) {
+        if (!empty($filter['keyword'])) {
             $keywords = explode(' ', $filter['keyword']);
             foreach ($keywords as $keyword) {
                 $keyword_filter .= $this->db->placehold('AND (b.name LIKE "%'.$this->db->escape(trim($keyword)).'%" OR b.meta_keywords LIKE "%'.$this->db->escape(trim($keyword)).'%") ');
