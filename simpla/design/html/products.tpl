@@ -136,6 +136,7 @@
 					{/if}
 					{if $categories|count>1}
 						<option value="move_to_category">Переместить в категорию</option>
+						<option value="add_to_category">Добавить в категорию</option>
 					{/if}
 					{if $all_brands|count>0}
 						<option value="move_to_brand">Указать бренд</option>
@@ -323,13 +324,14 @@
 		});
 
 
-		// Перенос товара в другую категорию
+		// Перенос товара в другую категорию или добавить товару категорию
 		$("#action select[name=action]").change(function () {
-			if ($(this).val() == 'move_to_category')
+			if ($(this).val() == 'move_to_category' || $(this).val() == 'add_to_category')
 				$("span#move_to_category").show();
 			else
 				$("span#move_to_category").hide();
 		});
+
 		$("#right_menu .droppable.category").droppable({
 			activeClass: "drop_active",
 			hoverClass: "drop_hover",

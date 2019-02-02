@@ -200,6 +200,20 @@ class ProductsAdmin extends Simpla
                     }
                     break;
                 }
+                    case 'add_to_category':
+                        {
+                            $category_id = $this->request->post('target_category', 'integer');
+                            //$filter['page'] = 1;
+                            foreach ($ids as $id) {
+
+                                $this->db->query("INSERT IGNORE INTO s_products_categories (category_id, product_id, position)
+                                        SELECT ?, ?, IFNULL(MAX(position), -1)+1
+                                         FROM s_products_categories  
+                                         WHERE product_id = ?", $category_id, $id, $id);
+
+                            }
+                            break;
+                        }
                 case 'move_to_brand':
                 {
                     $brand_id = $this->request->post('target_brand', 'integer');
