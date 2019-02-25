@@ -12,17 +12,20 @@
 
             if (!empty($result->query)) {
                 $kw = $this->db->escape($result->query);
+                // fix удаляем двойные пробелы
                 $kw = preg_replace('/\s{2,}/', ' ', trim($kw));
-	            $kw_array = explode(' ', $kw);
-	            $kw_filter = '';
-	            foreach ($kw_array as $kw1) {
-		            $kw_filter .= $simpla->db->placehold("AND (p.name LIKE '%$kw1%' OR p.meta_keywords LIKE '%$kw1%' OR p.id in (SELECT product_id FROM __variants WHERE sku LIKE '%$kw1%')) ");
-	            }
+                $keywords = explode(' ', $kw);
+                $keyword_filter = '';
+
+                foreach ($keywords as $keyword) {
+                    $kw = $this->db->escape(trim($keyword));
+                    $keyword_filter .= $this->db->placehold("AND (p.name LIKE '%$kw%' OR p.meta_keywords LIKE '%$kw%' OR p.id in (SELECT product_id FROM __variants WHERE sku LIKE '%$kw%'))");
+                }
 
                 $this->db->query("SELECT p.id, p.name, i.filename as image FROM __products p
 									LEFT JOIN __images i ON i.product_id=p.id AND i.position=(SELECT MIN(position) FROM __images WHERE product_id=p.id LIMIT 1)
 									WHERE 1
-                                    $kw_filter
+                                    $keyword_filter
 									AND p.visible=1
 									GROUP BY p.id
 									ORDER BY p.name
