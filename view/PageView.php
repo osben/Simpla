@@ -29,6 +29,10 @@ class PageView extends View
         $this->design->assign('meta_keywords', $page->meta_keywords);
         $this->design->assign('meta_description', $page->meta_description);
 
-        return $this->design->fetch('page.tpl');
+        if (file_exists($this->config->root_dir . '/design/' . $this->settings->theme . '/html/page_' . $page->url . '.tpl')) {
+            return $this->design->fetch('page_' . $page->url . '.tpl');
+        } else {
+            return $this->design->fetch('page.tpl');
+        }
     }
 }
