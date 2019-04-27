@@ -47,6 +47,7 @@ class Orders extends Simpla
                                               o.comment, 
                                               o.status,
                                               o.url, 
+                                              o.payment_details,
                                               o.total_price, 
                                               o.note, 
 										      o.ip
@@ -135,7 +136,7 @@ class Orders extends Simpla
                                               o.email, 
                                               o.comment, 
                                               o.status,
-                                              o.url, 
+                                              o.url,
                                               o.total_price, 
                                               o.note
                                         FROM __orders AS o
