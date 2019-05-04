@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>
+		AssetPayments
+	</name>
+	<settings>
+		<variable>merchant_id</variable>
+		<name>Merchant ID</name>
+	</settings>
+	<settings>
+		<variable>secret_key</variable>
+		<name>Secret key</name>
+	</settings>
+	<settings>
+		<variable>template_id</variable>
+		<name>Template ID</name>
+	</settings>	
+</module>
