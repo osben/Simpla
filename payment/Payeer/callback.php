@@ -105,14 +105,19 @@ if (isset($_POST["m_operation_id"]) && isset($_POST["m_sign"]))
 					switch ($_POST['m_status'])
 					{
 						case 'success':
-							$simpla->orders->update_order(intval($order_id),
-								array(
-								'paid' => 1,
-								'status' => $settings['payeer_order_status']
-							));
+						
+							if (!$order->paid)
+							{
+								$simpla->orders->update_order(intval($order_id),
+									array(
+									'paid' => 1,
+									'status' => $settings['payeer_order_status']
+								));
+								
+								$simpla->notify->email_order_user(intval($order_id));
+								$simpla->orders->close(intval($order_id));
+							}
 							
-							$simpla->notify->email_order_user(intval($order_id));
-							$simpla->orders->close(intval($order_id));
 							break;
 							
 						default:
