@@ -1,0 +1,6 @@
+{
+  "require": {
+    "php": ">=5.4",
+    "yandex-money/yandex-checkout-sdk-php": "1.0.6"
+  }
+}
