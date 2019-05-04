@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<module>
+	<name>BeGateway</name>
+	<settings>
+		<variable>shop_id</variable>
+		<name>Идентификатор магазина</name>
+	</settings>
+	<settings>
+		<variable>shop_key</variable>
+		<name>Секретный ключ магазина</name>
+	</settings>
+	<settings>
+		<variable>domain_checkout</variable>
+		<name>Домен страницы оплаты (например, checkout.example.com)</name>
+	</settings>
+	<settings>
+		<variable>pm_bankcard</variable>
+		<name>Включить оплату банковской картой</name>
+    <options>
+      <name>Да</name>
+      <value>1</value>
+    </options>
+    <options>
+      <name>Нет</name>
+      <value>0</value>
+    </options>
+	</settings>
+	<settings>
+		<variable>pm_bankcard_halva</variable>
+		<name>Включить оплату банковской картой Халва</name>
+    <options>
+      <name>Нет</name>
+      <value>0</value>
+    </options>
+    <options>
+      <name>Да</name>
+      <value>1</value>
+    </options>
+	</settings>
+	<settings>
+		<variable>pm_erip</variable>
+		<name>Включить оплату ЕРИП</name>
+    <options>
+      <name>Нет</name>
+      <value>0</value>
+    </options>
+    <options>
+      <name>Да</name>
+      <value>1</value>
+    </options>
+	</settings>
+	<settings>
+		<variable>pm_erip_service_no</variable>
+		<name>Код услуги ЕРИП</name>
+	</settings>
+	<settings>
+		<variable>test_mode</variable>
+		<name>Тестовый режим оплаты</name>
+    <options>
+      <name>Да</name>
+      <value>1</value>
+    </options>
+    <options>
+      <name>Нет</name>
+      <value>0</value>
+    </options>
+	</settings>
+</module>
