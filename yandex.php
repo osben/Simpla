@@ -37,7 +37,8 @@ print "</currencies>" . PHP_EOL;
 
 
 // Категории
-$categories = $simpla->categories->get_categories();
+$simpla->db->query("SELECT id, parent_id, name FROM __categories WHERE visible=1");
+$categories = $simpla->db->results();
 print "<categories>" .PHP_EOL;
 foreach ($categories as $c) {
     print "<category id='$c->id'";
@@ -60,25 +61,38 @@ $simpla->db->query("SELECT v.price,
                             p.id as product_id, 
                             p.url, 
                             p.annotation, 
-                            pc.category_id, 
-                            i.filename as image
+                            pc.category_id
 					FROM __variants v 
 					LEFT JOIN __products p ON v.product_id=p.id
 					LEFT JOIN __products_categories pc ON p.id = pc.product_id AND pc.position=(SELECT MIN(position) FROM __products_categories WHERE product_id=p.id LIMIT 1)
-					LEFT JOIN __images i ON p.id = i.product_id AND i.position=(SELECT MIN(position) FROM __images WHERE product_id=p.id LIMIT 1)
 					WHERE p.visible AND (v.stock >0 OR v.stock is NULL) 
 					GROUP BY v.id 
 					ORDER BY p.id, v.position");
+
+$products = [];
+foreach ($simpla->db->results() as $p) {
+    $products[$p->product_id] = $p;
+}
+
+$products_ids = array_keys($products);
+
+$query = $simpla->db->placehold("SELECT i.id,i.filename,i.position, i.product_id
+                                FROM __images as i
+                                WHERE i.product_id in (?@) AND i.position=(SELECT min(position) FROM __images WHERE i.product_id = product_id LIMIT 1)
+                                ORDER BY i.position
+                                ", $products_ids);
+$simpla->db->query($query);
+$images = $simpla->db->results();
+foreach ($images as $image) {
+    $products[$image->product_id]->image = $image->filename;
+}
 
 print "<offers>" . PHP_EOL;
 
 $currency_code = reset($currencies)->code;
 
-// В цикле мы используем не results(), a result(), то есть выбираем из базы товары по одному,
-// так они нам одновременно не нужны - мы всё равно сразу же отправляем товар на вывод.
-// Таким образом используется памяти только под один товар
 $prev_product_id = null;
-while ($p = $simpla->db->result()) {
+foreach ($products as $p) {
     $variant_url = '';
     if ($prev_product_id === $p->product_id) {
         $variant_url = '?variant='.$p->variant_id;
