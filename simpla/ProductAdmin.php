@@ -192,7 +192,7 @@ class ProductAdmin extends Simpla
                     // Загрузка изображений
                     if ($images = $this->request->files('images')) {
                         for ($i=0; $i<count($images['name']); $i++) {
-                            if ($image_name = $this->image->upload_image($images['tmp_name'][$i], $images['name'][$i])) {
+                            if ($image_name = $this->image->upload_image($images['tmp_name'][$i], $images['name'][$i], $product->id)) {
                                 $this->products->add_image($product->id, $image_name);
                             } else {
                                 $this->design->assign('error', 'error uploading image');
@@ -207,7 +207,7 @@ class ProductAdmin extends Simpla
                                 $this->products->add_image($product->id, $url);
                             } elseif ($dropped_images = $this->request->files('dropped_images')) {
                                 $key = array_search($url, $dropped_images['name']);
-                                if ($key!==false && $image_name = $this->image->upload_image($dropped_images['tmp_name'][$key], $dropped_images['name'][$key])) {
+                                if ($key!==false && $image_name = $this->image->upload_image($dropped_images['tmp_name'][$key], $dropped_images['name'][$key], $product->id)) {
                                     $this->products->add_image($product->id, $image_name);
                                 }
                             }

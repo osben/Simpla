@@ -53,6 +53,9 @@ smarty_html_minify = false;
 ;Использовать imagemagick для обработки изображений (вместо gd)
 use_imagick = true;
 
+;При загрузке вкладывать рисунки в папки
+image_products_hash_dir = false;
+
 ;Директория оригиналов изображений
 original_images_dir = files/originals/;
 
