@@ -30,7 +30,7 @@
 	{* Всплывающие подсказки для администратора *}
 	{if $smarty.session.admin == 'admin'}
 	<script src ="simpla/design/js/admintooltip/admintooltip.js" type="text/javascript"></script>
-	<link   href="simpla/design/js/admintooltip/css/admintooltip.css" rel="stylesheet" type="text/css" />
+	<link   href="simpla/design/js/admintooltip/admintooltip.css" rel="stylesheet" type="text/css" />
 	{/if}
 
 	{* Ctrl-навигация на соседние товары *}

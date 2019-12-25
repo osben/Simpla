@@ -1,0 +1,75 @@
+.admin-bookmark{
+	position:absolute;
+	left:3%;
+	top:0px;
+	width: 12px;
+	height: 35px;
+	background-image: url(bookmark.gif);
+	background-repeat: no-repeat;
+}
+.admin-tooltip{
+	position: absolute;
+	visibility: hidden;
+	opacity: 0;
+	z-index: 9999;
+	transition: all .3s ease .1s;
+	width: 200px;
+	padding-top: 10px;
+	top: 0;
+	left: 0;
+}
+.admin-tooltip-inner{
+	padding: 5px 10px;
+	background: #ffedb6;
+	border: 1px solid #FFC107;
+	border-radius: 3px;
+	position: relative;
+	box-shadow: 0 5px 5px -5px #d4ad38;
+}
+
+.admin-tooltip a{
+	display: block;
+	color: #795548;
+	padding: 3px 2px 3px 20px;
+	background-position: left center;
+	background-repeat: no-repeat;
+	text-decoration: none;
+}
+.admin-tooltip a:hover{
+	color: #ec6331;
+}
+.admin-tooltip:hover,
+.admin-tooltip.admin-tooltip-visible{
+	visibility: visible;
+	opacity: 1;
+	transition: none;
+}
+.admin-tooltip-edit { 
+	background-image:url(edit.png); 
+}
+.admin-tooltip-add { 
+	background-image:url(add.png);
+}
+.admin-tooltip-inner:before{
+	content: '';
+	display: block;
+	position: absolute;
+	border: 4px solid transparent;
+	top: -8px;
+	left: 10px;
+	border-bottom-color: #ffc107;
+}
+.admin-tooltip-inner:after{
+	content: '';
+	display: block;
+	position: absolute;
+	border: 4px solid transparent;
+	top: -7px;
+	left: 10px;
+	border-bottom-color: #ffedb6;
+}
+.flipped .admin-tooltip-inner:before,
+.flipped .admin-tooltip-inner:after{
+	left: auto;
+	right: 10px
+}
