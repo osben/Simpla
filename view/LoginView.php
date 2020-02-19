@@ -20,6 +20,10 @@ class LoginView extends View
             unset($_SESSION['user_id']);
             header('Location: ' . $this->config->root_url, true, 302);
             exit();
+        } // Если авторизован
+        elseif ($this->user) {
+            header('Location: '.$this->config->root_url.'/user', true, 302);
+            exit();
         } // Вспомнить пароль
         elseif ($this->request->get('action') == 'password_remind') {
             // Если запостили email

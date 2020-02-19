@@ -2,6 +2,7 @@
 
 {* Канонический адрес страницы *}
 {$canonical="/user/password_remind" scope=root}
+{$meta_title = "Напоминание пароля" scope=root}
 
 {if $email_sent}
 <h1>Вам отправлено письмо</h1>

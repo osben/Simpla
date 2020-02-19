@@ -15,6 +15,11 @@ class RegisterView extends View
 {
     public function fetch()
     {
+        if ($this->user) {
+            header('Location: '.$this->config->root_url.'/user', true, 302);
+            exit();
+        }
+
         $default_status = 1; // Активен ли пользователь сразу после регистрации (0 или 1)
 
         if ($this->request->method('post') && $this->request->post('register')) {
