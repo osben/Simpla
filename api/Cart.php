@@ -64,6 +64,7 @@ class Cart extends Simpla
                 $cart->discount = 0;
                 if (isset($_SESSION['user_id']) && $user = $this->users->get_user(intval($_SESSION['user_id']))) {
                     $cart->discount = $user->discount;
+                    $cart->discount_total = ($cart->discount * $cart->total_price) / 100;
                 }
 
                 $cart->total_price *= (100-$cart->discount)/100;
