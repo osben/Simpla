@@ -189,10 +189,11 @@ class Image extends Simpla
     public function upload_image($filename, $name)
     {
         // Имя оригинального файла
-        $uploaded_file = $new_name = pathinfo($name, PATHINFO_BASENAME);
+        $uploaded_file = pathinfo($name, PATHINFO_BASENAME);
         $base = pathinfo($uploaded_file, PATHINFO_FILENAME);
         $base = $this->correct_filename($base);
         $ext = pathinfo($uploaded_file, PATHINFO_EXTENSION);
+        $new_name = $base.'.'.$ext;
 
         if (in_array(strtolower($ext), $this->allowed_extentions)) {
             while (file_exists($this->config->root_dir.$this->config->original_images_dir.$new_name)) {
