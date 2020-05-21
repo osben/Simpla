@@ -41,7 +41,6 @@ require_once('Simpla.php');
  *
  * @property string $theme -
  * @property string $last_1c_orders_export_date -
- * @property string $license -
  *
  * @property string $pz_server
  * @property string $pz_password

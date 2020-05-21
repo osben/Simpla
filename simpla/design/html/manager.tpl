@@ -116,8 +116,7 @@
                     'currency'   =>'Валюты',
                     'delivery'   =>'Способы доставки',
                     'payment'    =>'Способы оплаты',
-                    'managers'   =>'Менеджеры',
-                    'license'    =>'Управление лицензией'
+                    'managers'   =>'Менеджеры'
                 ]}
                 {foreach $perms as $p=>$name}
                     <li>

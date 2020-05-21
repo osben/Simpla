@@ -16,7 +16,7 @@ class Managers extends Simpla
 {
     public $permissions_list = array('products', 'categories', 'brands', 'features', 'orders', 'labels',
         'users', 'groups', 'coupons', 'pages', 'blog', 'comments', 'feedbacks', 'import', 'export',
-        'backup', 'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers', 'license');
+        'backup', 'stats', 'design', 'settings', 'currency', 'delivery', 'payment', 'managers');
 
     public $passwd_file = "simpla/.passwd";
 
