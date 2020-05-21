@@ -13,7 +13,6 @@ require_once('Simpla.php');
 
 /**
  * Class Config
- * @property string $license
  * @property string $db_server
  * @property string $db_user
  * @property string $db_password
