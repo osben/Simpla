@@ -229,17 +229,6 @@
 	<!-- Подвал сайта -->
 	<div id="footer">
 		&copy; {date('Y')} <a href="http://simplacms.ru">Simpla {$config->version}</a>
-		{if in_array('license', $manager->permissions)}
-			{if $license->valid}
-				Лицензия действительна {if $license->expiration != '*'}до {$license->expiration}{/if} для домен{$license->domains|count|plural:'а':'ов'} {foreach $license->domains as $d}{$d}{if !$d@last}, {/if}{/foreach}.
-				<a href='index.php?module=LicenseAdmin'>Управление лицензией</a>
-				.
-			{else}
-				Лицензия недействительна.
-				<a href='index.php?module=LicenseAdmin'>Управление лицензией</a>
-				.
-			{/if}
-		{/if}
 		Вы вошли как {$manager->login}.
 		<a href='{$config->root_url}?logout' id="logout">Выход</a>
 	</div>
