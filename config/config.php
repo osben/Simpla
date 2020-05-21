@@ -1,7 +1,5 @@
 ;<? exit(); ?>
 
-license = fb9hhjgkcg nmpiqgpjpl mntvuwuyy9 9dc4bbc6 dfggfghmhf qrmrmqmulu uuv1t49546 aeebeicg9i lnigeligoi
-
 [database]
 
 ;Сервер базы данных
