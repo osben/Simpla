@@ -119,7 +119,7 @@ class Products extends Simpla
             }
         }
 
-        if (!empty($filter['features']) && !empty($filter['features'])) {
+        if (!empty($filter['features'])) {
             foreach ($filter['features'] as $feature=>$value) {
                 $features_filter .= $this->db->placehold('AND p.id IN (SELECT product_id FROM __options WHERE feature_id=? AND value=? ) ', $feature, $value);
             }
