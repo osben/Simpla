@@ -21,6 +21,7 @@ require_once('Simpla.php');
  * @property string $db_prefix
  * @property string $db_charset
  * @property string $db_sql_mode
+ * @property string $db_timezone
  * @property string $error_reporting
  * @property string $php_charset
  * @property string $php_locale_collate
