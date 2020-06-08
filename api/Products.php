@@ -414,7 +414,7 @@ class Products extends Simpla
             }
 
             // Удаляем товар из связанных с другими
-            $query = $this->db->placehold("DELETE FROM __related_products WHERE related_id=?", intval($id));
+            $query = $this->db->placehold("DELETE FROM __related_products WHERE (related_id=? OR product_id=?)", intval($id), intval($id));
             $this->db->query($query);
 
             // Удаляем отзывы
