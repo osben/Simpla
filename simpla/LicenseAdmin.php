@@ -66,9 +66,6 @@ class LicenseAdmin extends Simpla
                 $c .= rand(0,9);
             }
             $license = $h.'#'.$end.'#'.$c;
-            $p = 11;
-            $g = 2;
-            $x = 7; //rand(2, $p-1);
             $y = pow($g, $x) % $p; // same as x
 
             $message = bin2hex($license);
