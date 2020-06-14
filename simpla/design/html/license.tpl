@@ -3,7 +3,7 @@
 {/capture}
 
 <!-- Основная форма -->
-<form method=post id=product enctype="multipart/form-data">
+<form method=post id="product" name="license" enctype="multipart/form-data">
 	<input type=hidden name="session_id" value="{$smarty.session.id}">
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
