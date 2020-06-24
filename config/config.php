@@ -1,6 +1,6 @@
 ;<? exit(); ?>
 
-license = fb9hhjgkcg nmpiqgpjpl mntvuwuyy9 9dc4bbc6 dfggfghmhf qrmrmqmulu uuv1t49546 aeebeicg9i lnigeligoi
+license = cdgbhchiji kjplkpppmn smsnxrtsv5 79a8998bgh hehlekghlg ojliokptnt srsaq69585 8badacbihj jfflihlijo mppqnnvptq t7799e5da6 bc8dbkhcdm mknpioqpir utup
 
 [database]
 
