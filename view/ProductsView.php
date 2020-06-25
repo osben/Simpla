@@ -147,7 +147,7 @@ class ProductsView extends View
         }
 
         // Устанавливаем мета-теги в зависимости от запроса
-        if ($this->page) {
+        if ($this->page && $this->page->visible) {
             $this->design->assign('meta_title', $this->page->meta_title);
             $this->design->assign('meta_keywords', $this->page->meta_keywords);
             $this->design->assign('meta_description', $this->page->meta_description);
