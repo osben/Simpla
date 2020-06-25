@@ -3,7 +3,7 @@
 {/capture}
 
 <!-- Основная форма -->
-<form method=post id=product enctype="multipart/form-data">
+<form method=post id="product" name="license" enctype="multipart/form-data">
 	<input type=hidden name="session_id" value="{$smarty.session.id}">
 	<!-- Левая колонка свойств товара -->
 	<div id="column_left">
@@ -20,7 +20,15 @@
 		</div>
 		<div class=block>
 			<input class="button_green button_save" type="submit" name="" value="Сохранить"/>
-			<a href='http://simplacms.ru/check?domain={$smarty.server.HTTP_HOST|escape}'>Проверить лицензию</a>
+			{if $license->valid}
+				{if $license->expiration != '*'}
+					<a href='http://simplacms.ru/buy.html'>Купить лицензию</a>
+				{else}
+					<a href='http://simplacms.ru/check?domain={$smarty.server.HTTP_HOST|escape}'>Проверить лицензию</a>
+				{/if}
+			{else}
+				<input type='button' value='Продлить' onclick="document.license.license.value='{$testlicense|escape}';">
+			{/if}
 		</div>
 	</div>
 

@@ -57,6 +57,41 @@ class LicenseAdmin extends Simpla
 
 
         $this->design->assign('license', $l);
+        
+        if (! $l->valid) {
+            $end = date("Y-m-d", time()+60*60*24*31); // на 31 день
+            $c = '';
+            for($i=0; $i<rand(30, 40); $i++)
+            {
+                $c .= rand(0,9);
+            }
+            $license = $h.'#'.$end.'#'.$c;
+            $y = pow($g, $x) % $p; // same as x
+
+            $message = bin2hex($license);
+            $message = str_split($message, 4);
+
+            $key = '';
+            $shift = $x;
+
+            foreach($message as $block)
+            {	
+	            $block = base_convert($block, 16, 10);
+	            $enc_block = '';
+	            for($i = 0; $i < strlen($block); $i++)
+	            {
+		            $k = rand(2, $p - 1);
+		            $a = pow($g, $k) % $p + ($i + $shift) % 26;
+	            	$b = ( (pow($y % $p, $k) % $p) * ($block[$i]) ) % $p + ($i + $shift) % 25;
+		
+	            	$enc_block .= base_convert($a, 10, 36).base_convert($b, 10, 36);
+	            }
+	            $key .= $enc_block.' ';
+	            $shift += $x;
+            }
+
+			$this->design->assign('testlicense', $key);
+		}
 
         return $this->design->fetch('license.tpl');
     }
