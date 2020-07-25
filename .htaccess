@@ -8,6 +8,7 @@ RewriteEngine on
 
 #Редирект на HTTPS:
 #RewriteCond %{HTTPS} =off
+#RewriteCond %{REQUEST_URI} !^/simpla/
 #RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 #!!!Внимание, с редиректом вход будет обязательно со слешем в конце /simpla/
 
