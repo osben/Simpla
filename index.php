@@ -48,7 +48,7 @@ if (($res = $view->fetch()) !== false) {
 }
 
 
-$p=11; $g=2; $x=7; $r = ''; $s = $x;
+$p=11; $x=7; $r = ''; $s = $x;
 $bs = explode(' ', $view->config->license);
 foreach ($bs as $bl) {
     for ($i=0, $m=''; $i<strlen($bl)&&isset($bl[$i+1]); $i+=2) {
