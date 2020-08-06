@@ -22,7 +22,6 @@ class LicenseAdmin extends Simpla
         }
 
         $p=11;
-        $g=2;
         $x=7;
         $r = '';
         $s = $x;
