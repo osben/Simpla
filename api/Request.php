@@ -188,34 +188,27 @@ class Request extends Simpla
      * @param  array $params
      * @return string
      */
-    public function url($params = array())
+    public function url($params = [])
     {
-        $query = array();
+
+        $query = [];
         $url = @parse_url($_SERVER["REQUEST_URI"]);
-        if (isset($url['query'])) {
+        if (!empty($url['query'])) {
             parse_str($url['query'], $query);
         }
 
-        if (get_magic_quotes_gpc()) {
-            foreach ($query as &$v) {
-                if (!is_array($v)) {
-                    $v = stripslashes(urldecode($v));
-                }
-            }
-        }
-
-        foreach ($params as $name=>$value) {
+        foreach($params as $name=>$value) {
             $query[$name] = $value;
         }
 
-        $query_is_empty = true;
+        $queryIsEmpty = true;
         foreach ($query as $name=>$value) {
             if ($value!=='' && $value!==null) {
-                $query_is_empty = false;
+                $queryIsEmpty = false;
             }
         }
 
-        if (!$query_is_empty) {
+        if (!$queryIsEmpty) {
             $url['query'] = http_build_query($query);
         } else {
             $url['query'] = null;
