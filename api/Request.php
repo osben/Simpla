@@ -25,13 +25,6 @@ class Request extends Simpla
     public function __construct()
     {
         parent::__construct();
-
-        if (get_magic_quotes_gpc()) {
-            $_POST = $this->stripslashes_recursive($_POST);
-            $_GET = $this->stripslashes_recursive($_GET);
-            $_COOKIE = $this->stripslashes_recursive($_COOKIE);
-            $_REQUEST = $this->stripslashes_recursive($_REQUEST);
-        }
     }
 
     /**
@@ -62,14 +55,14 @@ class Request extends Simpla
     private function _input_filter($val, $type = null)
     {
         if ($type == 'string') {
-            return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-\.\%\s]/ui', '', $val));
+            return strval(preg_replace('/[^\p{L}\p{Nd}\d\s_\-.%]/ui', '', $val));
         }
 
         if ($type == 'integer' || $type == 'int') {
             return intval($val);
         }
 
-        if ($type == 'float' || $type == 'floatval') {
+        if ($type == 'float') {
             return floatval($val);
         }
 
@@ -91,9 +84,11 @@ class Request extends Simpla
      *
      * @param  string $name
      * @param  string $type
+     * @param  string $default
+     * @param  bool $stripTags
      * @return mixed
      */
-    public function get($name, $type = null)
+    public function get($name, $type = null, $default = null, $stripTags = true)
     {
         $val = null;
         if (isset($_GET[$name])) {
@@ -102,6 +97,15 @@ class Request extends Simpla
 
         if (!empty($type) && is_array($val)) {
             $val = reset($val);
+        }
+
+        if (empty($val) && $default !== null) {
+            $val = $default;
+        }
+
+        // На входе удаляем html теги
+        if ($stripTags === true && !empty($val)) {
+            $val = $this->recursiveStripTags($val);
         }
 
         return $this->_input_filter($val, $type);
@@ -114,15 +118,19 @@ class Request extends Simpla
      *
      * @param  string $name
      * @param  string $type
+     * @param  string $default
      * @return mixed
      */
-    public function post($name = null, $type = null)
-    {
+    public function post($name = null, $type = null, $default = null) {
         $val = null;
         if (!empty($name) && isset($_POST[$name])) {
             $val = $_POST[$name];
         } elseif (empty($name)) {
             $val = file_get_contents('php://input');
+        }
+
+        if (empty($val) && $default !== null) {
+            $val = $default;
         }
 
         return $this->_input_filter($val, $type);
@@ -143,29 +151,21 @@ class Request extends Simpla
             return $_FILES[$name][$name2];
         } elseif (empty($name2) && !empty($_FILES[$name])) {
             return $_FILES[$name];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
-    /**
-     * Рекурсивная чистка магических слешей
-     *
-     * @param $var
-     * @return array|string
-     */
-    private function stripslashes_recursive($var)
+    private function recursiveStripTags($val)
     {
-        if (is_array($var)) {
-            $res = array();
-            foreach ($var as $k => $v) {
-                $res[$this->stripslashes_recursive($k)] = $this->stripslashes_recursive($v);
+        if (is_array($val) || is_object($val)) {
+            foreach ($val as $k => $v) {
+                $val[$k] = $this->recursiveStripTags($v);
             }
-
-            return $res;
-        } else {
-            return stripslashes($var);
+            return $val;
         }
+
+        return htmlspecialchars(strip_tags($val));
     }
 
     /**
@@ -223,7 +223,35 @@ class Request extends Simpla
 
         return http_build_url(null, $url);
     }
-    
+
+
+    /**
+     * Parses a url to extract the query parameters from it as a assoc array
+     * @param string $url
+     * @param bool $decode (optional) apply url decode
+     * @return array
+     */
+    public function parseUrl($url = '', $decode = false)
+    {
+        if (empty($url)) {
+            $url = $_SERVER["REQUEST_URI"];
+        }
+        $urlData = parse_url($url);
+        if (empty($urlData['query'])) {
+            return null;
+        }
+        $query = explode("&", $urlData['query']);
+        $parameters = array();
+        foreach ($query as $parameter) {
+            $param = explode("=", $parameter);
+            if (!empty($param) && count($param) == 2) {
+                $parameters[$param[0]] = $decode == true ? urldecode($param[1]) : $param[1];
+            }
+        }
+
+        return $parameters;
+    }
+
     /**
      * Determine if the request is the result of an AJAX call.
      *
@@ -326,14 +354,14 @@ if (!function_exists('http_build_url')) {
         $new_url = $parse_url;
 
         return
-             ((isset($parse_url['scheme'])) ? $parse_url['scheme'] . '://' : '')
+            ((isset($parse_url['scheme'])) ? $parse_url['scheme'] . '://' : '')
             .((isset($parse_url['user'])) ? $parse_url['user'] . ((isset($parse_url['pass'])) ? ':' . $parse_url['pass'] : '') .'@' : '')
             .((isset($parse_url['host'])) ? $parse_url['host'] : '')
             .((isset($parse_url['port'])) ? ':' . $parse_url['port'] : '')
             .((isset($parse_url['path'])) ? $parse_url['path'] : '')
             .((isset($parse_url['query'])) ? '?' . $parse_url['query'] : '')
             .((isset($parse_url['fragment'])) ? '#' . $parse_url['fragment'] : '')
-        ;
+            ;
     }
 }
 
