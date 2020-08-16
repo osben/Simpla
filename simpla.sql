@@ -2279,7 +2279,6 @@ INSERT INTO `s_settings` (`setting_id`, `name`, `value`) VALUES
 	(33, 'products_num', '24'),
 	(34, 'products_num_admin', '20'),
 	(111, 'last_1c_orders_export_date', '2011-07-30 21:31:56'),
-	(112, 'license', 'bhbcfgkhfe iomjlglmpl rqwqxrtpz6 898495c7 cfee'),
 	(113, 'max_order_amount', '50'),
 	(114, 'watermark_offset_x', '50'),
 	(115, 'watermark_offset_y', '50'),

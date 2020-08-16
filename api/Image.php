@@ -3,9 +3,9 @@
 /**
  * Simpla CMS
  *
- * @copyright	2017 Denis Pikusov
- * @link		http://simplacms.ru
- * @author		Denis Pikusov
+ * @copyright    2017 Denis Pikusov
+ * @link        http://simplacms.ru
+ * @author        Denis Pikusov
  *
  */
 
@@ -21,31 +21,37 @@ class Image extends Simpla
         parent::__construct();
     }
 
-    public function resize_image($filename, $width=0, $height=0, $set_watermark=false) {
+    public function resize_image($filename, $width = 0, $height = 0, $set_watermark = false)
+    {
         $resized_filename = $this->add_resize_params($filename, '', $width, $height, $set_watermark);
         $resized_filename_encoded = $resized_filename;
 
-        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
+        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0,
+                8) == 'https://') {
+            $resized_filename_encoded = rawurlencode($resized_filename_encoded);
             $resized_filename_encoded = rawurlencode($resized_filename_encoded);
         }
 
-        $resized_filename_encoded = rawurlencode($resized_filename_encoded);
 
-        return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
+        return $this->config->root_url . '/' . $this->config->resized_images_dir . $resized_filename_encoded . '?' . $this->config->token($resized_filename);
     }
 
-    public function crop_image($filename, $width=0, $height=0, $set_watermark=false) {
+    public function crop_image($filename, $width = 0, $height = 0, $set_watermark = false)
+    {
         $resized_filename = $this->add_resize_params($filename, 'crop', $width, $height, $set_watermark);
         $resized_filename_encoded = $resized_filename;
 
-        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0, 8) == 'https://') {
+        if (substr($resized_filename_encoded, 0, 7) == 'http://' || substr($resized_filename_encoded, 0,
+                8) == 'https://') {
+            $resized_filename_encoded = rawurlencode($resized_filename_encoded);
             $resized_filename_encoded = rawurlencode($resized_filename_encoded);
         }
 
-        $resized_filename_encoded = rawurlencode($resized_filename_encoded);
+        // $resized_filename_encoded = rawurlencode($resized_filename_encoded);
 
-        return $this->config->root_url.'/'.$this->config->resized_images_dir.$resized_filename_encoded.'?'.$this->config->token($resized_filename);
+        return $this->config->root_url . '/' . $this->config->resized_images_dir . $resized_filename_encoded . '?' . $this->config->token($resized_filename);
     }
+
     /**
      * Создание превью изображения
      * @param  $filename файл с изображением (без пути к файлу)
@@ -65,33 +71,38 @@ class Image extends Simpla
             $original_file = $source_file;
         }
 
+
         $resized_file = $this->add_resize_params($original_file, $type, $width, $height, $set_watermark);
 
 
         // Пути к папкам с картинками
-        $originals_dir = $this->config->root_dir.$this->config->original_images_dir;
-        $preview_dir = $this->config->root_dir.$this->config->resized_images_dir;
+        $originals_dir = $this->config->root_dir . $this->config->original_images_dir;
+        $preview_dir = $this->config->root_dir . $this->config->resized_images_dir;
 
         $watermark_offset_x = $this->settings->watermark_offset_x;
         $watermark_offset_y = $this->settings->watermark_offset_y;
 
-        $sharpen = min(100, $this->settings->images_sharpen)/100;
-        $watermark_transparency =  1-min(100, $this->settings->watermark_transparency)/100;
+        $sharpen = min(100, $this->settings->images_sharpen) / 100;
+        $watermark_transparency = 1 - min(100, $this->settings->watermark_transparency) / 100;
 
 
-        if ($set_watermark && is_file($this->config->root_dir.$this->config->watermark_file)) {
-            $watermark = $this->config->root_dir.$this->config->watermark_file;
+        if ($set_watermark && is_file($this->config->root_dir . $this->config->watermark_file)) {
+            $watermark = $this->config->root_dir . $this->config->watermark_file;
         } else {
             $watermark = null;
         }
 
         if (class_exists('Imagick') && $this->config->use_imagick) {
-            $this->image_constrain_imagick($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offset_x, $watermark_offset_y, $watermark_transparency, $sharpen);
+
+            $this->image_constrain_imagick($originals_dir . $original_file, $preview_dir . $resized_file, $type, $width,
+                $height, $watermark, $watermark_offset_x, $watermark_offset_y, $watermark_transparency, $sharpen);
         } else {
-            $this->image_constrain_gd($originals_dir.$original_file, $preview_dir.$resized_file, $type, $width, $height, $watermark, $watermark_offset_x, $watermark_offset_y, $watermark_transparency);
+
+            $this->image_constrain_gd($originals_dir . $original_file, $preview_dir . $resized_file, $type, $width,
+                $height, $watermark, $watermark_offset_x, $watermark_offset_y, $watermark_transparency);
         }
 
-        return $preview_dir.$resized_file;
+        return $preview_dir . $resized_file;
     }
 
     /**
@@ -102,27 +113,28 @@ class Image extends Simpla
      * @param bool $set_watermark
      * @return string
      */
-    public function add_resize_params($filename, $type='', $width=0, $height=0, $set_watermark=false)
+    public function add_resize_params($filename, $type = '', $width = 0, $height = 0, $set_watermark = false)
     {
-        if ('.' != ($dirname = pathinfo($filename,  PATHINFO_DIRNAME))) {
-            $file = $dirname.'/'.pathinfo($filename, PATHINFO_FILENAME);
+
+        if ('.' != ($dirname = pathinfo($filename, PATHINFO_DIRNAME))) {
+            $file = $dirname . '/' . pathinfo($filename, PATHINFO_FILENAME);
         } else {
             $file = pathinfo($filename, PATHINFO_FILENAME);
         }
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
-        if ($width>0 || $height>0) {
-            $resized_filename = $file.'.'.$type.($width>0?$width:'').'x'.($height>0?$height:'').($set_watermark?'w':'').'.'.$ext;
+        if ($width > 0 || $height > 0) {
+            $resized_filename = $file . '.' . $type . ($width > 0 ? $width : '') . 'x' . ($height > 0 ? $height : '') . ($set_watermark ? 'w' : '') . '.' . $ext;
         } else {
             // TODO fix этот вариант сейчас не работает
-            $resized_filename = $file.'.'.$type.($set_watermark?'w':'').'.'.$ext;
+            $resized_filename = $file . '.' . $type . ($set_watermark ? 'w' : '') . '.' . $ext;
         }
 
         return $resized_filename;
     }
 
     /**
-     * @param  string $filename
+     * @param string $filename
      * @return array|false
      */
     public function get_resize_params($filename)
@@ -139,20 +151,23 @@ class Image extends Simpla
         $set_watermark = $matches[5] == 'w';    // ставить ли водяной знак
         $ext = $matches[6];                     // расширение файла
 
-        return array($file.'.'.$ext, $type, $width, $height, $set_watermark);
+        return array($file . '.' . $ext, $type, $width, $height, $set_watermark);
     }
 
     /**
-     * @param  string $filename
+     * @param string $filename
      * @return string|false
      */
     public function download_image($filename)
     {
         // Заливаем только есть такой файл есть в базе
-        $this->db->query('SELECT 1 FROM __images WHERE filename=? LIMIT 1', $filename);
-        if (!$this->db->result()) {
+        $this->db->query('SELECT * FROM __images WHERE filename=? LIMIT 1', $filename);
+        $row = $this->db->result();
+
+        if (!$row) {
             return false;
         }
+
 
         $parse_url = parse_url($filename);
 
@@ -162,50 +177,65 @@ class Image extends Simpla
         $ext = pathinfo($basename, PATHINFO_EXTENSION);
 
         // Если такой файл существует, нужно придумать другое название
-        $new_name = $base.'.'.$ext;
+        $new_name = $base . '.' . $ext;
 
-        while (file_exists($this->config->root_dir.$this->config->original_images_dir.$new_name)) {
+        $cacheImagePath = $this->getCacheImagePath($row->product_id);
+        while (file_exists($this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name)) {
             $new_base = pathinfo($new_name, PATHINFO_FILENAME);
             if (preg_match('/_([0-9]+)$/', $new_base, $parts)) {
-                $new_name = $base.'_'.($parts[1]+1).'.'.$ext;
+                $new_name = $base . '_' . ($parts[1] + 1) . '.' . $ext;
             } else {
-                $new_name = $base.'_1.'.$ext;
+                $new_name = $base . '_1.' . $ext;
             }
         }
 
-        $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $new_name, $filename);
+        $directory = dirname($this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name);
+
+        if (!is_dir($directory)) {
+            @mkdir($directory, 0777, true);
+        }
+
+        $this->db->query('UPDATE __images SET filename=? WHERE filename=?', $cacheImagePath . $new_name, $filename);
 
         // Перед долгим копированием займем это имя
-        fclose(fopen($this->config->root_dir.$this->config->original_images_dir.$new_name, 'w'));
-        copy($filename, $this->config->root_dir.$this->config->original_images_dir.$new_name);
-        return $new_name;
+        fclose(fopen($this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name, 'w'));
+        copy($filename, $this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name);
+        return $cacheImagePath . $new_name;
     }
 
     /**
-     * @param  string $filename
-     * @param  string $name
-     * @return string|false
+     * @param $filename
+     * @param $name
+     * @param bool|string|int $product_id
+     * @return bool|string
      */
-    public function upload_image($filename, $name)
+    public function upload_image($filename, $name, $product_id = false)
     {
         // Имя оригинального файла
-        $uploaded_file = pathinfo($name, PATHINFO_BASENAME);
+        $cacheImagePath = $this->getCacheImagePath($product_id);
+        $uploaded_file = $new_name = pathinfo($name, PATHINFO_BASENAME);
         $base = pathinfo($uploaded_file, PATHINFO_FILENAME);
         $base = $this->correct_filename($base);
         $ext = pathinfo($uploaded_file, PATHINFO_EXTENSION);
-        $new_name = $base.'.'.$ext;
-
+        $new_name = $base . '.' . $ext;
         if (in_array(strtolower($ext), $this->allowed_extentions)) {
-            while (file_exists($this->config->root_dir.$this->config->original_images_dir.$new_name)) {
+            while (file_exists($this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name)) {
                 $new_base = pathinfo($new_name, PATHINFO_FILENAME);
                 if (preg_match('/_([0-9]+)$/', $new_base, $parts)) {
-                    $new_name = $base.'_'.($parts[1]+1).'.'.$ext;
+                    $new_name = $base . '_' . ($parts[1] + 1) . '.' . $ext;
                 } else {
-                    $new_name = $base.'_1.'.$ext;
+                    $new_name = $base . '_1.' . $ext;
                 }
             }
-            if (move_uploaded_file($filename, $this->config->root_dir.$this->config->original_images_dir.$new_name)) {
-                return $new_name;
+            $directory = dirname($this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name);
+
+            if (!is_dir($directory)) {
+                @mkdir($directory, 0777, true);
+            }
+
+            if (move_uploaded_file($filename,
+                $this->config->root_dir . $this->config->original_images_dir . $cacheImagePath . $new_name)) {
+                return $cacheImagePath . $new_name;
             }
         }
 
@@ -215,19 +245,28 @@ class Image extends Simpla
     /**
      * Создание превью средствами gd
      *
-     * @param  string $src_file исходный файл
-     * @param  string $dst_file файл с результатом
-     * @param  string $type
-     * @param  int $max_w максимальная ширина
-     * @param  int $max_h максимальная высота
-     * @param  null $watermark
-     * @param  int $watermark_offset_x
-     * @param  int $watermark_offset_y
-     * @param  int $watermark_opacity
+     * @param string $src_file исходный файл
+     * @param string $dst_file файл с результатом
+     * @param string $type
+     * @param int $max_w максимальная ширина
+     * @param int $max_h максимальная высота
+     * @param null $watermark
+     * @param int $watermark_offset_x
+     * @param int $watermark_offset_y
+     * @param int $watermark_opacity
      * @return bool
      */
-    private function image_constrain_gd($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offset_x=0, $watermark_offset_y=0, $watermark_opacity=1)
-    {
+    private function image_constrain_gd(
+        $src_file,
+        $dst_file,
+        $type = '',
+        $max_w,
+        $max_h,
+        $watermark = null,
+        $watermark_offset_x = 0,
+        $watermark_offset_y = 0,
+        $watermark_opacity = 1
+    ) {
         // todo вынести в настройки
         $quality = 90;
 
@@ -237,6 +276,13 @@ class Image extends Simpla
 
         if (empty($src_w) || empty($src_h) || empty($src_type)) {
             return false;
+        }
+
+        if ($dst_file) {
+            $directory = dirname($dst_file);
+            if (!is_dir($directory)) {
+                @mkdir($directory, 0777, true);
+            }
         }
 
         // Нужно ли обрезать?
@@ -295,8 +341,7 @@ class Image extends Simpla
                 return false;
             }
             imagecolortransparent($dst_img, $transparent_index);
-        }
-        // or preserve alpha transparency for png
+        } // or preserve alpha transparency for png
         elseif ($src_type === 'image/png') {
             if (!imagealphablending($dst_img, false)) {
                 return false;
@@ -344,12 +389,13 @@ class Image extends Simpla
             $owidth = imagesx($overlay);
             $oheight = imagesy($overlay);
 
-            $watermark_x = min(($dst_w-$owidth)*$watermark_offset_x/100, $dst_w);
-            $watermark_y = min(($dst_h-$oheight)*$watermark_offset_y/100, $dst_h);
+            $watermark_x = min(($dst_w - $owidth) * $watermark_offset_x / 100, $dst_w);
+            $watermark_y = min(($dst_h - $oheight) * $watermark_offset_y / 100, $dst_h);
 
             //imagecopy($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight);
             //imagecopymerge($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight, $watermark_opacity*100);
-            $this->imagecopymerge_alpha($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight, $watermark_opacity*100);
+            $this->imagecopymerge_alpha($dst_img, $overlay, $watermark_x, $watermark_y, 0, 0, $owidth, $oheight,
+                $watermark_opacity * 100);
         }
 
 
@@ -381,25 +427,42 @@ class Image extends Simpla
     /**
      * Создание превью средствами imagick
      *
-     * @param  resource $src_file исходный файл
-     * @param  resource $dst_file файл с результатом
-     * @param  string $type
-     * @param  int $max_w максимальная ширина
-     * @param  int $max_h максимальная высота
-     * @param  null $watermark
-     * @param  int $watermark_offset_x
-     * @param  int $watermark_offset_y
-     * @param  int $watermark_opacity
-     * @param  float $sharpen
+     * @param resource $src_file исходный файл
+     * @param resource $dst_file файл с результатом
+     * @param string $type
+     * @param int $max_w максимальная ширина
+     * @param int $max_h максимальная высота
+     * @param null $watermark
+     * @param int $watermark_offset_x
+     * @param int $watermark_offset_y
+     * @param int $watermark_opacity
+     * @param float $sharpen
      * @return bool
      */
-    private function image_constrain_imagick($src_file, $dst_file, $type='', $max_w, $max_h, $watermark=null, $watermark_offset_x=0, $watermark_offset_y=0, $watermark_opacity=1, $sharpen=0.2)
-    {
+    private function image_constrain_imagick(
+        $src_file,
+        $dst_file,
+        $type = '',
+        $max_w,
+        $max_h,
+        $watermark = null,
+        $watermark_offset_x = 0,
+        $watermark_offset_y = 0,
+        $watermark_opacity = 1,
+        $sharpen = 0.2
+    ) {
         $thumb = new Imagick();
 
         // Читаем изображение
         if (!$thumb->readImage($src_file)) {
             return false;
+        }
+
+        if ($dst_file) {
+            $directory = dirname($dst_file);
+            if (!is_dir($directory)) {
+                @mkdir($directory, 0777, true);
+            }
         }
 
         // Размеры исходного изображения
@@ -442,8 +505,8 @@ class Image extends Simpla
             $owidth = $overlay->getImageWidth();
             $oheight = $overlay->getImageHeight();
 
-            $watermark_x = min(($dst_w-$owidth)*$watermark_offset_x/100, $dst_w);
-            $watermark_y = min(($dst_h-$oheight)*$watermark_offset_y/100, $dst_h);
+            $watermark_x = min(($dst_w - $owidth) * $watermark_offset_x / 100, $dst_w);
+            $watermark_y = min(($dst_h - $oheight) * $watermark_offset_y / 100, $dst_h);
         }
 
 
@@ -462,7 +525,8 @@ class Image extends Simpla
 
             if (isset($overlay) && is_object($overlay)) {
                 // $frame->compositeImage($overlay, $overlay_compose, $watermark_x, $watermark_y, imagick::COLOR_ALPHA);
-                $frame->compositeImage($overlay, imagick::COMPOSITE_OVER, $watermark_x, $watermark_y, imagick::COLOR_ALPHA);
+                $frame->compositeImage($overlay, imagick::COMPOSITE_OVER, $watermark_x, $watermark_y,
+                    imagick::COLOR_ALPHA);
             }
         }
 
@@ -490,11 +554,11 @@ class Image extends Simpla
     /**
      * Вычисляет размеры изображения, до которых нужно его пропорционально уменьшить, чтобы вписать в квадрат $max_w x $max_h
      *
-     * @param  int $src_w ширина исходного изображения
-     * @param  int $src_h высота исходного изображения
-     * @param  int $max_w максимальная ширина
-     * @param  int $max_h максимальная высота
-     * @param  string $type
+     * @param int $src_w ширина исходного изображения
+     * @param int $src_h высота исходного изображения
+     * @param int $max_w максимальная ширина
+     * @param int $max_h максимальная высота
+     * @param string $type
      * @return array|bool
      */
     private function calc_contrain_size($src_w, $src_h, $max_w = 0, $max_h = 0, $type = 'resize')
@@ -512,19 +576,19 @@ class Image extends Simpla
 
             if ($source_aspect_ratio > $desired_aspect_ratio) {
                 $dst_h = $max_h;
-                $dst_w = ( int ) ($max_h * $source_aspect_ratio);
+                $dst_w = ( int )($max_h * $source_aspect_ratio);
             } else {
                 $dst_w = $max_w;
-                $dst_h = ( int ) ($max_w / $source_aspect_ratio);
+                $dst_h = ( int )($max_w / $source_aspect_ratio);
             }
         } else {
             // image resize calculator
-            if ($src_w > $max_w && $max_w>0) {
-                $dst_h = $src_h * ($max_w/$src_w);
+            if ($src_w > $max_w && $max_w > 0) {
+                $dst_h = $src_h * ($max_w / $src_w);
                 $dst_w = $max_w;
             }
-            if ($dst_h > $max_h && $max_h>0) {
-                $dst_w = $dst_w * ($max_h/$dst_h);
+            if ($dst_h > $max_h && $max_h > 0) {
+                $dst_w = $dst_w * ($max_h / $dst_h);
                 $dst_h = $max_h;
             }
         }
@@ -532,20 +596,22 @@ class Image extends Simpla
     }
 
     /**
-     * @param  string $filename
+     * @param string $filename
      * @return mixed|string
      */
     public function correct_filename($filename)
     {
-        $ru = explode('-', "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я- ");
-        $en = explode('-', "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-_-Y-y-_-E-e-YU-yu-YA-ya-_");
+        $ru = explode('-',
+            "А-а-Б-б-В-в-Ґ-ґ-Г-г-Д-д-Е-е-Ё-ё-Є-є-Ж-ж-З-з-И-и-І-і-Ї-ї-Й-й-К-к-Л-л-М-м-Н-н-О-о-П-п-Р-р-С-с-Т-т-У-у-Ф-ф-Х-х-Ц-ц-Ч-ч-Ш-ш-Щ-щ-Ъ-ъ-Ы-ы-Ь-ь-Э-э-Ю-ю-Я-я- ");
+        $en = explode('-',
+            "A-a-B-b-V-v-G-g-G-g-D-d-E-e-E-e-E-e-ZH-zh-Z-z-I-i-I-i-I-i-J-j-K-k-L-l-M-m-N-n-O-o-P-p-R-r-S-s-T-t-U-u-F-f-H-h-TS-ts-CH-ch-SH-sh-SCH-sch-_-Y-y-_-E-e-YU-yu-YA-ya-_");
         $res = str_replace($ru, $en, $filename);
         $res = strtolower($res);
         $res = preg_replace("/[^a-z0-9_-]/", "", $res);
         return $res;
     }
 
-     /**
+    /**
      * merge two true colour images while maintaining alpha transparency of both
      * images.
      *
@@ -576,5 +642,20 @@ class Image extends Simpla
 
         // insert cut resource to destination image
         imagecopymerge($dst_im, $cut, $dst_x, $dst_y, 0, 0, $src_w, $src_h, $pct);
+    }
+
+    public function getCacheImagePath($product_id = '')
+    {
+        if (!$this->config->image_products_hash_dir) {
+            return '';
+        }
+
+        if (!empty($product_id)) {
+
+            return implode('/', array($product_id % 1000, $product_id % 100, $product_id)) . '/';
+            // return implode('/', str_split($product_id)) . '/';
+        }
+
+        return '';
     }
 }

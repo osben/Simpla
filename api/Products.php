@@ -119,7 +119,7 @@ class Products extends Simpla
             }
         }
 
-        if (!empty($filter['features']) && !empty($filter['features'])) {
+        if (!empty($filter['features'])) {
             foreach ($filter['features'] as $feature=>$value) {
                 $features_filter .= $this->db->placehold('AND p.id IN (SELECT product_id FROM __options WHERE feature_id=? AND value=? ) ', $feature, $value);
             }
@@ -414,7 +414,7 @@ class Products extends Simpla
             }
 
             // Удаляем товар из связанных с другими
-            $query = $this->db->placehold("DELETE FROM __related_products WHERE related_id=?", intval($id));
+            $query = $this->db->placehold("DELETE FROM __related_products WHERE (related_id=? OR product_id=?)", intval($id), intval($id));
             $this->db->query($query);
 
             // Удаляем отзывы
