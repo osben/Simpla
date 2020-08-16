@@ -88,7 +88,10 @@ class Config
         $this->vars['host'] = rtrim($_SERVER['HTTP_HOST']);
 
         // Протокол (http OR https)
-        $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5))=='https'? 'https' : 'http';
+        $protocol = 'http';
+        if(isset($_SERVER["SERVER_PROTOCOL"])) {
+            $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"], 0, 5))=='https'? 'https' : 'http';
+        }
         if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) {
             $protocol = 'https';
         } elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
